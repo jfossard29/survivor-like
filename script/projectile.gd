@@ -10,8 +10,6 @@ var direction: Vector3 = Vector3.ZERO
 
 func _ready():
 	add_to_group("projectile")
-	# Connecter le signal pour détecter les collisions
-	body_entered.connect(Callable(self, "_on_body_entered"))
 	
 	# Chercher le PNJ le plus proche
 	var pnjs = get_tree().get_nodes_in_group("pnj")
@@ -48,11 +46,8 @@ func _physics_process(delta: float) -> void:
 	else:
 		queue_free()
 
-func _on_body_entered(body: Node) -> void:
-	# Vérifier que c'est bien un PNJ
-	if body.is_in_group("pnj"):
-		# Infliger les dégâts
-		if body.has_method("take_damage"):
-			body.take_damage(damage)
-		# Supprimer le projectile
+func _on_area_entered(area: Area3D) -> void:
+	if area.is_in_group("pnj"):
+		if area.has_method("take_damage"):
+			area.take_damage(damage)
 		queue_free()

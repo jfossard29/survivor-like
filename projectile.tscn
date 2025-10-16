@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://buvywldvvmux5"]
 
-[ext_resource type="Script" uid="uid://bx6saq5ymlwa5" path="res://projectile.gd" id="1_a85iw"]
+[ext_resource type="Script" uid="uid://bx6saq5ymlwa5" path="res://script/projectile.gd" id="1_a85iw"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a85iw"]
 albedo_color = Color(1, 1, 0, 1)
@@ -27,4 +27,4 @@ mesh = SubResource("CapsuleMesh_qxf0c")
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_dgwo2")
 
-[connection signal="body_entered" from="." to="." method="_on_projectile_body_entered"]
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

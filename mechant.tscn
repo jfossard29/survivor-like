@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://cgbo35opsgy86"]
 
-[ext_resource type="Script" uid="uid://dgqdnluy2assq" path="res://mechant_script.gd" id="1_56eqi"]
+[ext_resource type="Script" uid="uid://dgqdnluy2assq" path="res://script/mechant_script.gd" id="1_56eqi"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_30oyp"]
 

@@ -1,15 +1,16 @@
-[gd_scene load_steps=18 format=3 uid="uid://1hoxtt5rrj3g"]
+[gd_scene load_steps=16 format=3 uid="uid://1hoxtt5rrj3g"]
 
-[ext_resource type="Script" uid="uid://bpafwtxkb2gqg" path="res://player.gd" id="1_4vgkv"]
+[ext_resource type="Script" uid="uid://bpafwtxkb2gqg" path="res://script/player.gd" id="1_4vgkv"]
 [ext_resource type="PackedScene" uid="uid://cgbo35opsgy86" path="res://mechant.tscn" id="1_rkcwo"]
-[ext_resource type="Script" uid="uid://d3b8ydmcddf0q" path="res://racine.gd" id="1_rlwjj"]
-[ext_resource type="Script" uid="uid://cmec34xq4f0sr" path="res://bonus.gd" id="2_xsnwh"]
+[ext_resource type="Script" uid="uid://d3b8ydmcddf0q" path="res://script/racine.gd" id="1_rlwjj"]
+[ext_resource type="Script" uid="uid://cmec34xq4f0sr" path="res://script/bonus.gd" id="2_xsnwh"]
 [ext_resource type="PackedScene" uid="uid://1w0ttl831ipd" path="res://experience.tscn" id="4_0tuo0"]
 [ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://projectile.tscn" id="4_ns5mm"]
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ns5mm"]
+[ext_resource type="PackedScene" uid="uid://bk7dangodqgts" path="res://SpawnRoot.tscn" id="7_6qlrk"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_4vgkv"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ns5mm"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xsnwh"]
 albedo_color = Color(1, 1, 0, 1)
@@ -59,45 +60,35 @@ _data = {
 &"tourner": SubResource("Animation_rkcwo")
 }
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_vitpe"]
-size = Vector3(100, 0, 100)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4vgkv"]
-albedo_color = Color(0.23137255, 0.039215688, 0.20784314, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_xsnwh"]
-material = SubResource("StandardMaterial3D_4vgkv")
-size = Vector3(100, 1, 100)
-
 [node name="Racine" type="Node3D"]
 script = ExtResource("1_rlwjj")
-spawn_zone = NodePath("Zone")
+spawn_zone = NodePath("SpawnRoot")
 pnj_scene = ExtResource("1_rkcwo")
-
-[node name="Mechant" parent="." instance=ExtResource("1_rkcwo")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.75886226, 0.6512512, 0, -0.6512512, 0.75886226, 3.7473829, 24.840767, 28.256449)
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="." node_paths=PackedStringArray("camera") groups=["player"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.62, 1.6, 9.836)
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." node_paths=PackedStringArray("camera", "pivot_camera") groups=["player"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2206593, 7.429404)
 collision_layer = 4
-collision_mask = 24
+collision_mask = 26
 script = ExtResource("1_4vgkv")
 projectile_scene = ExtResource("4_ns5mm")
-camera = NodePath("Camera3D")
+turn_speed = 1.0
+camera = NodePath("PivotCamera/Camera3D")
+pivot_camera = NodePath("PivotCamera")
 
-[node name="Camera3D" type="Camera3D" parent="CharacterBody3D"]
-transform = Transform3D(1, 0, 0, 0, 0.9551441, 0.29614154, 0, -0.29614154, 0.95514405, 0, 2.5659184, 4.7896204)
+[node name="PivotCamera" type="Node3D" parent="CharacterBody3D"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
-shape = SubResource("CapsuleShape3D_ns5mm")
-metadata/_edit_lock_ = true
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D/PivotCamera"]
+transform = Transform3D(1, 0, 0, 0, 0.9551441, 0.29614154, 0, -0.29614154, 0.95514405, 0, 3.5464163, 7.6848617)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
 mesh = SubResource("CapsuleMesh_4vgkv")
 metadata/_edit_lock_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+shape = SubResource("CapsuleShape3D_ns5mm")
 
 [node name="Bonus" type="Area3D" parent="."]
 transform = Transform3D(-4.371139e-08, -1, 0, -4.371139e-08, 1.9106855e-15, -1, 1, -4.371139e-08, -4.371139e-08, 1.9258548, 1.727591, 0)
@@ -120,15 +111,6 @@ autoplay = "tourner"
 [node name="Experience" parent="." instance=ExtResource("4_0tuo0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1190462, 0)
 
-[node name="Zone" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00054979324, 0.017288208, 0.011449814)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Zone"]
-shape = SubResource("BoxShape3D_vitpe")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Zone"]
-mesh = SubResource("BoxMesh_xsnwh")
-
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="Panel" type="Panel" parent="CanvasLayer"]
@@ -148,5 +130,8 @@ layout_mode = 0
 offset_left = 32.0
 offset_right = 72.0
 offset_bottom = 23.0
+
+[node name="SpawnRoot" parent="." instance=ExtResource("7_6qlrk")]
+script = null
 
 [connection signal="body_entered" from="Bonus" to="Bonus" method="_on_body_entered"]
