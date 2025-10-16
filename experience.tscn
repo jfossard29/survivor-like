@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://1w0ttl831ipd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k42go"]
+albedo_color = Color(0, 1, 1, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_k42go"]
+material = SubResource("StandardMaterial3D_k42go")
+radius = 0.05
+height = 0.1
+
+[node name="Experience" type="StaticBody3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0900829, 0)
+layers = 17
+mesh = SubResource("SphereMesh_k42go")
