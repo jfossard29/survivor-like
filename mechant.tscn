@@ -11,9 +11,9 @@ albedo_color = Color(1, 0, 0.09803922, 1)
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_h2wir"]
 material = SubResource("StandardMaterial3D_jca2d")
 
-[node name="Mechant" type="Area3D" groups=["pnj"]]
+[node name="Mechant" type="CharacterBody3D" groups=["pnj"]]
 collision_layer = 16
-collision_mask = 12
+collision_mask = 28
 script = ExtResource("1_56eqi")
 experience_scene = ExtResource("2_30oyp")
 

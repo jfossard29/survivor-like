@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://1hoxtt5rrj3g"]
+[gd_scene load_steps=25 format=3 uid="uid://1hoxtt5rrj3g"]
 
 [ext_resource type="Script" uid="uid://bpafwtxkb2gqg" path="res://script/player.gd" id="1_4vgkv"]
 [ext_resource type="PackedScene" uid="uid://cgbo35opsgy86" path="res://mechant.tscn" id="1_rkcwo"]
@@ -8,7 +8,233 @@
 [ext_resource type="Script" uid="uid://b6g6rerfmvwhp" path="res://HarvestZone.gd" id="5_gi8kb"]
 [ext_resource type="PackedScene" uid="uid://bk7dangodqgts" path="res://SpawnRoot.tscn" id="7_6qlrk"]
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_4vgkv"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6qlrk"]
+sky_curve = 0.086152345
+sky_cover_modulate = Color(1, 1, 1, 0.536)
+
+[sub_resource type="Sky" id="Sky_gi8kb"]
+sky_material = SubResource("ProceduralSkyMaterial_6qlrk")
+
+[sub_resource type="Environment" id="Environment_6qlrk"]
+background_mode = 2
+sky = SubResource("Sky_gi8kb")
+glow_enabled = true
+
+[sub_resource type="Animation" id="Animation_6qlrk"]
+resource_name = "bouger"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D/MeshInstance3D2:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1e-05, 1e-05),
+"update": 0,
+"values": [Vector3(-0.12893681, -0.56999993, 0.15288973), Vector3(-0.11778561, -0.56999993, -0.16163683)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MeshInstance3D/MeshInstance3D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1e-05, 1e-05),
+"update": 0,
+"values": [Vector3(0.12893681, -0.56999993, -0.15288973), Vector3(0.11778561, -0.56999993, 0.16163683)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("MeshInstance3D/MeshInstance3D2:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1e-05, 1e-05),
+"update": 0,
+"values": [Vector3(3.7382314e-08, 0.8701862, -0.408407), Vector3(-3.0424477e-08, -0.9410641, -0.40840706)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("MeshInstance3D/MeshInstance3D:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1e-05, 1e-05),
+"update": 0,
+"values": [Vector3(3.1758596e-09, 0.8701864, 0.40840703), Vector3(6.351719e-09, -0.941064, 0.408407)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("MeshInstance3D/MeshInstance3D5:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1e-05, 1e-05),
+"update": 0,
+"values": [Vector3(0.18856002, -0.032000065, 0.23333502), Vector3(0.17943886, -0.032000065, -0.24041986)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("MeshInstance3D/MeshInstance3D6:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1e-05, 1e-05),
+"update": 0,
+"values": [Vector3(-0.18856002, -0.032000065, -0.23333502), Vector3(-0.17943886, -0.032000065, 0.24041986)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("MeshInstance3D/MeshInstance3D5:rotation")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1e-05, 1e-05),
+"update": 0,
+"values": [Vector3(0, -0.8911302, 0.7263711), Vector3(6.3990576e-08, 0.9296321, 0.72637105)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("MeshInstance3D/MeshInstance3D6:rotation")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1e-05, 1e-05),
+"update": 0,
+"values": [Vector3(0, -0.8911302, -0.74932224), Vector3(-6.6595504e-08, 0.9296322, -0.7493223)]
+}
+
+[sub_resource type="Animation" id="Animation_gi8kb"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D/MeshInstance3D2:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.12893681, -0.56999993, 0.15288973)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MeshInstance3D/MeshInstance3D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.12893681, -0.56999993, -0.15288973)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("MeshInstance3D/MeshInstance3D2:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(3.7382314e-08, 0.8701862, -0.408407)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("MeshInstance3D/MeshInstance3D:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(3.1758596e-09, 0.8701864, 0.40840703)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("MeshInstance3D/MeshInstance3D5:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.18856002, -0.032000065, 0.23333502)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("MeshInstance3D/MeshInstance3D6:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.18856002, -0.032000065, -0.23333502)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("MeshInstance3D/MeshInstance3D5:rotation")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, -0.8911302, 0.7263711)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("MeshInstance3D/MeshInstance3D6:rotation")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, -0.8911302, -0.74932224)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_obkj5"]
+_data = {
+&"RESET": SubResource("Animation_gi8kb"),
+&"bouger": SubResource("Animation_6qlrk")
+}
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_6qlrk"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_gi8kb"]
+size = Vector3(0.1, 0.5, 0.1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_obkj5"]
+top_radius = 0.15
+bottom_radius = 0.15
+height = 0.05
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ns5mm"]
 
@@ -68,6 +294,9 @@ script = ExtResource("1_rlwjj")
 spawn_zone = NodePath("SpawnRoot")
 pnj_scene = ExtResource("1_rkcwo")
 
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_6qlrk")
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.75886226, 0.6512512, 0, -0.6512512, 0.75886226, 3.7473829, 24.840767, 28.256449)
 
@@ -81,14 +310,46 @@ turn_speed = 1.0
 camera = NodePath("PivotCamera/Camera3D")
 pivot_camera = NodePath("PivotCamera")
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CharacterBody3D"]
+libraries = {
+&"": SubResource("AnimationLibrary_obkj5")
+}
+autoplay = "bouger"
+
 [node name="PivotCamera" type="Node3D" parent="CharacterBody3D"]
 
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D/PivotCamera"]
 transform = Transform3D(1, 0, 0, 0, 0.9551441, 0.29614154, 0, -0.29614154, 0.95514405, 0, 3.5464163, 7.6848617)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
-mesh = SubResource("CapsuleMesh_4vgkv")
+mesh = SubResource("ArrayMesh_6qlrk")
 metadata/_edit_lock_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
+transform = Transform3D(0.59166175, -0.25603494, 0.764449, 0.39714786, 0.91775477, -3.1758591e-09, -0.70157665, 0.3035994, 0.644684, 0.12893681, -0.56999993, -0.15288973)
+mesh = SubResource("BoxMesh_gi8kb")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
+transform = Transform3D(0.591662, 0.25603503, 0.7644489, -0.39714792, 0.9177549, -3.738231e-08, -0.7015767, -0.30359933, 0.64468414, -0.12893681, -0.56999993, 0.15288973)
+mesh = SubResource("BoxMesh_gi8kb")
+skeleton = NodePath("../MeshInstance3D")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
+transform = Transform3D(1.0000002, 0, 0, 0, 1.0000002, 0, 0, 0, 1, 0, 0.02, 0)
+mesh = SubResource("BoxMesh_gi8kb")
+skeleton = NodePath("../MeshInstance3D")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
+transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, 0, 0.48622727, 0)
+mesh = SubResource("CylinderMesh_obkj5")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
+transform = Transform3D(0.46988487, -0.4174473, -0.77778256, 0.664161, 0.7475893, 0, 0.581462, -0.51657283, 0.6285333, 0.18856002, -0.032000065, 0.23333502)
+mesh = SubResource("BoxMesh_gi8kb")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
+transform = Transform3D(0.4601811, 0.42812085, -0.7777826, -0.6811426, 0.7321506, 0, 0.569454, 0.52978086, 0.62853336, -0.18856002, -0.032000065, -0.23333502)
+mesh = SubResource("BoxMesh_gi8kb")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
 shape = SubResource("CapsuleShape3D_ns5mm")

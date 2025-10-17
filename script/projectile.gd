@@ -3,34 +3,36 @@ extends Area3D
 @export var speed: float = 20.0
 @export var damage: int = 10
 @export var lifetime: float = 2.0
-@export var search_range: float = 30.0  # zone de recherche du PNJ
+@export var search_range: float = 30.0
 
 var target: Node3D = null
 var direction: Vector3 = Vector3.ZERO
 
 func _ready():
 	add_to_group("projectile")
-	
-	# Chercher le PNJ le plus proche
+
+	# Connecte les signaux de collision
+	connect("area_entered", Callable(self, "_on_area_entered"))
+	connect("body_entered", Callable(self, "_on_body_entered"))
+
+	# Recherche du PNJ le plus proche
 	var pnjs = get_tree().get_nodes_in_group("pnj")
 	var closest_dist = search_range + 1.0
 	for p in pnjs:
-		# S'assurer que c'est bien un PNJ et pas le joueur
-		if not is_instance_valid(p) or not p.is_in_group("pnj"):
+		if not is_instance_valid(p):
 			continue
-		
 		var d = global_position.distance_to(p.global_position)
 		if d <= search_range and d < closest_dist:
 			closest_dist = d
 			target = p
-	
-	# Si aucun PNJ trouvé, tirer droit devant
+
+	# Si aucun PNJ trouvé, tirer tout droit
 	if target == null and direction == Vector3.ZERO:
-		direction = -transform.basis.z
+		direction = -global_transform.basis.z
 		direction.y = 0
 		direction = direction.normalized()
-	
-	# Supprimer après 'lifetime' secondes
+
+	# Auto-destruction après un délai
 	await get_tree().create_timer(lifetime).timeout
 	if is_instance_valid(self):
 		queue_free()
@@ -50,4 +52,10 @@ func _on_area_entered(area: Area3D) -> void:
 	if area.is_in_group("pnj"):
 		if area.has_method("take_damage"):
 			area.take_damage(damage)
+		queue_free()
+
+func _on_body_entered(body: Node) -> void:
+	if body.is_in_group("pnj"):
+		if body.has_method("take_damage"):
+			body.take_damage(damage)
 		queue_free()
