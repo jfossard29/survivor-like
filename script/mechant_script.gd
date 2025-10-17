@@ -4,6 +4,7 @@ extends Area3D
 @export var stop_distance: float = 0.0
 @export var damage: int = 25
 @export var max_health: int = 50
+@export var experience_scene: PackedScene
 
 var player: Node3D = null
 var current_health: int
@@ -69,4 +70,9 @@ func take_damage(amount: int) -> void:
 
 func die() -> void:
 	print("PNJ mort !")
+	if experience_scene:
+		var experience = experience_scene.instantiate()
+		get_parent().add_child(experience)
+		experience.global_position = global_position
+
 	queue_free()

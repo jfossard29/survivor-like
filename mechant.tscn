@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://cgbo35opsgy86"]
+[gd_scene load_steps=6 format=3 uid="uid://cgbo35opsgy86"]
 
 [ext_resource type="Script" uid="uid://dgqdnluy2assq" path="res://script/mechant_script.gd" id="1_56eqi"]
+[ext_resource type="PackedScene" uid="uid://1w0ttl831ipd" path="res://experience.tscn" id="2_30oyp"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_30oyp"]
 
@@ -14,6 +15,7 @@ material = SubResource("StandardMaterial3D_jca2d")
 collision_layer = 16
 collision_mask = 12
 script = ExtResource("1_56eqi")
+experience_scene = ExtResource("2_30oyp")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_30oyp")

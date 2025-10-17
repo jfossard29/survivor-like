@@ -3,23 +3,30 @@ extends CharacterBody3D
 @export var projectile_scene: PackedScene
 @export var max_health = 100
 @export var fire_interval: float = 1.0
-@export var fire_range: float = 30.0  # portée de détection des PNJ
-var current_health = 100
-var can_fire: bool = true
-# Référence au label d'affichage des PV
-@onready var health_label: Label = $"../CanvasLayer/Panel/PV/Label"
-
+@export var fire_range: float = 30.0
 @export var speed: float = 5.0
 @export var turn_speed: float = 0.8
 @export var camera: Camera3D
 @export var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
-@export var mouse_sensitivity: float = 0.002  # Ajuste selon ton confort
+@export var mouse_sensitivity: float = 0.002
 @export var pivot_camera: Node3D
-@export var jump_speed: float = 5.0  # Ajuste selon la hauteur de saut
-var camera_pitch: float = 0.0  # pour limiter la rotation verticale
+@export var jump_speed: float = 5.0
+@onready var health_label: Label = $"../CanvasLayer/Panel/PV/Label"
+@onready var recolte: Area3D = $Recolte
+@onready var experience_label: Label = $"../CanvasLayer/Panel/Experience/Label"
+
+var camera_pitch: float = 0.0
+var current_health = 100
+var current_experience: float = 0.0
+var can_fire: bool = true
+
 
 func _ready():
+	add_to_group("player")
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	health_label.text = str(current_health)
+	if recolte :
+		recolte.body_entered.connect(_on_harvest_zone_entered)
 
 func _physics_process(delta: float) -> void:
 	# Tir automatique
@@ -83,8 +90,7 @@ func _input(event: InputEvent) -> void:
 func take_damage(amount: int):
 	current_health -= amount
 	current_health = max(0, current_health)  # Ne pas descendre en dessous de 0
-	
-	print("Joueur touché ! PV restants : ", current_health)
+
 	update_health_display()
 	
 	# Vérifier si le joueur est mort
@@ -99,8 +105,6 @@ func heal(amount: int):
 func update_health_display():
 	if health_label:
 		health_label.text = str(current_health)
-	else:
-		print("ERREUR : Label 'nombre' introuvable dans PV/nombre")
 
 func die():
 	print("Le joueur est mort !")
@@ -135,3 +139,12 @@ func fire_projectile():
 		projectile.target = closest_pnj
 	else:
 		projectile.direction = forward_dir
+		
+func _on_harvest_zone_entered(body: Node) -> void:
+	if body.is_in_group("experience"):
+		body.start_following(self)
+		
+func add_experience(amount: float):
+	current_experience += amount
+	if experience_label:
+		experience_label.text = str(int(current_experience))
