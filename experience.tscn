@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://1w0ttl831ipd"]
 
-[ext_resource type="Script" uid="uid://btstq576glhq2" path="res://experience.gd" id="1_eu0gq"]
+[ext_resource type="Script" uid="uid://btstq576glhq2" path="res://script/experience.gd" id="1_eu0gq"]
 [ext_resource type="Shader" uid="uid://d8qy4jn630ck" path="res://Hologram.tres" id="2_j7eut"]
 [ext_resource type="Texture2D" uid="uid://dtwnaf3imfq4v" path="res://HologramLines.png" id="3_0bgji"]
 
@@ -18,7 +18,7 @@ height = 0.5
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0bgji"]
 render_priority = 0
 shader = ExtResource("2_j7eut")
-shader_parameter/Scanline_Color = Color(0.18431373, 1, 1, 0.09411765)
+shader_parameter/Scanline_Color = Color(0.18020247, 0.9818757, 0.9818757, 0.17254902)
 shader_parameter/Scanline_Scroll_Speed = 1.0
 shader_parameter/Scanline_Scale = 20.0
 shader_parameter/Scanline_Texture = ExtResource("3_0bgji")

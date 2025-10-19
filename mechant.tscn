@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://cgbo35opsgy86"]
+[gd_scene load_steps=7 format=3 uid="uid://cgbo35opsgy86"]
 
 [ext_resource type="Script" uid="uid://dgqdnluy2assq" path="res://script/mechant_script.gd" id="1_56eqi"]
 [ext_resource type="PackedScene" uid="uid://1w0ttl831ipd" path="res://experience.tscn" id="2_30oyp"]
@@ -11,10 +11,14 @@ albedo_color = Color(1, 0, 0.09803922, 1)
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_h2wir"]
 material = SubResource("StandardMaterial3D_jca2d")
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jca2d"]
+
 [node name="Mechant" type="CharacterBody3D" groups=["pnj"]]
 collision_layer = 16
 collision_mask = 28
 script = ExtResource("1_56eqi")
+speed = 4.0
+max_health = 20
 experience_scene = ExtResource("2_30oyp")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -23,3 +27,10 @@ shape = SubResource("CapsuleShape3D_30oyp")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_h2wir")
 skeleton = NodePath("")
+
+[node name="Detection" type="Area3D" parent="."]
+collision_layer = 16
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Detection"]
+shape = SubResource("CapsuleShape3D_jca2d")
