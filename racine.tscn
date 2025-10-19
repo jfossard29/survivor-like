@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://1hoxtt5rrj3g"]
+[gd_scene load_steps=30 format=3 uid="uid://1hoxtt5rrj3g"]
 
 [ext_resource type="Script" uid="uid://bpafwtxkb2gqg" path="res://script/player.gd" id="1_4vgkv"]
 [ext_resource type="PackedScene" uid="uid://cgbo35opsgy86" path="res://mechant.tscn" id="1_rkcwo"]
@@ -7,6 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://projectile.tscn" id="4_ns5mm"]
 [ext_resource type="Script" uid="uid://b6g6rerfmvwhp" path="res://script/HarvestZone.gd" id="5_gi8kb"]
 [ext_resource type="PackedScene" uid="uid://bk7dangodqgts" path="res://SpawnRoot.tscn" id="7_6qlrk"]
+[ext_resource type="PackedScene" uid="uid://brbib2i6ft83b" path="res://Amelioration.tscn" id="8_gi8kb"]
+[ext_resource type="Script" uid="uid://bug10plnrdh5t" path="res://script/GestionnaireAmelioration.gd" id="9_obkj5"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6qlrk"]
 sky_curve = 0.086152345
@@ -242,8 +244,8 @@ height = 0.05
 radius = 2.352
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_6qlrk"]
-height = 10.0
-radius = 10.0
+height = 20.0
+radius = 30.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xsnwh"]
 albedo_color = Color(1, 1, 0, 1)
@@ -314,6 +316,7 @@ collision_mask = 27
 script = ExtResource("1_4vgkv")
 projectile_scene = ExtResource("4_ns5mm")
 camera = NodePath("PivotCamera/Camera3D")
+xp_to_next_level = 30.0
 pivot_camera = NodePath("PivotCamera")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="CharacterBody3D"]
@@ -429,5 +432,10 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_gi8kb")
 script = ExtResource("1_rlwjj")
 pnj_scene = ExtResource("1_rkcwo")
 player = NodePath("../CharacterBody3D")
+
+[node name="Amelioration" parent="." instance=ExtResource("8_gi8kb")]
+
+[node name="AmeliorationManager" type="Node" parent="."]
+script = ExtResource("9_obkj5")
 
 [connection signal="body_entered" from="Bonus" to="Bonus" method="_on_body_entered"]

@@ -4,6 +4,7 @@ extends CharacterBody3D
 @export var damage: int = 25
 @export var max_health: int = 50
 @export var experience_scene: PackedScene
+@onready var game_manager: Node = GameManager
 
 var player: Node3D = null
 var current_health: int
@@ -13,10 +14,24 @@ func _ready() -> void:
 	add_to_group("pnj")
 	current_health = max_health
 	player = get_tree().get_first_node_in_group("player")
+	_apply_difficulty_modifiers()
+
 	if player:
 		print("✅ Joueur trouvé :", player.name)
 	else:
 		print("❌ Aucun joueur trouvé dans le groupe 'player' !")
+
+func _apply_difficulty_modifiers():
+	if not game_manager:
+		return
+	# Facteur global venant du temps
+	var df = game_manager.difficulty_factor
+
+	# Appliquer multiplicateurs liés au temps + améliorations
+	max_health = int(max_health * df * game_manager.enemy_health_multiplier)
+	damage = int(damage * df * game_manager.enemy_damage_multiplier)
+	speed = speed * df * game_manager.enemy_speed_multiplier
+	current_health = max_health
 
 func _physics_process(delta: float) -> void:
 	if not player or has_attacked:

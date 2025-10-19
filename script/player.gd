@@ -17,7 +17,9 @@ extends CharacterBody3D
 @onready var health_bar: ProgressBar = $"../CanvasLayer/Panel/PV/ProgressBar"
 @onready var experience_bar: ProgressBar = $"../CanvasLayer/Panel/Experience/ProgressBar"
 @onready var recolte: Area3D = $Recolte
+@onready var popup_multi: CanvasLayer = $"../Amelioration"
 @onready var tween := create_tween()
+@onready var amelioration_manager: Node = $"../AmeliorationManager"
 var camera_pitch: float = 0.0
 var current_health: float = 100.0
 var current_experience: float = 0.0
@@ -29,15 +31,29 @@ var damage: int
 var move_speed: float
 var fire_interval: float
 var projectile_speed: float
+var ameliorations_en_attente: Array[Amelioration] = []
+var base_radius: float = 1.0
+var radius_multiplier: float = 1.0
 
 func _ready():
 	add_to_group("player")
 	update_stats()
 	update_health_display()
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	if Engine.has_singleton("GameManager"):
+		recolte.set_pickup_radius_multiplier(GameManager.pickup_scale_multiplier)
 	if recolte :
 		recolte.body_entered.connect(_on_harvest_zone_entered)
 
+
+
+func set_pickup_radius_multiplier(mult: float) -> void:
+	radius_multiplier = mult
+	_update_collision_shape()
+
+func _update_collision_shape():
+	$CollisionShape3D.scale = Vector3.ONE * (base_radius * radius_multiplier)
+	
 func update_stats():
 	damage = base_damage + (level - 1) * 2
 	move_speed = base_speed + (level - 1) * 0.3
@@ -45,14 +61,6 @@ func update_stats():
 	projectile_speed = base_projectile_speed + (level - 1) * 1.5
 
 func level_up():
-	level += 1
-	print("🎉 Niveau", level, "atteint !")
-
-	xp_to_next_level *= 1.25
-	move_speed += 0.2
-	fire_interval = max(0.3, fire_interval - 0.05)
-	print("🔥 Nouvelles stats → Vitesse :", move_speed, "| Délai tir :", fire_interval)
-
 	# Animation spéciale quand on monte de niveau (barre bleue pulse plusieurs fois)
 	var stylebox = experience_bar.get("theme_override_styles/fill") as StyleBoxFlat
 	if stylebox:
@@ -60,6 +68,17 @@ func level_up():
 		for i in range(3):
 			flash.tween_property(stylebox, "bg_color", Color(0.6, 0.8, 1), 0.1)
 			flash.tween_property(stylebox, "bg_color", Color(0.2, 0.4, 1), 0.1)
+			
+	level += 1
+	xp_to_next_level *= 1.25
+	move_speed += 0.2
+	fire_interval = max(0.3, fire_interval - 0.05)
+
+	var choix = amelioration_manager.get_ameliorations_random(self)
+	popup_multi.afficher(choix)
+
+
+
 	
 func _physics_process(delta: float) -> void:
 	# Tir automatique
@@ -221,3 +240,7 @@ func update_experience_bar():
 		var pulse_tween = create_tween()
 		pulse_tween.tween_property(stylebox, "bg_color", Color(0.4, 0.6, 1), 0.15)
 		pulse_tween.tween_property(stylebox, "bg_color", Color(0.2, 0.4, 1), 0.4)
+
+func apply_pickup_multiplier(mult: float) -> void:
+	if recolte and recolte.has_method("add_pickup_radius_multiplier"):
+		recolte.add_pickup_radius_multiplier(mult)

@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://brbib2i6ft83b"]
+
+[ext_resource type="Script" uid="uid://bk2jp463mce6y" path="res://script/PopupAmelioration.gd" id="1_dt8am"]
+
+[node name="Amelioration" type="CanvasLayer"]
+process_mode = 3
+script = ExtResource("1_dt8am")
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = 351.0
+offset_top = 128.0
+offset_right = 919.0
+offset_bottom = 453.0
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 170.0
+offset_top = 32.0
+offset_right = 287.0
+offset_bottom = 55.0
+
+[node name="ChoixContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.25500003
+anchor_top = 0.26200002
+anchor_right = 0.25500003
+anchor_bottom = 0.26200002
+offset_left = 0.1599884
+offset_top = -0.15000916
+offset_right = 256.88098
+offset_bottom = 177.45003
