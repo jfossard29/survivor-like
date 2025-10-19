@@ -104,10 +104,16 @@ uniform vec4 Fresnel_Color : source_color = vec4(0.000000, 0.000000, 1.000000, 1
 
 
 void vertex() {
+// Input:4
+	mat4 n_out4p0 = MODEL_MATRIX;
+
+
+// Input:2
+	vec3 n_out2p0 = VERTEX;
+
+
 // TransformVectorMult:3
-	mat4 n_in3p0 = mat4(vec4(1.00000, 0.00000, 0.00000, 0.0), vec4(0.00000, 1.00000, 0.00000, 0.0), vec4(0.00000, 0.00000, 1.00000, 0.0), vec4(0.00000, 0.00000, 0.00000, 1.0));
-	vec3 n_in3p1 = vec3(0.00000, 0.00000, 0.00000);
-	vec3 n_out3p0 = (n_in3p0 * vec4(n_in3p1, 1.0)).xyz;
+	vec3 n_out3p0 = (n_out4p0 * vec4(n_out2p0, 1.0)).xyz;
 
 
 // VaryingSetter:5
@@ -208,7 +214,7 @@ nodes/vertex/4/node = SubResource("VisualShaderNodeInput_y0ccy")
 nodes/vertex/4/position = Vector2(-340, 280)
 nodes/vertex/5/node = SubResource("VisualShaderNodeVaryingSetter_ibofu")
 nodes/vertex/5/position = Vector2(400, 440)
-nodes/vertex/connections = PackedInt32Array(3, 0, 5, 0)
+nodes/vertex/connections = PackedInt32Array(3, 0, 5, 0, 4, 0, 3, 0, 2, 0, 3, 1)
 nodes/fragment/2/node = SubResource("VisualShaderNodeTexture2DParameter_rfuvb")
 nodes/fragment/2/position = Vector2(-960, 240)
 nodes/fragment/3/node = SubResource("VisualShaderNodeTexture_jjbvg")
