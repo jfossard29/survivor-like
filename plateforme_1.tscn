@@ -1,0 +1,56 @@
+[gd_scene load_steps=8 format=3 uid="uid://xcj7gummgqm5"]
+
+[ext_resource type="Script" uid="uid://dp7bbgof7sw8y" path="res://Plateforme.gd" id="1_uef27"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2hk12"]
+albedo_color = Color(0.20152658, 0.20152658, 0.20152658, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_odemg"]
+material = SubResource("StandardMaterial3D_2hk12")
+left_to_right = 0.0
+size = Vector3(10, 5, 5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lo8k3"]
+albedo_color = Color(0.02745098, 0.24313726, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_u5vsd"]
+material = SubResource("StandardMaterial3D_lo8k3")
+size = Vector3(10, 5, 20)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p0jco"]
+albedo_color = Color(0.02745098, 0.24313726, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8rdwr"]
+material = SubResource("StandardMaterial3D_p0jco")
+size = Vector3(20, 10, 20)
+
+[node name="Plateforme1" type="Node3D"]
+script = ExtResource("1_uef27")
+
+[node name="Rampe_2" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -32.49547, 0, 22.507729)
+mesh = SubResource("PrismMesh_odemg")
+skeleton = NodePath("../../StaticBody3D")
+
+[node name="1x2_2" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -24.99569, 0, 12.50904)
+mesh = SubResource("BoxMesh_u5vsd")
+skeleton = NodePath("../1x2_1")
+
+[node name="Rampe_3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.012555838)
+mesh = SubResource("PrismMesh_odemg")
+skeleton = NodePath("../../StaticBody3D")
+
+[node name="1x2_1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.998, 0, 7.513)
+mesh = SubResource("BoxMesh_u5vsd")
+
+[node name="Rampe3" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -32.495, 5, 12.508)
+mesh = SubResource("PrismMesh_odemg")
+skeleton = NodePath("../../StaticBody3D")
+
+[node name="3x3_1" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -24.996, 2.5, -2.478)
+mesh = SubResource("BoxMesh_8rdwr")

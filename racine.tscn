@@ -256,7 +256,10 @@ bg_color = Color(0.5563933, 0, 0, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gi8kb"]
 bg_color = Color(0.07846785, 0.805388, 0.97360384, 1)
 
-[node name="Racine" type="Node3D"]
+[node name="Racine" type="Node3D" node_paths=PackedStringArray("player")]
+script = ExtResource("1_rlwjj")
+pnj_scene = ExtResource("1_rkcwo")
+player = NodePath("CharacterBody3D")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_6qlrk")
@@ -368,10 +371,7 @@ offset_right = 182.0
 offset_bottom = 27.0
 theme_override_styles/fill = SubResource("StyleBoxFlat_gi8kb")
 
-[node name="Map" parent="." node_paths=PackedStringArray("player") instance=ExtResource("7_6qlrk")]
-script = ExtResource("1_rlwjj")
-pnj_scene = ExtResource("1_rkcwo")
-player = NodePath("../CharacterBody3D")
+[node name="Map" parent="." instance=ExtResource("7_6qlrk")]
 
 [node name="Amelioration" parent="." instance=ExtResource("8_gi8kb")]
 
