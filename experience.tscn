@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://1w0ttl831ipd"]
+[gd_scene load_steps=7 format=3 uid="uid://1w0ttl831ipd"]
 
 [ext_resource type="Script" uid="uid://btstq576glhq2" path="res://script/experience.gd" id="1_eu0gq"]
 [ext_resource type="Shader" uid="uid://d8qy4jn630ck" path="res://Hologram.tres" id="2_j7eut"]
@@ -7,32 +7,30 @@
 [sub_resource type="SphereShape3D" id="SphereShape3D_k42go"]
 radius = 0.3
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j7eut"]
-emission_enabled = true
-
 [sub_resource type="SphereMesh" id="SphereMesh_w8b7j"]
-material = SubResource("StandardMaterial3D_j7eut")
 radius = 0.25
 height = 0.5
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_0bgji"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j7eut"]
 render_priority = 0
 shader = ExtResource("2_j7eut")
-shader_parameter/Scanline_Color = Color(0.18020247, 0.9818757, 0.9818757, 0.17254902)
+shader_parameter/Scanline_Color = Color(0, 0.32156864, 1, 0.22745098)
 shader_parameter/Scanline_Scroll_Speed = 1.0
 shader_parameter/Scanline_Scale = 20.0
 shader_parameter/Scanline_Texture = ExtResource("3_0bgji")
-shader_parameter/Fresnel_Power = 1.0
-shader_parameter/Fresnel_Color = Color(0, 0.5921569, 0.8235294, 0.64705884)
+shader_parameter/Fresnel_Power = 2.0
+shader_parameter/Fresnel_Color = Color(0, 0.78431374, 1, 1)
 
 [node name="Experience" type="Area3D"]
-collision_mask = 4
+collision_layer = 32
+collision_mask = 64
 script = ExtResource("1_eu0gq")
-speed = 10.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_k42go")
+metadata/_edit_lock_ = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("SphereMesh_w8b7j")
-surface_material_override/0 = SubResource("ShaderMaterial_0bgji")
+surface_material_override/0 = SubResource("ShaderMaterial_j7eut")
+metadata/_edit_lock_ = true

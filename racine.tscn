@@ -1,18 +1,21 @@
-[gd_scene load_steps=30 format=3 uid="uid://1hoxtt5rrj3g"]
+[gd_scene load_steps=24 format=3 uid="uid://1hoxtt5rrj3g"]
 
 [ext_resource type="Script" uid="uid://bpafwtxkb2gqg" path="res://script/player.gd" id="1_4vgkv"]
 [ext_resource type="PackedScene" uid="uid://cgbo35opsgy86" path="res://mechant.tscn" id="1_rkcwo"]
 [ext_resource type="Script" uid="uid://d3b8ydmcddf0q" path="res://script/racine.gd" id="1_rlwjj"]
-[ext_resource type="Script" uid="uid://cmec34xq4f0sr" path="res://script/bonus.gd" id="2_xsnwh"]
 [ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://projectile.tscn" id="4_ns5mm"]
 [ext_resource type="Script" uid="uid://b6g6rerfmvwhp" path="res://script/HarvestZone.gd" id="5_gi8kb"]
 [ext_resource type="PackedScene" uid="uid://bk7dangodqgts" path="res://SpawnRoot.tscn" id="7_6qlrk"]
 [ext_resource type="PackedScene" uid="uid://brbib2i6ft83b" path="res://Amelioration.tscn" id="8_gi8kb"]
 [ext_resource type="Script" uid="uid://bug10plnrdh5t" path="res://script/GestionnaireAmelioration.gd" id="9_obkj5"]
 
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_obkj5"]
+
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6qlrk"]
+sky_top_color = Color(0.043137256, 0.45490196, 0.54901963, 1)
 sky_curve = 0.086152345
-sky_cover_modulate = Color(1, 1, 1, 0.536)
+sky_cover = SubResource("NoiseTexture2D_obkj5")
+sky_cover_modulate = Color(1, 1, 1, 0.33333334)
 
 [sub_resource type="Sky" id="Sky_gi8kb"]
 sky_material = SubResource("ProceduralSkyMaterial_6qlrk")
@@ -241,59 +244,11 @@ height = 0.05
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ns5mm"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_6qlrk"]
-radius = 2.352
+radius = 2.0
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_6qlrk"]
 height = 20.0
 radius = 30.0
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xsnwh"]
-albedo_color = Color(1, 1, 0, 1)
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_4vgkv"]
-material = SubResource("StandardMaterial3D_xsnwh")
-height = 0.1
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_xsnwh"]
-height = 0.1
-
-[sub_resource type="Animation" id="Animation_0tuo0"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(1.5707964, 0, 1.5707964)]
-}
-
-[sub_resource type="Animation" id="Animation_rkcwo"]
-resource_name = "tourner"
-length = 2.0
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1, 2),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(1.5707964, 0, 1.5707964), Vector3(1.5707964, 0, 3.1415927), Vector3(1.5707964, 0, 4.712389)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_rlwjj"]
-_data = {
-&"RESET": SubResource("Animation_0tuo0"),
-&"tourner": SubResource("Animation_rkcwo")
-}
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6qlrk"]
 bg_color = Color(0.5563933, 0, 0, 1)
@@ -312,7 +267,7 @@ transform = Transform3D(1, 0, 0, 0, 0.75886226, 0.6512512, 0, -0.6512512, 0.7588
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." node_paths=PackedStringArray("camera", "pivot_camera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2206593, 7.429404)
 collision_layer = 4
-collision_mask = 27
+collision_mask = 59
 script = ExtResource("1_4vgkv")
 projectile_scene = ExtResource("4_ns5mm")
 camera = NodePath("PivotCamera/Camera3D")
@@ -364,33 +319,18 @@ mesh = SubResource("BoxMesh_gi8kb")
 shape = SubResource("CapsuleShape3D_ns5mm")
 
 [node name="Recolte" type="Area3D" parent="CharacterBody3D"]
+collision_layer = 64
+collision_mask = 32
 script = ExtResource("5_gi8kb")
 
 [node name="Zone" type="CollisionShape3D" parent="CharacterBody3D/Recolte"]
+unique_name_in_owner = true
 shape = SubResource("SphereShape3D_6qlrk")
 
 [node name="SpawnZone" type="Area3D" parent="CharacterBody3D"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D/SpawnZone"]
 shape = SubResource("CylinderShape3D_6qlrk")
-
-[node name="Bonus" type="Area3D" parent="."]
-transform = Transform3D(-4.371139e-08, -1, 0, -4.371139e-08, 1.9106855e-15, -1, 1, -4.371139e-08, -4.371139e-08, 1.9258548, 1.727591, 0)
-script = ExtResource("2_xsnwh")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Bonus"]
-mesh = SubResource("CylinderMesh_4vgkv")
-metadata/_edit_lock_ = true
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Bonus"]
-shape = SubResource("CylinderShape3D_xsnwh")
-metadata/_edit_lock_ = true
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Bonus"]
-libraries = {
-&"": SubResource("AnimationLibrary_rlwjj")
-}
-autoplay = "tourner"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -437,5 +377,3 @@ player = NodePath("../CharacterBody3D")
 
 [node name="AmeliorationManager" type="Node" parent="."]
 script = ExtResource("9_obkj5")
-
-[connection signal="body_entered" from="Bonus" to="Bonus" method="_on_body_entered"]

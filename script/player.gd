@@ -40,25 +40,18 @@ func _ready():
 	update_stats()
 	update_health_display()
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	if Engine.has_singleton("GameManager"):
-		recolte.set_pickup_radius_multiplier(GameManager.pickup_scale_multiplier)
-	if recolte :
-		recolte.body_entered.connect(_on_harvest_zone_entered)
+	if recolte:
+		recolte.connect("area_entered", Callable(self, "_on_harvest_zone_entered"))
 
 
-
-func set_pickup_radius_multiplier(mult: float) -> void:
-	radius_multiplier = mult
-	_update_collision_shape()
-
-func _update_collision_shape():
-	$CollisionShape3D.scale = Vector3.ONE * (base_radius * radius_multiplier)
 	
 func update_stats():
 	damage = base_damage + (level - 1) * 2
 	move_speed = base_speed + (level - 1) * 0.3
 	fire_interval = base_fire_interval * pow(0.95, level - 1) # cadence un peu plus rapide
 	projectile_speed = base_projectile_speed + (level - 1) * 1.5
+	if Engine.has_singleton("GameManager"):
+		recolte.set_pickup_radius_multiplier(GameManager.pickup_scale_multiplier)
 
 func level_up():
 	# Animation spéciale quand on monte de niveau (barre bleue pulse plusieurs fois)

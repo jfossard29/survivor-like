@@ -60,6 +60,8 @@ sauter={
 3d_physics/layer_3="Player"
 3d_physics/layer_4="Projectile"
 3d_physics/layer_5="PNJ"
+3d_physics/layer_6="experience"
+3d_physics/layer_7="recolte"
 
 [rendering]
 
