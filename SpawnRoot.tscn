@@ -1,38 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://bk7dangodqgts"]
+[gd_scene load_steps=2 format=3 uid="uid://bk7dangodqgts"]
 
-[ext_resource type="Script" uid="uid://b5r21a7qvo4f0" path="res://script/terrain_group.gd" id="1_odemg"]
-[ext_resource type="PackedScene" uid="uid://xcj7gummgqm5" path="res://plateforme_1.tscn" id="2_odemg"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_u5vsd"]
-size = Vector3(200, 1, 200)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u5vsd"]
-albedo_color = Color(0, 0, 0.06666667, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_odemg"]
-material = SubResource("StandardMaterial3D_u5vsd")
-size = Vector3(200, 1, 200)
+[ext_resource type="Script" uid="uid://bohawkrbf34aa" path="res://script/map_procedural.gd" id="1_8rdwr"]
 
 [node name="Map" type="Node3D"]
-
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
-collision_layer = 2
-collision_mask = 4
-script = ExtResource("1_odemg")
-metadata/_edit_lock_ = true
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-shape = SubResource("BoxShape3D_u5vsd")
-metadata/_edit_lock_ = true
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
-mesh = SubResource("BoxMesh_odemg")
-metadata/_edit_lock_ = true
-
-[node name="Wall" type="Node3D" parent="."]
-
-[node name="Plateforme1" parent="." instance=ExtResource("2_odemg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.349695, 3, -50.13899)
-
-[node name="Plateforme2" parent="." instance=ExtResource("2_odemg")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 20.436752, 3, 64.25801)
+script = ExtResource("1_8rdwr")
+tile_size = 5.0
+platform_coverage = 25.0
+min_platform_tiles = 10
+max_platform_tiles = 30
+seed = 3
+auto_generate_on_play = false

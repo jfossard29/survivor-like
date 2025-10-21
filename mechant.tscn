@@ -1,7 +1,6 @@
-[gd_scene load_steps=14 format=3 uid="uid://cgbo35opsgy86"]
+[gd_scene load_steps=13 format=3 uid="uid://cgbo35opsgy86"]
 
 [ext_resource type="Script" uid="uid://dgqdnluy2assq" path="res://script/mechant_script.gd" id="1_56eqi"]
-[ext_resource type="PackedScene" uid="uid://1w0ttl831ipd" path="res://experience.tscn" id="2_30oyp"]
 [ext_resource type="Shader" uid="uid://d8qy4jn630ck" path="res://Hologram.tres" id="3_h2wir"]
 [ext_resource type="Texture2D" uid="uid://dtwnaf3imfq4v" path="res://HologramLines.png" id="4_rorym"]
 
@@ -122,11 +121,9 @@ shader_parameter/Fresnel_Color = Color(0, 0.5921569, 0.8235294, 0.64705884)
 
 [node name="Mechant" type="CharacterBody3D" groups=["pnj"]]
 collision_layer = 16
-collision_mask = 28
+collision_mask = 30
 script = ExtResource("1_56eqi")
 speed = 4.0
-max_health = 20
-experience_scene = ExtResource("2_30oyp")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_30oyp")

@@ -5,6 +5,7 @@ extends CharacterBody3D
 @export var max_health: int = 50
 @export var experience_scene: PackedScene
 @onready var game_manager: Node = GameManager
+@export var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 var player: Node3D = null
 var current_health: int
@@ -36,15 +37,24 @@ func _apply_difficulty_modifiers():
 func _physics_process(delta: float) -> void:
 	if not player or has_attacked:
 		return
-
-	# Déplacement direct vers le joueur
+	
+	# Appliquer la gravité (conserver velocity.y)
+	if not is_on_floor():
+		velocity.y -= gravity * delta
+	else:
+		velocity.y = 0
+	
+	# Déplacement horizontal vers le joueur (sans toucher à velocity.y)
 	var direction = (player.global_position - global_position)
 	direction.y = 0
 	direction = direction.normalized()
-	velocity = direction * speed
-
+	
+	# Appliquer seulement le mouvement horizontal
+	velocity.x = direction.x * speed
+	velocity.z = direction.z * speed
+	
 	move_and_slide()
-
+	
 	# Vérification de collision avec le joueur
 	for i in range(get_slide_collision_count()):
 		var collision = get_slide_collision(i)
@@ -56,7 +66,6 @@ func _physics_process(delta: float) -> void:
 			has_attacked = true
 			queue_free()
 			break
-
 func take_damage(amount: int) -> void:
 	current_health -= amount
 	print("PNJ touché ! PV restants :", current_health)

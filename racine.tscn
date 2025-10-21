@@ -1,7 +1,6 @@
-[gd_scene load_steps=24 format=3 uid="uid://1hoxtt5rrj3g"]
+[gd_scene load_steps=23 format=3 uid="uid://1hoxtt5rrj3g"]
 
 [ext_resource type="Script" uid="uid://bpafwtxkb2gqg" path="res://script/player.gd" id="1_4vgkv"]
-[ext_resource type="PackedScene" uid="uid://cgbo35opsgy86" path="res://mechant.tscn" id="1_rkcwo"]
 [ext_resource type="Script" uid="uid://d3b8ydmcddf0q" path="res://script/racine.gd" id="1_rlwjj"]
 [ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://projectile.tscn" id="4_ns5mm"]
 [ext_resource type="Script" uid="uid://b6g6rerfmvwhp" path="res://script/HarvestZone.gd" id="5_gi8kb"]
@@ -247,8 +246,8 @@ height = 0.05
 radius = 2.0
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_6qlrk"]
-height = 20.0
-radius = 30.0
+height = 10.0
+radius = 15.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6qlrk"]
 bg_color = Color(0.5563933, 0, 0, 1)
@@ -256,10 +255,8 @@ bg_color = Color(0.5563933, 0, 0, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gi8kb"]
 bg_color = Color(0.07846785, 0.805388, 0.97360384, 1)
 
-[node name="Racine" type="Node3D" node_paths=PackedStringArray("player")]
+[node name="Racine" type="Node3D"]
 script = ExtResource("1_rlwjj")
-pnj_scene = ExtResource("1_rkcwo")
-player = NodePath("CharacterBody3D")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_6qlrk")
@@ -268,11 +265,12 @@ environment = SubResource("Environment_6qlrk")
 transform = Transform3D(1, 0, 0, 0, 0.75886226, 0.6512512, 0, -0.6512512, 0.75886226, 3.7473829, 24.840767, 28.256449)
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." node_paths=PackedStringArray("camera", "pivot_camera")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2206593, 7.429404)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 65.33247, 0)
 collision_layer = 4
 collision_mask = 59
 script = ExtResource("1_4vgkv")
 projectile_scene = ExtResource("4_ns5mm")
+base_fire_interval = 90.0
 camera = NodePath("PivotCamera/Camera3D")
 xp_to_next_level = 30.0
 pivot_camera = NodePath("PivotCamera")
@@ -372,6 +370,14 @@ offset_bottom = 27.0
 theme_override_styles/fill = SubResource("StyleBoxFlat_gi8kb")
 
 [node name="Map" parent="." instance=ExtResource("7_6qlrk")]
+map_size = 250
+tile_size = 10.0
+platform_height = 10.0
+min_platform_tiles = 3
+max_platform_tiles = 15
+seed = 7
+stacked_platform_chance = 50.0
+auto_generate_on_play = true
 
 [node name="Amelioration" parent="." instance=ExtResource("8_gi8kb")]
 
