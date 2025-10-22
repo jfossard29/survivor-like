@@ -232,7 +232,7 @@ _data = {
 &"bouger": SubResource("Animation_6qlrk")
 }
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_6qlrk"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_obkj5"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_gi8kb"]
 size = Vector3(0.1, 0.5, 0.1)
@@ -242,14 +242,14 @@ top_radius = 0.15
 bottom_radius = 0.15
 height = 0.05
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ns5mm"]
-
 [sub_resource type="SphereShape3D" id="SphereShape3D_6qlrk"]
 radius = 2.0
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_6qlrk"]
 height = 10.0
 radius = 15.0
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ns5mm"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6qlrk"]
 bg_color = Color(0.5563933, 0, 0, 1)
@@ -291,9 +291,7 @@ autoplay = "bouger"
 transform = Transform3D(1, 0, 0, 0, 0.9551441, 0.29614154, 0, -0.29614154, 0.95514405, 0, 3.5464163, 7.6848617)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 65.33247, 0)
-top_level = true
-mesh = SubResource("ArrayMesh_6qlrk")
+mesh = SubResource("ArrayMesh_obkj5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
 transform = Transform3D(0.59166175, -0.25603494, 0.764449, 0.39714783, 0.91775477, -3.1758591e-09, -0.70157665, 0.3035994, 0.644684, 0.12893681, -0.56999993, -0.15288973)
@@ -321,9 +319,6 @@ mesh = SubResource("BoxMesh_gi8kb")
 transform = Transform3D(0.46018106, 0.42812085, -0.7777826, -0.6811426, 0.7321506, 0, 0.569454, 0.52978086, 0.62853336, -0.18856002, -0.032000065, -0.23333502)
 mesh = SubResource("BoxMesh_gi8kb")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
-shape = SubResource("CapsuleShape3D_ns5mm")
-
 [node name="Recolte" type="Area3D" parent="CharacterBody3D"]
 collision_layer = 64
 collision_mask = 32
@@ -337,6 +332,9 @@ shape = SubResource("SphereShape3D_6qlrk")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D/SpawnZone"]
 shape = SubResource("CylinderShape3D_6qlrk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+shape = SubResource("CapsuleShape3D_ns5mm")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
