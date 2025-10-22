@@ -1,11 +1,13 @@
-[gd_scene load_steps=23 format=3 uid="uid://1hoxtt5rrj3g"]
+[gd_scene load_steps=25 format=3 uid="uid://1hoxtt5rrj3g"]
 
 [ext_resource type="Script" uid="uid://bpafwtxkb2gqg" path="res://script/player.gd" id="1_4vgkv"]
 [ext_resource type="Script" uid="uid://d3b8ydmcddf0q" path="res://script/racine.gd" id="1_rlwjj"]
+[ext_resource type="PackedScene" uid="uid://cgbo35opsgy86" path="res://mechant.tscn" id="2_gi8kb"]
 [ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://projectile.tscn" id="4_ns5mm"]
 [ext_resource type="Script" uid="uid://b6g6rerfmvwhp" path="res://script/HarvestZone.gd" id="5_gi8kb"]
 [ext_resource type="PackedScene" uid="uid://bk7dangodqgts" path="res://SpawnRoot.tscn" id="7_6qlrk"]
 [ext_resource type="PackedScene" uid="uid://brbib2i6ft83b" path="res://Amelioration.tscn" id="8_gi8kb"]
+[ext_resource type="Script" uid="uid://butan0pwk8eil" path="res://performance.gd" id="9_6mm8b"]
 [ext_resource type="Script" uid="uid://bug10plnrdh5t" path="res://script/GestionnaireAmelioration.gd" id="9_obkj5"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_obkj5"]
@@ -255,8 +257,10 @@ bg_color = Color(0.5563933, 0, 0, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gi8kb"]
 bg_color = Color(0.07846785, 0.805388, 0.97360384, 1)
 
-[node name="Racine" type="Node3D"]
+[node name="Racine" type="Node3D" node_paths=PackedStringArray("player")]
 script = ExtResource("1_rlwjj")
+pnj_scene = ExtResource("2_gi8kb")
+player = NodePath("CharacterBody3D")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_6qlrk")
@@ -287,8 +291,9 @@ autoplay = "bouger"
 transform = Transform3D(1, 0, 0, 0, 0.9551441, 0.29614154, 0, -0.29614154, 0.95514405, 0, 3.5464163, 7.6848617)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 65.33247, 0)
+top_level = true
 mesh = SubResource("ArrayMesh_6qlrk")
-metadata/_edit_lock_ = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
 transform = Transform3D(0.59166175, -0.25603494, 0.764449, 0.39714783, 0.91775477, -3.1758591e-09, -0.70157665, 0.3035994, 0.644684, 0.12893681, -0.56999993, -0.15288973)
@@ -309,11 +314,11 @@ transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.3
 mesh = SubResource("CylinderMesh_obkj5")
 
 [node name="MeshInstance3D5" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
-transform = Transform3D(0.46988487, -0.41744727, -0.7777825, 0.664161, 0.74758923, 0, 0.581462, -0.5165728, 0.62853324, 0.18856002, -0.032000065, 0.23333502)
+transform = Transform3D(0.46988487, -0.41744724, -0.7777825, 0.664161, 0.74758923, 0, 0.581462, -0.5165728, 0.62853324, 0.18856002, -0.032000065, 0.23333502)
 mesh = SubResource("BoxMesh_gi8kb")
 
 [node name="MeshInstance3D6" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
-transform = Transform3D(0.4601811, 0.42812088, -0.7777826, -0.6811426, 0.7321506, 0, 0.569454, 0.52978086, 0.62853336, -0.18856002, -0.032000065, -0.23333502)
+transform = Transform3D(0.46018106, 0.42812085, -0.7777826, -0.6811426, 0.7321506, 0, 0.569454, 0.52978086, 0.62853336, -0.18856002, -0.032000065, -0.23333502)
 mesh = SubResource("BoxMesh_gi8kb")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
@@ -370,16 +375,15 @@ offset_bottom = 27.0
 theme_override_styles/fill = SubResource("StyleBoxFlat_gi8kb")
 
 [node name="Map" parent="." instance=ExtResource("7_6qlrk")]
-map_size = 250
-tile_size = 10.0
-platform_height = 10.0
-min_platform_tiles = 3
-max_platform_tiles = 15
-seed = 7
-stacked_platform_chance = 50.0
+map_size = 300
+min_platform_blocs = 3
 auto_generate_on_play = true
+bloc_path = "uid://c4tdysfhmxeh2"
 
 [node name="Amelioration" parent="." instance=ExtResource("8_gi8kb")]
 
 [node name="AmeliorationManager" type="Node" parent="."]
 script = ExtResource("9_obkj5")
+
+[node name="Node3D" type="Node3D" parent="."]
+script = ExtResource("9_6mm8b")

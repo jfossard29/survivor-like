@@ -1,4 +1,4 @@
-[gd_resource type="VisualShader" load_steps=8 format=3 uid="uid://dhtbcld73mfmk"]
+[gd_resource type="VisualShader" load_steps=8 format=3 uid="uid://pvowm4rvnnxs"]
 
 [sub_resource type="VisualShaderNodeColorParameter" id="VisualShaderNodeColorParameter_nl6gi"]
 parameter_name = "Base_Color"
@@ -25,7 +25,7 @@ input_name = "vertex"
 
 [resource]
 code = "shader_type spatial;
-render_mode blend_mix, depth_draw_opaque, cull_front, diffuse_lambert, specular_schlick_ggx;
+render_mode blend_mix, depth_draw_opaque, depth_test_default, cull_front, diffuse_lambert, specular_schlick_ggx;
 
 uniform float Outline_Size = 0.05000000074506;
 uniform vec4 Base_Color : source_color = vec4(0.050000, 0.050000, 0.050000, 1.000000);
