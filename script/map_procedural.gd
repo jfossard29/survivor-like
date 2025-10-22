@@ -3,18 +3,19 @@ extends Node3D
 
 # Paramètres
 @export var map_size: int = 100
-@export var bloc_size: float = 10.0  # Taille du bloc préfait (10x10x10)
+@export var bloc_size: float = 10.0
 @export var platform_coverage: float = 0.06
 @export var min_platform_blocs: int = 2
 @export var max_platform_blocs: int = 8
 @export var max_attempts_place: int = 3000
 @export var seed: int = 0
-@export var bloc_gap: int = 1  # Espacement en nombre de blocs
+@export var bloc_gap: int = 1
 @export var stacked_platform_chance: float = 0.5
 @export var auto_generate_on_play: bool = true
-@export_file("*.glb") var bloc_path: String = "res://bloc.glb"  # Chemin vers le modèle
+@export var generate_ground: bool = true
+@export var ground_height: float = -5.0
+@export_file("*.glb") var bloc_path: String = "res://bloc.glb"
 
-# Exported property avec setter/getter
 @export var Generate: bool:
 	get:
 		return false
@@ -37,16 +38,13 @@ func generate() -> void:
 	print("Génération avec blocs préfaits...")
 	_cleanup_previous()
 	
-	# Vérifier que le bloc existe
 	if not ResourceLoader.exists(bloc_path):
 		push_error("Le modèle bloc.glb n'existe pas au chemin: " + bloc_path)
 		return
 	
-	# Calcul du nombre de blocs basé sur map_size et bloc_size
 	var N = max(1, int(floor(float(map_size) / bloc_size)))
 	var M = N
 	
-	# Validation des paramètres
 	if min_platform_blocs > max_platform_blocs:
 		push_error("min_platform_blocs ne peut pas être plus grand que max_platform_blocs")
 		return
@@ -60,18 +58,14 @@ func generate() -> void:
 	else:
 		rng.seed = seed
 
-	# Grille de hauteur (stocke le niveau de chaque bloc)
 	var hm := []
 	for x in range(N + 1):
 		var col := []
 		for z in range(M + 1):
-			col.append(0)  # 0 = pas de bloc, 1+ = niveau
+			col.append(0)
 		hm.append(col)
 
-	# Liste des plateformes placées
 	var placed_platforms := []
-
-	# Cible de blocs à placer
 	var total_blocs = float(N) * float(M)
 	var target_blocs = int(clamp(platform_coverage * total_blocs, 1, total_blocs))
 
@@ -96,25 +90,23 @@ func generate() -> void:
 		var x0 = rng.randi_range(0, N - w)
 		var z0 = rng.randi_range(0, M - h)
 
-		# Vérifie l'espacement
 		var ok = true
 		for xi in range(max(0, x0 - bloc_gap), min(N, x0 + w + bloc_gap)):
 			for zi in range(max(0, z0 - bloc_gap), min(M, z0 + h + bloc_gap)):
-				if hm[xi][zi] > 0:
-					ok = false
-					break
+				if xi < hm.size() and zi < hm[xi].size():
+					if hm[xi][zi] > 0:
+						ok = false
+						break
 			if not ok:
 				break
 		if not ok:
 			continue
 
-		# Place la plateforme niveau 1
 		for xi in range(x0, x0 + w):
 			for zi in range(z0, z0 + h):
 				hm[xi][zi] = 1
 				blocs_placed += 1
 
-		# Stocke la plateforme
 		placed_platforms.append({
 			"x": x0,
 			"z": z0,
@@ -154,7 +146,6 @@ func generate() -> void:
 		var z0 = base_plat.z + offset_z
 		var new_level = base_plat.level + 1
 		
-		# Place la plateforme empilée
 		for xi in range(x0, x0 + w):
 			for zi in range(z0, z0 + h):
 				hm[xi][zi] = new_level
@@ -167,13 +158,19 @@ func generate() -> void:
 			"level": new_level
 		})
 
-	# Créer le conteneur principal
 	var container = Node3D.new()
 	container.name = NAME_BODY
 	var center = Vector3(N * bloc_size * 0.5, 0, M * bloc_size * 0.5)
 
-	# Placer les blocs
+	# Générer le sol
+	if generate_ground:
+		_generate_ground(N, M, bloc_size, center, container)
+
+	# Placer les blocs visuels (sans collision individuelle)
 	var bloc_scene = load(bloc_path)
+	var visual_container = Node3D.new()
+	visual_container.name = "BlocsVisuels"
+	
 	for x in range(N):
 		for z in range(M):
 			var level = hm[x][z]
@@ -181,23 +178,88 @@ func generate() -> void:
 				var bloc_instance = bloc_scene.instantiate()
 				bloc_instance.name = "Bloc_" + str(x) + "_" + str(z) + "_L" + str(level)
 				
-				# Position du bloc
 				var x_pos = x * bloc_size + bloc_size * 0.5
 				var y_pos = (level - 1) * bloc_size + bloc_size * 0.5
 				var z_pos = z * bloc_size + bloc_size * 0.5
 				
 				bloc_instance.position = Vector3(x_pos, y_pos, z_pos) - center
-				container.add_child(bloc_instance)
+				visual_container.add_child(bloc_instance)
+	
+	container.add_child(visual_container)
+
+	# Créer les collisions par plateforme (une collision par plateforme)
+	_generate_platform_collisions(placed_platforms, bloc_size, center, container)
 
 	# Générer les rampes
 	for plat in placed_platforms:
 		_generate_ramps(plat.x, plat.z, plat.w, plat.h, plat.level, hm, N, M, bloc_size, rng, container, center)
 
 	add_child(container)
+	
+	if Engine.is_editor_hint():
+		container.owner = get_tree().edited_scene_root
 
 	print("MapGenerator: génération terminée. size=", N, "x", M, " blocs:", blocs_placed, " plateformes:", placed_platforms.size())
 
-# ---------------------------------------------------
+# Générer une collision unique par plateforme
+func _generate_platform_collisions(platforms: Array, bloc_size: float, center: Vector3, container: Node3D) -> void:
+	for plat in platforms:
+		var collision_body = StaticBody3D.new()
+		collision_body.name = "Platform_L" + str(plat.level) + "_" + str(plat.x) + "_" + str(plat.z)
+		collision_body.collision_layer = 2
+		collision_body.collision_mask = 4
+		
+		# Créer une BoxShape pour toute la plateforme
+		var collision = CollisionShape3D.new()
+		collision.name = "Collision"
+		var box_shape = BoxShape3D.new()
+		
+		# Taille de la plateforme
+		var width = plat.w * bloc_size
+		var depth = plat.h * bloc_size
+		box_shape.size = Vector3(width, bloc_size, depth)
+		
+		# Position au centre de la plateforme
+		var x_pos = plat.x * bloc_size + width * 0.5
+		var y_pos = (plat.level - 1) * bloc_size + bloc_size * 0.5
+		var z_pos = plat.z * bloc_size + depth * 0.5
+		
+		collision_body.position = Vector3(x_pos, y_pos, z_pos) - center
+		collision.shape = box_shape
+		collision_body.add_child(collision)
+		container.add_child(collision_body)
+
+func _generate_ground(N: int, M: int, bloc_size: float, center: Vector3, container: Node3D) -> void:
+	var ground_body = StaticBody3D.new()
+	ground_body.name = "Ground"
+	ground_body.collision_layer = 2
+	ground_body.collision_mask = 4
+	
+	var mesh = BoxMesh.new()
+	var ground_width = N * bloc_size
+	var ground_depth = M * bloc_size
+	mesh.size = Vector3(ground_width, 1.0, ground_depth)
+	
+	var mesh_instance = MeshInstance3D.new()
+	mesh_instance.name = "GroundMesh"
+	mesh_instance.mesh = mesh
+	
+	var mat = StandardMaterial3D.new()
+	mat.albedo_color = Color(0.3, 0.5, 0.3)
+	mesh_instance.material_override = mat
+	
+	ground_body.position = Vector3(0, ground_height, 0)
+	ground_body.add_child(mesh_instance)
+	
+	var collision = CollisionShape3D.new()
+	collision.name = "GroundCollision"
+	var box_shape = BoxShape3D.new()
+	box_shape.size = Vector3(ground_width, 1.0, ground_depth)
+	collision.shape = box_shape
+	ground_body.add_child(collision)
+	
+	container.add_child(ground_body)
+
 func _generate_ramps(x0, z0, w, h, level, hm, N, M, bloc_size, rng, container: Node3D, center: Vector3):
 	var directions = [Vector2(1,0), Vector2(-1,0), Vector2(0,1), Vector2(0,-1)]
 	directions.shuffle()
@@ -218,7 +280,6 @@ func _generate_ramps(x0, z0, w, h, level, hm, N, M, bloc_size, rng, container: N
 			nx = x0 + rng.randi_range(0, w-1)
 			nz = z0 - 1
 
-		# Vérifie la tuile voisine
 		if nx >= 0 and nx < N and nz >= 0 and nz < M:
 			var neighbor_level = hm[nx][nz]
 			if neighbor_level == level - 1:
@@ -229,7 +290,6 @@ func _add_ramp(origin: Vector3, dir: Vector2, bloc_size: float, level: int, cont
 	var mat = StandardMaterial3D.new()
 	mat.albedo_color = Color(0.9, 0.7, 0.5)
 	
-	# Créer le StaticBody pour la rampe
 	var ramp_body = StaticBody3D.new()
 	ramp_body.name = "Ramp_" + str(origin.x) + "_" + str(origin.z)
 	ramp_body.collision_layer = 2
@@ -248,39 +308,32 @@ func _add_ramp(origin: Vector3, dir: Vector2, bloc_size: float, level: int, cont
 	ramp_mi.mesh = mesh
 	ramp_mi.material_override = mat
 	
-	# Configuration selon la direction
-	if dir.x > 0:
-		mesh.left_to_right = 0.0
-		ramp_mi.rotation_degrees = Vector3(0, 0, 0)
-	elif dir.x < 0:
-		mesh.left_to_right = 1.0
-		ramp_mi.rotation_degrees = Vector3(0, 0, 0)
-	elif dir.y > 0:
-		mesh.left_to_right = 0.0
-		ramp_mi.rotation_degrees = Vector3(0, -45, 0)
-	elif dir.y < 0:
-		mesh.left_to_right = 1.0
-		ramp_mi.rotation_degrees = Vector3(0, -45, 0)
+	# Variables pour rotation et inclinaison
+	var mesh_rotation = Vector3.ZERO
 	
+	# Configuration selon la direction
+	if dir.x > 0:  # Rampe vers +X
+		mesh.left_to_right = 0.0
+		mesh_rotation = Vector3(0, 0, 0)
+	elif dir.x < 0:  # Rampe vers -X
+		mesh.left_to_right = 1.0
+		mesh_rotation = Vector3(0, 0, 0)
+	elif dir.y > 0:  # Rampe vers +Z
+		mesh.left_to_right = 1.0
+		mesh_rotation = Vector3(0, 90, 0)
+	elif dir.y < 0:  # Rampe vers -Z
+		mesh.left_to_right = 0.0
+		mesh_rotation = Vector3(0, 90, 0)
+	
+	ramp_mi.rotation_degrees = mesh_rotation
 	ramp_body.position = Vector3(x_pos, base_height + bloc_size * 0.5, z_pos) - center
-	ramp_body.rotation = ramp_mi.rotation
 	ramp_body.add_child(ramp_mi)
 	
-	# Créer la collision
+	# Collision de rampe - même forme que le mesh
 	var cs_ramp = CollisionShape3D.new()
 	cs_ramp.name = "RampCollision"
-	
-	var st = SurfaceTool.new()
-	st.create_from(mesh, 0)
-	var ramp_mesh = st.commit()
-	
-	if ramp_mesh.get_surface_count() > 0:
-		var arrs = ramp_mesh.surface_get_arrays(0)
-		if arrs.size() > Mesh.ARRAY_VERTEX and arrs[Mesh.ARRAY_VERTEX]:
-			var verts = arrs[Mesh.ARRAY_VERTEX]
-			var convex = ConvexPolygonShape3D.new()
-			convex.points = verts
-			cs_ramp.shape = convex
+	cs_ramp.rotation_degrees = mesh_rotation
+	cs_ramp.shape = mesh.create_trimesh_shape() 
 	
 	ramp_body.add_child(cs_ramp)
 	container.add_child(ramp_body)

@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://b6g6rerfmvwhp" path="res://script/HarvestZone.gd" id="5_gi8kb"]
 [ext_resource type="PackedScene" uid="uid://bk7dangodqgts" path="res://SpawnRoot.tscn" id="7_6qlrk"]
 [ext_resource type="PackedScene" uid="uid://brbib2i6ft83b" path="res://Amelioration.tscn" id="8_gi8kb"]
-[ext_resource type="Script" uid="uid://butan0pwk8eil" path="res://performance.gd" id="9_6mm8b"]
+[ext_resource type="Script" path="res://performance.gd" id="9_6mm8b"]
 [ext_resource type="Script" uid="uid://bug10plnrdh5t" path="res://script/GestionnaireAmelioration.gd" id="9_obkj5"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_obkj5"]
@@ -376,7 +376,10 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_gi8kb")
 map_size = 300
 min_platform_blocs = 3
 auto_generate_on_play = true
-bloc_path = "uid://c4tdysfhmxeh2"
+ground_height = 0.0
+bloc_path = "uid://baq26a1gi7kgv"
+
+[node name="GeneratedStaticBody" type="Node3D" parent="Map"]
 
 [node name="Amelioration" parent="." instance=ExtResource("8_gi8kb")]
 
