@@ -1,25 +1,31 @@
-[gd_scene load_steps=25 format=3 uid="uid://1hoxtt5rrj3g"]
+[gd_scene load_steps=32 format=4 uid="uid://1hoxtt5rrj3g"]
 
 [ext_resource type="Script" uid="uid://bpafwtxkb2gqg" path="res://script/player.gd" id="1_4vgkv"]
 [ext_resource type="Script" uid="uid://d3b8ydmcddf0q" path="res://script/racine.gd" id="1_rlwjj"]
 [ext_resource type="PackedScene" uid="uid://cgbo35opsgy86" path="res://mechant.tscn" id="2_gi8kb"]
+[ext_resource type="Shader" uid="uid://p6i28ung6ymp" path="res://test.gdshader" id="3_y477d"]
 [ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://projectile.tscn" id="4_ns5mm"]
 [ext_resource type="Script" uid="uid://b6g6rerfmvwhp" path="res://script/HarvestZone.gd" id="5_gi8kb"]
+[ext_resource type="Script" uid="uid://bj34ar46op5rx" path="res://Quadrilatere.gd" id="7_6mm8b"]
 [ext_resource type="PackedScene" uid="uid://bk7dangodqgts" path="res://SpawnRoot.tscn" id="7_6qlrk"]
 [ext_resource type="PackedScene" uid="uid://brbib2i6ft83b" path="res://Amelioration.tscn" id="8_gi8kb"]
-[ext_resource type="Script" path="res://performance.gd" id="9_6mm8b"]
+[ext_resource type="Script" uid="uid://butan0pwk8eil" path="res://performance.gd" id="9_6mm8b"]
 [ext_resource type="Script" uid="uid://bug10plnrdh5t" path="res://script/GestionnaireAmelioration.gd" id="9_obkj5"]
+[ext_resource type="Shader" uid="uid://dta3l04x00wf6" path="res://sun.gdshader" id="11_06ci2"]
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_obkj5"]
-
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6qlrk"]
-sky_top_color = Color(0.043137256, 0.45490196, 0.54901963, 1)
-sky_curve = 0.086152345
-sky_cover = SubResource("NoiseTexture2D_obkj5")
-sky_cover_modulate = Color(1, 1, 1, 0.33333334)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sgosv"]
+shader = ExtResource("3_y477d")
+shader_parameter/sky_color = Color(0.1, 0, 0.2, 1)
+shader_parameter/grid_color = Color(0.827451, 0.34117648, 1, 1)
+shader_parameter/horizon_color = Color(0.1, 0.1, 0.15, 1)
+shader_parameter/grid_size = 2.0
+shader_parameter/line_width = 0.05
+shader_parameter/intersection_glow = 0.5
+shader_parameter/horizon_height = 1.0
+shader_parameter/grid_fade_distance = 20.0
 
 [sub_resource type="Sky" id="Sky_gi8kb"]
-sky_material = SubResource("ProceduralSkyMaterial_6qlrk")
+sky_material = SubResource("ShaderMaterial_sgosv")
 
 [sub_resource type="Environment" id="Environment_6qlrk"]
 background_mode = 2
@@ -257,6 +263,75 @@ bg_color = Color(0.5563933, 0, 0, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gi8kb"]
 bg_color = Color(0.07846785, 0.805388, 0.97360384, 1)
 
+[sub_resource type="Shader" id="Shader_y477d"]
+code = "
+shader_type spatial;
+render_mode blend_add, depth_draw_opaque, cull_back, unshaded;
+
+uniform vec4 line_color : source_color = vec4(0.0, 1.0, 1.0, 1.0);
+uniform float line_speed : hint_range(0.0, 5.0) = 1.0;
+uniform float line_width : hint_range(0.01, 0.5) = 0.05;
+uniform float line_spacing : hint_range(0.1, 1.0) = 0.2;
+uniform float emission_strength : hint_range(0.0, 10.0) = 2.0;
+
+void fragment() {
+	// Inverser la direction : défilement du haut (1) vers la base (0)
+	float scroll = fract(UV.y - TIME * line_speed);
+	
+	// Créer des lignes répétées
+	float pattern = fract(scroll / line_spacing);
+	
+	// Déterminer si on est sur une ligne (contrôle de la taille)
+	float line = smoothstep(line_width, 0.0, pattern) + smoothstep(1.0 - line_width, 1.0, pattern);
+	
+	// Effet de fade-out en arrivant au bout (UV.y proche de 0.0 maintenant)
+	float fade = smoothstep(0.0, 0.15, UV.y);
+	
+	// Combiner la ligne avec le fade
+	float final_line = line * fade;
+	
+	// Appliquer la couleur avec émission
+	ALBEDO = line_color.rgb * emission_strength;
+	EMISSION = line_color.rgb * emission_strength * final_line;
+	ALPHA = final_line * line_color.a;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pfvfn"]
+render_priority = 0
+shader = SubResource("Shader_y477d")
+shader_parameter/line_color = Color(0.78941506, 0, 0.33577523, 0.42745098)
+shader_parameter/line_speed = 0.1
+shader_parameter/line_width = 0.7
+shader_parameter/line_spacing = 0.1
+shader_parameter/emission_strength = 1.0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_jnsk0"]
+_surfaces = [{
+"aabb": AABB(-150, 0, -300, 300, 1e-05, 600),
+"attribute_data": PackedByteArray("AAAAAAAAAAAAAIA/AAAAAAAAgD8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAIA/"),
+"format": 34359738391,
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 6,
+"vertex_data": PackedByteArray("AAAWwwAAAAAAAJbDAAAWQwAAAAAAAJbDAACWQgAAAAAAAJZDAAAWwwAAAAAAAJbDAACWQgAAAAAAAJZDAACWwgAAAAAAAJZD/3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+/")
+}]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cxcjd"]
+render_priority = 0
+shader = ExtResource("11_06ci2")
+shader_parameter/color_top = Color(1, 0.5, 0, 1)
+shader_parameter/color_bottom = Color(1, 0, 0.5, 1)
+shader_parameter/line_speed = 0.0310000014725
+shader_parameter/line_width = 0.5
+shader_parameter/line_spacing = 0.10000000149012
+shader_parameter/emission_strength = 1.286000061085
+
+[sub_resource type="SphereMesh" id="SphereMesh_pfvfn"]
+material = SubResource("ShaderMaterial_cxcjd")
+radius = 64.0
+height = 126.0
+
 [node name="Racine" type="Node3D" node_paths=PackedStringArray("player")]
 script = ExtResource("1_rlwjj")
 pnj_scene = ExtResource("2_gi8kb")
@@ -379,7 +454,7 @@ auto_generate_on_play = true
 ground_height = 0.0
 bloc_path = "uid://baq26a1gi7kgv"
 
-[node name="GeneratedStaticBody" type="Node3D" parent="Map"]
+[node name="@Node3D@31748" type="Node3D" parent="Map"]
 
 [node name="Amelioration" parent="." instance=ExtResource("8_gi8kb")]
 
@@ -388,3 +463,23 @@ script = ExtResource("9_obkj5")
 
 [node name="Node3D" type="Node3D" parent="."]
 script = ExtResource("9_6mm8b")
+
+[node name="Sunset" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Sunset"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 449.0048)
+material_override = SubResource("ShaderMaterial_pfvfn")
+mesh = SubResource("ArrayMesh_jnsk0")
+script = ExtResource("7_6mm8b")
+base_width = 300.0
+top_ratio = 0.5
+depth = 600.0
+line_color = Color(0.78941506, 0, 0.33577523, 0.42745098)
+line_speed = 0.1
+line_width = 0.7
+line_spacing = 0.1
+emission_strength = 1.0
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Sunset"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13.100769, 831.32764)
+mesh = SubResource("SphereMesh_pfvfn")

@@ -245,7 +245,7 @@ func _generate_ground(N: int, M: int, bloc_size: float, center: Vector3, contain
 	mesh_instance.mesh = mesh
 	
 	var mat = StandardMaterial3D.new()
-	mat.albedo_color = Color(0.3, 0.5, 0.3)
+	mat.albedo_color = Color(0.091, 0.084, 0.093, 1.0)
 	mesh_instance.material_override = mat
 	
 	ground_body.position = Vector3(0, ground_height, 0)
