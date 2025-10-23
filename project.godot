@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 GameManager="*res://script/GameManager.gd"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/MagicaVoxel_Importer_with_Extensions/plugin.cfg")
+
 [importer_defaults]
 
 animation_library={

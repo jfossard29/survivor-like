@@ -1,34 +1,12 @@
-[gd_scene load_steps=30 format=4 uid="uid://1hoxtt5rrj3g"]
+[gd_scene load_steps=23 format=3 uid="uid://61c8mu2pkxgh"]
 
-[ext_resource type="Script" uid="uid://bpafwtxkb2gqg" path="res://script/player.gd" id="1_4vgkv"]
-[ext_resource type="Shader" uid="uid://p6i28ung6ymp" path="res://test.gdshader" id="3_y477d"]
-[ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://projectile.tscn" id="4_ns5mm"]
-[ext_resource type="Script" uid="uid://b6g6rerfmvwhp" path="res://script/HarvestZone.gd" id="5_gi8kb"]
-[ext_resource type="Script" uid="uid://bj34ar46op5rx" path="res://Quadrilatere.gd" id="7_6mm8b"]
-[ext_resource type="PackedScene" uid="uid://bk7dangodqgts" path="res://SpawnRoot.tscn" id="7_6qlrk"]
-[ext_resource type="PackedScene" uid="uid://brbib2i6ft83b" path="res://Amelioration.tscn" id="8_gi8kb"]
-[ext_resource type="Script" uid="uid://butan0pwk8eil" path="res://performance.gd" id="9_6mm8b"]
-[ext_resource type="Script" uid="uid://bug10plnrdh5t" path="res://script/GestionnaireAmelioration.gd" id="9_obkj5"]
-[ext_resource type="Shader" uid="uid://dta3l04x00wf6" path="res://sun.gdshader" id="11_06ci2"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_sgosv"]
-shader = ExtResource("3_y477d")
-shader_parameter/sky_color = Color(0.1, 0, 0.2, 1)
-shader_parameter/grid_color = Color(0.827451, 0.34117648, 1, 1)
-shader_parameter/horizon_color = Color(0.1, 0.1, 0.15, 1)
-shader_parameter/grid_size = 2.0
-shader_parameter/line_width = 0.05
-shader_parameter/intersection_glow = 0.5
-shader_parameter/horizon_height = 1.0
-shader_parameter/grid_fade_distance = 20.0
-
-[sub_resource type="Sky" id="Sky_6mm8b"]
-sky_material = SubResource("ShaderMaterial_sgosv")
-
-[sub_resource type="Environment" id="Environment_6qlrk"]
-background_mode = 2
-sky = SubResource("Sky_6mm8b")
-glow_enabled = true
+[ext_resource type="Script" uid="uid://bpafwtxkb2gqg" path="res://script/player.gd" id="1_ob1jx"]
+[ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://projectile.tscn" id="2_gk8k0"]
+[ext_resource type="Script" uid="uid://b6g6rerfmvwhp" path="res://script/HarvestZone.gd" id="3_yg2ly"]
+[ext_resource type="Shader" uid="uid://p6i28ung6ymp" path="res://test.gdshader" id="4_gk8k0"]
+[ext_resource type="Shader" uid="uid://g3uovj5kqbhb" path="res://pylone.gdshader" id="5_4f6sl"]
+[ext_resource type="ArrayMesh" uid="uid://b87yto1evoqiy" path="res://pilone.vox" id="5_yg2ly"]
+[ext_resource type="Script" uid="uid://bbkiswqwrl6a6" path="res://pylone_charge.gd" id="7_xfq1h"]
 
 [sub_resource type="Animation" id="Animation_gi8kb"]
 length = 0.001
@@ -236,115 +214,67 @@ _data = {
 &"bouger": SubResource("Animation_6qlrk")
 }
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_obkj5"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_4f6sl"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_gi8kb"]
+[sub_resource type="BoxMesh" id="BoxMesh_xfq1h"]
 size = Vector3(0.1, 0.5, 0.1)
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_obkj5"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_pqehc"]
 top_radius = 0.15
 bottom_radius = 0.15
 height = 0.05
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_6qlrk"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_tk6bf"]
 radius = 2.0
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_6qlrk"]
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_8ami1"]
 height = 10.0
 radius = 15.0
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ns5mm"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_g5b5y"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6qlrk"]
-bg_color = Color(0.5563933, 0, 0, 1)
+[sub_resource type="PlaneMesh" id="PlaneMesh_yg2ly"]
+size = Vector2(25, 25)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gi8kb"]
-bg_color = Color(0.07846785, 0.805388, 0.97360384, 1)
+[sub_resource type="BoxShape3D" id="BoxShape3D_4f6sl"]
+size = Vector3(25, 0, 25)
 
-[sub_resource type="Shader" id="Shader_6mm8b"]
-code = "
-shader_type spatial;
-render_mode blend_add, depth_draw_opaque, cull_back, unshaded;
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xfq1h"]
+shader = ExtResource("4_gk8k0")
+shader_parameter/sky_color = Color(0.1, 0, 0.2, 1)
+shader_parameter/grid_color = Color(0.827451, 0.34117648, 1, 1)
+shader_parameter/horizon_color = Color(0.1, 0.1, 0.15, 1)
+shader_parameter/grid_size = 2.0
+shader_parameter/line_width = 0.05
+shader_parameter/intersection_glow = 0.5
+shader_parameter/horizon_height = 1.0
+shader_parameter/grid_fade_distance = 20.0
 
-uniform vec4 line_color : source_color = vec4(0.0, 1.0, 1.0, 1.0);
-uniform float line_speed : hint_range(0.0, 5.0) = 1.0;
-uniform float line_width : hint_range(0.01, 0.5) = 0.05;
-uniform float line_spacing : hint_range(0.1, 1.0) = 0.2;
-uniform float emission_strength : hint_range(0.0, 10.0) = 2.0;
+[sub_resource type="Sky" id="Sky_gi8kb"]
+sky_material = SubResource("ShaderMaterial_xfq1h")
 
-void fragment() {
-	// Inverser la direction : défilement du haut (1) vers la base (0)
-	float scroll = fract(UV.y - TIME * line_speed);
-	
-	// Créer des lignes répétées
-	float pattern = fract(scroll / line_spacing);
-	
-	// Déterminer si on est sur une ligne (contrôle de la taille)
-	float line = smoothstep(line_width, 0.0, pattern) + smoothstep(1.0 - line_width, 1.0, pattern);
-	
-	// Effet de fade-out en arrivant au bout (UV.y proche de 0.0 maintenant)
-	float fade = smoothstep(0.0, 0.15, UV.y);
-	
-	// Combiner la ligne avec le fade
-	float final_line = line * fade;
-	
-	// Appliquer la couleur avec émission
-	ALBEDO = line_color.rgb * emission_strength;
-	EMISSION = line_color.rgb * emission_strength * final_line;
-	ALPHA = final_line * line_color.a;
-}
-"
+[sub_resource type="Environment" id="Environment_pqehc"]
+background_mode = 2
+sky = SubResource("Sky_gi8kb")
+glow_enabled = true
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_06ci2"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pqehc"]
 render_priority = 0
-shader = SubResource("Shader_6mm8b")
-shader_parameter/line_color = Color(0.78941506, 0, 0.33577523, 0.42745098)
-shader_parameter/line_speed = 0.1
-shader_parameter/line_width = 0.7
-shader_parameter/line_spacing = 0.1
-shader_parameter/emission_strength = 1.0
+shader = ExtResource("5_4f6sl")
+shader_parameter/brightness_threshold = 0.894000042465
+shader_parameter/neon_color = Color(1, 0, 0, 1)
+shader_parameter/emission_strength = 6.50000030875
+shader_parameter/tint_with_original = true
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_y477d"]
-_surfaces = [{
-"aabb": AABB(-150, 0, -300, 300, 1e-05, 600),
-"attribute_data": PackedByteArray("AAAAAAAAAAAAAIA/AAAAAAAAgD8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAIA/"),
-"format": 34359738391,
-"primitive": 3,
-"uv_scale": Vector4(0, 0, 0, 0),
-"vertex_count": 6,
-"vertex_data": PackedByteArray("AAAWwwAAAAAAAJbDAAAWQwAAAAAAAJbDAACWQgAAAAAAAJZDAAAWwwAAAAAAAJbDAACWQgAAAAAAAJZDAACWwgAAAAAAAJZD/3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+/")
-}]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_cxcjd"]
-render_priority = 0
-shader = ExtResource("11_06ci2")
-shader_parameter/color_top = Color(1, 0.5, 0, 1)
-shader_parameter/color_bottom = Color(1, 0, 0.5, 1)
-shader_parameter/line_speed = 0.0310000014725
-shader_parameter/line_width = 0.5
-shader_parameter/line_spacing = 0.10000000149012
-shader_parameter/emission_strength = 1.286000061085
-
-[sub_resource type="SphereMesh" id="SphereMesh_pfvfn"]
-material = SubResource("ShaderMaterial_cxcjd")
-radius = 256.0
-height = 504.0
-
-[node name="Racine" type="Node3D"]
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_6qlrk")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.9945165, 0.10458055, 0, -0.10458055, 0.9945165, -0.10938668, 24.840767, 301.89688)
-light_color = Color(0.9116014, 0.48098278, 0.4881596, 1)
+[node name="ZoneTest" type="Node3D"]
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." node_paths=PackedStringArray("camera", "pivot_camera")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 94.37393, 0)
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.1756115, 0)
 collision_layer = 4
 collision_mask = 187
-script = ExtResource("1_4vgkv")
-projectile_scene = ExtResource("4_ns5mm")
+script = ExtResource("1_ob1jx")
+projectile_scene = ExtResource("2_gk8k0")
 base_fire_interval = 90.0
 camera = NodePath("PivotCamera/Camera3D")
 xp_to_next_level = 30.0
@@ -362,125 +292,70 @@ autoplay = "bouger"
 transform = Transform3D(1, 0, 0, 0, 0.9551441, 0.29614154, 0, -0.29614154, 0.95514405, 0, 3.5464163, 7.6848617)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
-mesh = SubResource("ArrayMesh_obkj5")
+mesh = SubResource("ArrayMesh_4f6sl")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
 transform = Transform3D(0.59166175, -0.25603494, 0.764449, 0.39714783, 0.91775477, -3.1758591e-09, -0.70157665, 0.3035994, 0.644684, 0.12893681, -0.56999993, -0.15288973)
-mesh = SubResource("BoxMesh_gi8kb")
+mesh = SubResource("BoxMesh_xfq1h")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
 transform = Transform3D(0.591662, 0.25603503, 0.7644489, -0.39714792, 0.9177549, -3.738231e-08, -0.7015767, -0.30359933, 0.64468414, -0.12893681, -0.56999993, 0.15288973)
-mesh = SubResource("BoxMesh_gi8kb")
+mesh = SubResource("BoxMesh_xfq1h")
 skeleton = NodePath("../MeshInstance3D")
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
 transform = Transform3D(1.0000002, 0, 0, 0, 1.0000002, 0, 0, 0, 1, 0, 0.02, 0)
-mesh = SubResource("BoxMesh_gi8kb")
+mesh = SubResource("BoxMesh_xfq1h")
 skeleton = NodePath("../MeshInstance3D")
 
 [node name="MeshInstance3D4" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
 transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, 0, 0.48622727, 0)
-mesh = SubResource("CylinderMesh_obkj5")
+mesh = SubResource("CylinderMesh_pqehc")
 
 [node name="MeshInstance3D5" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
 transform = Transform3D(0.46988487, -0.41744724, -0.7777825, 0.664161, 0.74758923, 0, 0.581462, -0.5165728, 0.62853324, 0.18856002, -0.032000065, 0.23333502)
-mesh = SubResource("BoxMesh_gi8kb")
+mesh = SubResource("BoxMesh_xfq1h")
 
 [node name="MeshInstance3D6" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
 transform = Transform3D(0.46018106, 0.42812085, -0.7777826, -0.6811426, 0.7321506, 0, 0.569454, 0.52978086, 0.62853336, -0.18856002, -0.032000065, -0.23333502)
-mesh = SubResource("BoxMesh_gi8kb")
+mesh = SubResource("BoxMesh_xfq1h")
 
 [node name="Recolte" type="Area3D" parent="CharacterBody3D"]
 collision_layer = 64
 collision_mask = 32
-script = ExtResource("5_gi8kb")
+script = ExtResource("3_yg2ly")
 
 [node name="Zone" type="CollisionShape3D" parent="CharacterBody3D/Recolte"]
 unique_name_in_owner = true
-shape = SubResource("SphereShape3D_6qlrk")
+shape = SubResource("SphereShape3D_tk6bf")
 
 [node name="SpawnZone" type="Area3D" parent="CharacterBody3D"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D/SpawnZone"]
-shape = SubResource("CylinderShape3D_6qlrk")
+shape = SubResource("CylinderShape3D_8ami1")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
-shape = SubResource("CapsuleShape3D_ns5mm")
+shape = SubResource("CapsuleShape3D_g5b5y")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="sol" type="StaticBody3D" parent="."]
 
-[node name="Panel" type="Panel" parent="CanvasLayer"]
-offset_right = 198.0
-offset_bottom = 65.0
+[node name="MeshInstance3D" type="MeshInstance3D" parent="sol"]
+mesh = SubResource("PlaneMesh_yg2ly")
 
-[node name="PV" type="Label" parent="CanvasLayer/Panel"]
-layout_mode = 0
-offset_left = 6.852009
-offset_top = 7.3451385
-offset_right = 46.85201
-offset_bottom = 30.345139
-text = "PV :"
+[node name="CollisionShape3D" type="CollisionShape3D" parent="sol"]
+shape = SubResource("BoxShape3D_4f6sl")
 
-[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer/Panel/PV"]
-layout_mode = 0
-offset_left = 32.0
-offset_right = 182.0
-offset_bottom = 27.0
-theme_override_styles/fill = SubResource("StyleBoxFlat_6qlrk")
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+unique_name_in_owner = true
+environment = SubResource("Environment_pqehc")
 
-[node name="Experience" type="Label" parent="CanvasLayer/Panel"]
-layout_mode = 0
-offset_left = 6.852
-offset_top = 35.0
-offset_right = 46.852
-offset_bottom = 58.0
-text = "XP :"
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.9945165, 0.10458055, 0, -0.10458055, 0.9945165, -0.10938668, 24.840767, 301.89688)
+light_color = Color(0.9116014, 0.48098278, 0.4881596, 1)
 
-[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer/Panel/Experience"]
-layout_mode = 0
-offset_left = 32.0
-offset_right = 182.0
-offset_bottom = 27.0
-theme_override_styles/fill = SubResource("StyleBoxFlat_gi8kb")
-
-[node name="Map" parent="." instance=ExtResource("7_6qlrk")]
-map_size = 300
-min_platform_blocs = 3
-auto_generate_on_play = true
-ground_height = 0.0
-bloc_path = "uid://c4tdysfhmxeh2"
-pilone_path = "uid://jkd3tcfjtyxe"
-pilone_count = 50
-pilone_shader_path = "uid://g3uovj5kqbhb"
-pilone_texture_path = "uid://dtuvcdegrsjrx"
-pilone_script_path = "uid://bbkiswqwrl6a6"
-
-[node name="GeneratedStaticBody" type="Node3D" parent="Map"]
-
-[node name="Amelioration" parent="." instance=ExtResource("8_gi8kb")]
-
-[node name="AmeliorationManager" type="Node" parent="."]
-script = ExtResource("9_obkj5")
-
-[node name="Node3D" type="Node3D" parent="."]
-script = ExtResource("9_6mm8b")
-
-[node name="Sunset" type="Node3D" parent="."]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Sunset"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -42.707893, 449.0048)
-material_override = SubResource("ShaderMaterial_06ci2")
-mesh = SubResource("ArrayMesh_y477d")
-script = ExtResource("7_6mm8b")
-base_width = 300.0
-top_ratio = 0.5
-depth = 600.0
-line_color = Color(0.78941506, 0, 0.33577523, 0.42745098)
-line_speed = 0.1
-line_width = 0.7
-line_spacing = 0.1
-emission_strength = 1.0
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Sunset"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13.100769, 1555.3901)
-mesh = SubResource("SphereMesh_pfvfn")
+[node name="Pilone" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -6.5227203, 0, -4.236906)
+material_overlay = SubResource("ShaderMaterial_pqehc")
+mesh = ExtResource("5_yg2ly")
+script = ExtResource("7_xfq1h")

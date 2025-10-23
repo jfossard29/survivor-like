@@ -22,7 +22,7 @@ extends Node3D
 @export_group("Pylône Shader")
 @export_file("*.gdshader") var pilone_shader_path: String = "res://pilone_shader.gdshader"
 @export_file("*.png") var pilone_texture_path: String = "res://pilone.png"
-@export_file("*.gd") var pilone_script_path: String = "res://pylone_charge.gd"
+@export_file("*.gd") var pilone_script_path: String = "res://pilone_charge.gd"
 @export var neon_color: Color = Color("#ff1633")  # Couleur néon de départ
 @export var pilone_detection_radius: float = 5.0  # Rayon de détection
 
