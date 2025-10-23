@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://b6g6rerfmvwhp" path="res://script/HarvestZone.gd" id="3_yg2ly"]
 [ext_resource type="Shader" uid="uid://p6i28ung6ymp" path="res://test.gdshader" id="4_gk8k0"]
 [ext_resource type="Shader" uid="uid://g3uovj5kqbhb" path="res://pylone.gdshader" id="5_4f6sl"]
-[ext_resource type="ArrayMesh" uid="uid://b87yto1evoqiy" path="res://pilone.vox" id="5_yg2ly"]
+[ext_resource type="ArrayMesh" uid="uid://t0ppwimobug6" path="res://pylone.vox" id="6_xfq1h"]
 [ext_resource type="Script" uid="uid://bbkiswqwrl6a6" path="res://pylone_charge.gd" id="7_xfq1h"]
 
 [sub_resource type="Animation" id="Animation_gi8kb"]
@@ -244,11 +244,16 @@ shader = ExtResource("4_gk8k0")
 shader_parameter/sky_color = Color(0.1, 0, 0.2, 1)
 shader_parameter/grid_color = Color(0.827451, 0.34117648, 1, 1)
 shader_parameter/horizon_color = Color(0.1, 0.1, 0.15, 1)
+shader_parameter/mountain_color = Color(0.3, 0.1, 0.4, 1)
+shader_parameter/mountain_outline = Color(1, 0.2, 0.8, 1)
 shader_parameter/grid_size = 2.0
 shader_parameter/line_width = 0.05
 shader_parameter/intersection_glow = 0.5
 shader_parameter/horizon_height = 1.0
 shader_parameter/grid_fade_distance = 20.0
+shader_parameter/mountain_height = 0.15
+shader_parameter/mountain_scale = 2.0
+shader_parameter/outline_width = 0.015
 
 [sub_resource type="Sky" id="Sky_gi8kb"]
 sky_material = SubResource("ShaderMaterial_xfq1h")
@@ -261,7 +266,7 @@ glow_enabled = true
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pqehc"]
 render_priority = 0
 shader = ExtResource("5_4f6sl")
-shader_parameter/brightness_threshold = 0.894000042465
+shader_parameter/brightness_threshold = 0.90000004275
 shader_parameter/neon_color = Color(1, 0, 0, 1)
 shader_parameter/emission_strength = 6.50000030875
 shader_parameter/tint_with_original = true
@@ -354,8 +359,8 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 0.9945165, 0.10458055, 0, -0.10458055, 0.9945165, -0.10938668, 24.840767, 301.89688)
 light_color = Color(0.9116014, 0.48098278, 0.4881596, 1)
 
-[node name="Pilone" type="MeshInstance3D" parent="."]
+[node name="Pylone" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -6.5227203, 0, -4.236906)
 material_overlay = SubResource("ShaderMaterial_pqehc")
-mesh = ExtResource("5_yg2ly")
+mesh = ExtResource("6_xfq1h")
 script = ExtResource("7_xfq1h")

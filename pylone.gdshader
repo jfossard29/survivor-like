@@ -1,7 +1,7 @@
 shader_type spatial;
 render_mode blend_mix, depth_draw_opaque, cull_back;
 
-uniform float brightness_threshold : hint_range(0.0, 1.0) = 0.8;
+uniform float brightness_threshold : hint_range(0.0, 1.0) = 0.9;
 uniform vec4 neon_color : source_color = vec4(0.0, 1.0, 1.0, 1.0);
 uniform float emission_strength : hint_range(0.0, 50.0) = 10.0;
 uniform bool tint_with_original = true;

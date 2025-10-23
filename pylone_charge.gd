@@ -2,8 +2,9 @@ extends Node3D
 
 # Paramètres de charge
 @export var charge_duration: float = 5.0
-@export var detection_radius: float = 5.0
-@export var end_color: Color = Color("#00ffff") # Couleur du néon
+@export var detection_radius: float = 13.0
+@export var begin_color: Color = Color("#ff0004") # Couleur de départ (rouge)
+@export var end_color: Color = Color("#00ffff") # Couleur finale (cyan)
 @export var debug_mode: bool = true
 
 # Références internes
@@ -18,9 +19,22 @@ var charge_progress: float = 0.0
 var is_player_inside: bool = false
 var is_charged: bool = false
 
+# Référence au GameManager
+var game_manager: Node = null
+
 func _ready() -> void:
+	# Récupère le GameManager
+	game_manager = get_node_or_null("/root/GameManager")
+	if game_manager and game_manager.has_method("register_pylon"):
+		game_manager.register_pylon(self)
+		if debug_mode:
+			print("Pylône enregistré auprès du GameManager")
+	else:
+		push_warning("GameManager introuvable ou méthode register_pylon manquante")
+	
 	if debug_mode:
 		print("Pylône initialisé à position: ", global_position)
+	
 	_setup_area3d()
 	_setup_visual_indicator()
 	_find_mesh_instance()
@@ -66,7 +80,7 @@ func _setup_visual_indicator() -> void:
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	mat.albedo_color = Color(1.0, 1.0, 1.0, 0.0)
 	mat.emission_enabled = true
-	mat.emission = end_color
+	mat.emission = begin_color
 	mat.emission_energy_multiplier = 0.0
 	visual_indicator.material_override = mat
 	
@@ -81,13 +95,13 @@ func _find_mesh_instance() -> void:
 			print("Aucun MeshInstance3D trouvé dans le pylône.")
 		return
 
-	# Priorité à material_overlay
-	if mesh_instance.material_overlay is ShaderMaterial:
-		shader_material = mesh_instance.material_overlay
-	elif mesh_instance.material_override is ShaderMaterial:
+	# Priorité à material_override (car c'est ce qu'utilise le générateur)
+	if mesh_instance.material_override is ShaderMaterial:
 		shader_material = mesh_instance.material_override
+	elif mesh_instance.material_overlay is ShaderMaterial:
+		shader_material = mesh_instance.material_overlay
 	else:
-		# Vérifie aussi les matériaux de surface (rare, mais utile)
+		# Vérifie aussi les matériaux de surface
 		var mesh = mesh_instance.mesh
 		if mesh and mesh.get_surface_count() > 0:
 			var mat = mesh.surface_get_material(0)
@@ -98,11 +112,7 @@ func _find_mesh_instance() -> void:
 		print("Shader trouvé :", shader_material != null)
 		if shader_material:
 			print("Matériau source :", shader_material)
-			print("  Appliqué via overlay :", mesh_instance.material_overlay == shader_material)
-
-	if debug_mode:
-		print("Shader trouvé sur mesh:", shader_material != null)
-
+			print("  Appliqué via override :", mesh_instance.material_override == shader_material)
 
 func _find_mesh_recursive(node: Node) -> MeshInstance3D:
 	if node is MeshInstance3D and node != visual_indicator:
@@ -155,7 +165,22 @@ func _update_shader_color() -> void:
 	if not shader_material:
 		return
 	
-	var current_color = end_color
+	# Interpolation dans l'espace HSV pour éviter de passer par le blanc
+	var h1 = begin_color.h
+	var s1 = begin_color.s
+	var v1 = begin_color.v
+	
+	var h2 = end_color.h
+	var s2 = end_color.s
+	var v2 = end_color.v
+	
+	# Interpoler en HSV
+	var current_h = lerp(h1, h2, charge_progress)
+	var current_s = lerp(s1, s2, charge_progress)
+	var current_v = lerp(v1, v2, charge_progress)
+	
+	# Créer la couleur finale depuis HSV
+	var current_color = Color.from_hsv(current_h, current_s, current_v)
 	shader_material.set_shader_parameter("neon_color", current_color)
 
 func _update_indicator_progress() -> void:
@@ -163,19 +188,48 @@ func _update_indicator_progress() -> void:
 		return
 	var mat = visual_indicator.material_override as StandardMaterial3D
 	if mat:
-		mat.emission = end_color
+		# Interpolation de la couleur de l'indicateur en HSV
+		var h1 = begin_color.h
+		var s1 = begin_color.s
+		var v1 = begin_color.v
+		
+		var h2 = end_color.h
+		var s2 = end_color.s
+		var v2 = end_color.v
+		
+		var current_h = lerp(h1, h2, charge_progress)
+		var current_s = lerp(s1, s2, charge_progress)
+		var current_v = lerp(v1, v2, charge_progress)
+		
+		var current_indicator_color = Color.from_hsv(current_h, current_s, current_v)
+		mat.emission = current_indicator_color
 		mat.emission_energy_multiplier = charge_progress * 5.0
 
 func _on_fully_charged() -> void:
 	is_charged = true
+	
+	# Notifie le GameManager
+	if game_manager and game_manager.has_method("notify_pylon_charged"):
+		game_manager.notify_pylon_charged(self)
+		if debug_mode:
+			print("GameManager notifié du chargement du pylône")
+	
 	if debug_mode:
-		print("Pylône 100% chargé ! Disparition en cours...")
-	var tween = create_tween()
-	tween.set_parallel(true)
-	if mesh_instance:
-		tween.tween_property(mesh_instance, "scale", Vector3.ZERO, 0.5)
+		print("Pylône 100% chargé ! Désactivation de la zone de détection...")
+	
+	# Faire disparaître l'indicateur visuel
 	if visual_indicator:
 		var mat = visual_indicator.material_override as StandardMaterial3D
 		if mat:
+			var tween = create_tween()
 			tween.tween_property(mat, "albedo_color:a", 0.0, 0.5)
-	tween.chain().tween_callback(queue_free)
+	
+	# Retirer l'Area3D de détection
+	if area_3d:
+		area_3d.queue_free()
+		area_3d = null
+
+func _exit_tree() -> void:
+	# Sécurité : désenregistre si pas encore fait
+	if is_charged and game_manager and game_manager.has_method("unregister_pylon"):
+		game_manager.unregister_pylon(self)

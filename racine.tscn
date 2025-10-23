@@ -16,11 +16,16 @@ shader = ExtResource("3_y477d")
 shader_parameter/sky_color = Color(0.1, 0, 0.2, 1)
 shader_parameter/grid_color = Color(0.827451, 0.34117648, 1, 1)
 shader_parameter/horizon_color = Color(0.1, 0.1, 0.15, 1)
+shader_parameter/mountain_color = Color(0.15, 0.15, 0.25, 1)
+shader_parameter/mountain_outline = Color(1, 0.2, 0.8, 1)
 shader_parameter/grid_size = 2.0
-shader_parameter/line_width = 0.05
+shader_parameter/line_width = 0.02
 shader_parameter/intersection_glow = 0.5
-shader_parameter/horizon_height = 1.0
+shader_parameter/horizon_height = -0.10899995767750004
 shader_parameter/grid_fade_distance = 20.0
+shader_parameter/mountain_height = 0.15
+shader_parameter/mountain_scale = 2.0
+shader_parameter/outline_width = 0.05000000074506
 
 [sub_resource type="Sky" id="Sky_6mm8b"]
 sky_material = SubResource("ShaderMaterial_sgosv")
@@ -448,14 +453,12 @@ map_size = 300
 min_platform_blocs = 3
 auto_generate_on_play = true
 ground_height = 0.0
-bloc_path = "uid://c4tdysfhmxeh2"
-pilone_path = "uid://jkd3tcfjtyxe"
-pilone_count = 50
-pilone_shader_path = "uid://g3uovj5kqbhb"
-pilone_texture_path = "uid://dtuvcdegrsjrx"
-pilone_script_path = "uid://bbkiswqwrl6a6"
+bloc_path = "uid://baq26a1gi7kgv"
+pylone_path = "uid://t0ppwimobug6"
+pylone_shader_path = "uid://g3uovj5kqbhb"
+pylone_script_path = "uid://bbkiswqwrl6a6"
 
-[node name="GeneratedStaticBody" type="Node3D" parent="Map"]
+[node name="@Node3D@52835" type="Node3D" parent="Map"]
 
 [node name="Amelioration" parent="." instance=ExtResource("8_gi8kb")]
 

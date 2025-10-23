@@ -10,7 +10,11 @@ var pickup_scale_multiplier: float = 1.0
 var enemy_health_multiplier: float = 1.0
 var enemy_damage_multiplier: float = 1.0
 var enemy_speed_multiplier: float = 1.0
+var registered_pylons: Array = []
+var charged_pylons_count: int = 0
 
+signal pylon_charged(pylon: Node3D)
+signal all_pylons_charged()
 signal multipliers_changed()
 
 var enemy_tick_timer: float = 0.0
@@ -84,3 +88,26 @@ func add_xp_multiplier(factor: float) -> void:
 func add_pickup_multiplier(factor: float) -> void:
 	pickup_scale_multiplier *= factor
 	emit_signal("multipliers_changed")
+func register_pylon(pylon: Node3D) -> void:
+	if not registered_pylons.has(pylon):
+		registered_pylons.append(pylon)
+
+func unregister_pylon(pylon: Node3D) -> void:
+	var idx = registered_pylons.find(pylon)
+	if idx != -1:
+		registered_pylons.remove_at(idx)
+
+func notify_pylon_charged(pylon: Node3D) -> void:
+	charged_pylons_count += 1
+	pylon_charged.emit(pylon)
+	
+	if charged_pylons_count >= registered_pylons.size():
+		all_pylons_charged.emit()
+		print("🎉 Tous les pylônes sont chargés!")
+
+func get_pylon_progress() -> Dictionary:
+	return {
+		"total": registered_pylons.size(),
+		"charged": charged_pylons_count,
+		"progress": float(charged_pylons_count) / max(1, registered_pylons.size())
+	}
