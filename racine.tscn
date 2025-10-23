@@ -329,8 +329,8 @@ shader_parameter/emission_strength = 1.286000061085
 
 [sub_resource type="SphereMesh" id="SphereMesh_pfvfn"]
 material = SubResource("ShaderMaterial_cxcjd")
-radius = 64.0
-height = 126.0
+radius = 256.0
+height = 504.0
 
 [node name="Racine" type="Node3D" node_paths=PackedStringArray("player")]
 script = ExtResource("1_rlwjj")
@@ -341,12 +341,13 @@ player = NodePath("CharacterBody3D")
 environment = SubResource("Environment_6qlrk")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.75886226, 0.6512512, 0, -0.6512512, 0.75886226, 3.7473829, 24.840767, 28.256449)
+transform = Transform3D(1, 0, 0, 0, 0.9945165, 0.10458055, 0, -0.10458055, 0.9945165, -0.10938668, 24.840767, 301.89688)
+light_color = Color(0.9116014, 0.48098278, 0.4881596, 1)
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." node_paths=PackedStringArray("camera", "pivot_camera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 65.33247, 0)
 collision_layer = 4
-collision_mask = 59
+collision_mask = 187
 script = ExtResource("1_4vgkv")
 projectile_scene = ExtResource("4_ns5mm")
 base_fire_interval = 90.0
@@ -452,9 +453,14 @@ map_size = 300
 min_platform_blocs = 3
 auto_generate_on_play = true
 ground_height = 0.0
-bloc_path = "uid://baq26a1gi7kgv"
+bloc_path = "uid://c4tdysfhmxeh2"
+pilone_path = "uid://jkd3tcfjtyxe"
+pilone_count = 50
+pilone_shader_path = "uid://g3uovj5kqbhb"
+pilone_texture_path = "uid://dtuvcdegrsjrx"
+pilone_script_path = "uid://bbkiswqwrl6a6"
 
-[node name="@Node3D@31748" type="Node3D" parent="Map"]
+[node name="GeneratedStaticBody" type="Node3D" parent="Map"]
 
 [node name="Amelioration" parent="." instance=ExtResource("8_gi8kb")]
 
@@ -481,5 +487,5 @@ line_spacing = 0.1
 emission_strength = 1.0
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Sunset"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13.100769, 831.32764)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13.100769, 1555.3901)
 mesh = SubResource("SphereMesh_pfvfn")

@@ -15,6 +15,16 @@ extends Node3D
 @export var generate_ground: bool = true
 @export var ground_height: float = -5.0
 @export_file("*.glb") var bloc_path: String = "res://bloc.glb"
+@export_file("*.obj", "*.glb") var pilone_path: String = "res://pilone.obj"
+@export var pilone_count: int = 10
+
+# Paramètres du shader pylône
+@export_group("Pylône Shader")
+@export_file("*.gdshader") var pilone_shader_path: String = "res://pilone_shader.gdshader"
+@export_file("*.png") var pilone_texture_path: String = "res://pilone.png"
+@export_file("*.gd") var pilone_script_path: String = "res://pylone_charge.gd"
+@export var neon_color: Color = Color("#ff1633")  # Couleur néon de départ
+@export var pilone_detection_radius: float = 5.0  # Rayon de détection
 
 @export var Generate: bool:
 	get:
@@ -191,8 +201,15 @@ func generate() -> void:
 	_generate_platform_collisions(placed_platforms, bloc_size, center, container)
 
 	# Générer les rampes
+	var ramp_positions = []  # Stocker les positions des rampes
 	for plat in placed_platforms:
-		_generate_ramps(plat.x, plat.z, plat.w, plat.h, plat.level, hm, N, M, bloc_size, rng, container, center)
+		var ramp_pos = _generate_ramps(plat.x, plat.z, plat.w, plat.h, plat.level, hm, N, M, bloc_size, rng, container, center)
+		if ramp_pos != null:
+			ramp_positions.append(ramp_pos)
+
+	# Placer les pylônes aléatoirement
+	if pilone_count > 0 and ResourceLoader.exists(pilone_path):
+		_generate_pilones(N, M, hm, bloc_size, rng, container, center, ramp_positions)
 
 	add_child(container)
 	
@@ -245,7 +262,7 @@ func _generate_ground(N: int, M: int, bloc_size: float, center: Vector3, contain
 	mesh_instance.mesh = mesh
 	
 	var mat = StandardMaterial3D.new()
-	mat.albedo_color = Color(0.091, 0.084, 0.093, 1.0)
+	mat.albedo_color = Color(0.3, 0.5, 0.3)
 	mesh_instance.material_override = mat
 	
 	ground_body.position = Vector3(0, ground_height, 0)
@@ -284,7 +301,9 @@ func _generate_ramps(x0, z0, w, h, level, hm, N, M, bloc_size, rng, container: N
 			var neighbor_level = hm[nx][nz]
 			if neighbor_level == level - 1:
 				_add_ramp(Vector3(nx, 0, nz), dir, bloc_size, level, container, center)
-				break
+				return Vector2(nx, nz)  # Retourner la position de la rampe
+	
+	return null  # Aucune rampe créée
 
 func _add_ramp(origin: Vector3, dir: Vector2, bloc_size: float, level: int, container: Node3D, center: Vector3) -> void:
 	var mat = StandardMaterial3D.new()
@@ -310,33 +329,163 @@ func _add_ramp(origin: Vector3, dir: Vector2, bloc_size: float, level: int, cont
 	
 	# Variables pour rotation et inclinaison
 	var mesh_rotation = Vector3.ZERO
+	var collision_rotation = Vector3.ZERO
 	
 	# Configuration selon la direction
 	if dir.x > 0:  # Rampe vers +X
 		mesh.left_to_right = 0.0
 		mesh_rotation = Vector3(0, 0, 0)
+		collision_rotation = Vector3(0, 0, -45)
 	elif dir.x < 0:  # Rampe vers -X
 		mesh.left_to_right = 1.0
 		mesh_rotation = Vector3(0, 0, 0)
+		collision_rotation = Vector3(0, 0, 45)
 	elif dir.y > 0:  # Rampe vers +Z
-		mesh.left_to_right = 1.0
-		mesh_rotation = Vector3(0, 90, 0)
-	elif dir.y < 0:  # Rampe vers -Z
 		mesh.left_to_right = 0.0
 		mesh_rotation = Vector3(0, 90, 0)
+		collision_rotation = Vector3(45, 90, 0)
+	elif dir.y < 0:  # Rampe vers -Z
+		mesh.left_to_right = 1.0
+		mesh_rotation = Vector3(0, 90, 0)
+		collision_rotation = Vector3(-45, 90, 0)
 	
 	ramp_mi.rotation_degrees = mesh_rotation
 	ramp_body.position = Vector3(x_pos, base_height + bloc_size * 0.5, z_pos) - center
+	ramp_body.rotation_degrees = mesh_rotation
 	ramp_body.add_child(ramp_mi)
 	
-	# Collision de rampe - même forme que le mesh
+	# Collision de rampe
 	var cs_ramp = CollisionShape3D.new()
 	cs_ramp.name = "RampCollision"
-	cs_ramp.rotation_degrees = mesh_rotation
-	cs_ramp.shape = mesh.create_trimesh_shape() 
+	
+	var st = SurfaceTool.new()
+	st.create_from(mesh, 0)
+	var ramp_mesh = st.commit()
+	
+	if ramp_mesh.get_surface_count() > 0:
+		var arrs = ramp_mesh.surface_get_arrays(0)
+		if arrs.size() > Mesh.ARRAY_VERTEX and arrs[Mesh.ARRAY_VERTEX]:
+			var verts = arrs[Mesh.ARRAY_VERTEX]
+			var convex = ConvexPolygonShape3D.new()
+			convex.points = verts
+			cs_ramp.shape = convex
 	
 	ramp_body.add_child(cs_ramp)
 	container.add_child(ramp_body)
+
+func _create_pilone_material() -> ShaderMaterial:
+	var shader_material = ShaderMaterial.new()
+	
+	# Charger le shader
+	if ResourceLoader.exists(pilone_shader_path):
+		var shader = load(pilone_shader_path)
+		shader_material.shader = shader
+	else:
+		push_error("Shader non trouvé: " + pilone_shader_path)
+		return null
+	
+	# Charger la texture
+	if ResourceLoader.exists(pilone_texture_path):
+		var texture = load(pilone_texture_path)
+		shader_material.set_shader_parameter("albedo_texture", texture)
+	else:
+		push_error("Texture non trouvée: " + pilone_texture_path)
+	
+	# Définir les paramètres fixes
+	shader_material.set_shader_parameter("target_color", Color("#fff2f2"))
+	shader_material.set_shader_parameter("color_tolerance", 0.11)
+	shader_material.set_shader_parameter("emission_strength", 5.5)
+	shader_material.set_shader_parameter("use_original_color", false)
+	
+	# Paramètre tweakable depuis l'export
+	shader_material.set_shader_parameter("neon_color", neon_color)
+	
+	return shader_material
+
+func _apply_material_to_mesh_recursive(node: Node, material: Material) -> void:
+	if node is MeshInstance3D:
+		node.material_override = material
+	
+	for child in node.get_children():
+		_apply_material_to_mesh_recursive(child, material)
+
+func _generate_pilones(N: int, M: int, hm: Array, bloc_size: float, rng: RandomNumberGenerator, container: Node3D, center: Vector3, ramp_positions: Array) -> void:
+	var pilone_resource = load(pilone_path)
+	var pilone_material = _create_pilone_material()
+	
+	if not pilone_material:
+		push_error("Impossible de créer le matériau pylône")
+		return
+	
+	var placed = 0
+	var attempts = 0
+	var max_attempts = pilone_count * 10
+	
+	while placed < pilone_count and attempts < max_attempts:
+		attempts += 1
+		
+		# Position aléatoire sur la grille
+		var x = rng.randi_range(0, N - 1)
+		var z = rng.randi_range(0, M - 1)
+		
+		# Vérifier qu'on n'est pas sur une rampe
+		var is_on_ramp = false
+		for ramp_pos in ramp_positions:
+			if ramp_pos != null and int(ramp_pos.x) == x and int(ramp_pos.y) == z:
+				is_on_ramp = true
+				break
+		
+		if is_on_ramp:
+			continue
+		
+		# Les pylônes peuvent être placés partout sauf sur les rampes
+		var level = hm[x][z]
+		
+		var pilone_instance: Node3D
+		
+		# Vérifier si c'est une scène (.glb) ou un mesh (.obj)
+		if pilone_resource is PackedScene:
+			pilone_instance = pilone_resource.instantiate()
+		else:
+			# C'est un mesh (.obj), créer un Node3D parent avec MeshInstance3D enfant
+			var pilone_parent = Node3D.new()
+			var mesh_inst = MeshInstance3D.new()
+			mesh_inst.mesh = pilone_resource
+			mesh_inst.material_override = pilone_material
+			pilone_parent.add_child(mesh_inst)
+			pilone_instance = pilone_parent
+		
+		pilone_instance.name = "Pilone_" + str(placed)
+		
+		# Position du pylône (adapter la hauteur selon le niveau)
+		var x_pos = x * bloc_size + bloc_size * 0.5
+		var y_pos = level * bloc_size  # Hauteur selon le niveau de la plateforme
+		var z_pos = z * bloc_size + bloc_size * 0.5
+		
+		pilone_instance.position = Vector3(x_pos, y_pos, z_pos) - center
+		
+		# Scale du pylône
+		pilone_instance.scale = Vector3(0.5, 0.5, 0.5)
+		
+		# Rotation aléatoire sur l'axe Y
+		pilone_instance.rotation_degrees.y = rng.randf_range(0.0, 360.0)
+		
+		# Appliquer le matériau shader de manière récursive (pour les .glb)
+		if pilone_resource is PackedScene:
+			_apply_material_to_mesh_recursive(pilone_instance, pilone_material)
+		
+		# Attacher le script de charge au pylône
+		if ResourceLoader.exists(pilone_script_path):
+			var script = load(pilone_script_path)
+			pilone_instance.set_script(script)
+			# Configurer les paramètres du script
+			pilone_instance.set("detection_radius", pilone_detection_radius)
+			pilone_instance.set("start_color", neon_color)
+		
+		container.add_child(pilone_instance)
+		placed += 1
+	
+	print("Pylônes placés: ", placed, "/", pilone_count)
 
 func _cleanup_previous() -> void:
 	for child in get_children():
