@@ -1,12 +1,9 @@
-[gd_scene load_steps=23 format=3 uid="uid://61c8mu2pkxgh"]
+[gd_scene load_steps=19 format=3 uid="uid://61c8mu2pkxgh"]
 
 [ext_resource type="Script" uid="uid://bpafwtxkb2gqg" path="res://script/player.gd" id="1_ob1jx"]
 [ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://projectile.tscn" id="2_gk8k0"]
 [ext_resource type="Script" uid="uid://b6g6rerfmvwhp" path="res://script/HarvestZone.gd" id="3_yg2ly"]
 [ext_resource type="Shader" uid="uid://p6i28ung6ymp" path="res://test.gdshader" id="4_gk8k0"]
-[ext_resource type="Shader" uid="uid://g3uovj5kqbhb" path="res://pylone.gdshader" id="5_4f6sl"]
-[ext_resource type="ArrayMesh" uid="uid://t0ppwimobug6" path="res://pylone.vox" id="6_xfq1h"]
-[ext_resource type="Script" uid="uid://bbkiswqwrl6a6" path="res://pylone_charge.gd" id="7_xfq1h"]
 
 [sub_resource type="Animation" id="Animation_gi8kb"]
 length = 0.001
@@ -263,14 +260,6 @@ background_mode = 2
 sky = SubResource("Sky_gi8kb")
 glow_enabled = true
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_pqehc"]
-render_priority = 0
-shader = ExtResource("5_4f6sl")
-shader_parameter/brightness_threshold = 0.90000004275
-shader_parameter/neon_color = Color(1, 0, 0, 1)
-shader_parameter/emission_strength = 6.50000030875
-shader_parameter/tint_with_original = true
-
 [node name="ZoneTest" type="Node3D"]
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." node_paths=PackedStringArray("camera", "pivot_camera")]
@@ -358,9 +347,3 @@ environment = SubResource("Environment_pqehc")
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 0.9945165, 0.10458055, 0, -0.10458055, 0.9945165, -0.10938668, 24.840767, 301.89688)
 light_color = Color(0.9116014, 0.48098278, 0.4881596, 1)
-
-[node name="Pylone" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -6.5227203, 0, -4.236906)
-material_overlay = SubResource("ShaderMaterial_pqehc")
-mesh = ExtResource("6_xfq1h")
-script = ExtResource("7_xfq1h")

@@ -85,7 +85,7 @@ func _setup_visual_indicator() -> void:
 	visual_indicator.material_override = mat
 	
 	visual_indicator.position = Vector3(0, 0.1, 0)
-	visual_indicator.rotation_degrees = Vector3(-90, 0, 0)
+	visual_indicator.rotation_degrees = Vector3(0, 0, 0)
 	add_child(visual_indicator)
 
 func _find_mesh_instance() -> void:

@@ -204,14 +204,14 @@ func generate() -> void:
 		if ramp_pos != null:
 			ramp_positions.append(ramp_pos)
 
-	# Placer les pylônes
-	if pilone_count > 0:
-		_generate_pilones(N, M, hm, bloc_size, rng, container, center, ramp_positions)
-
 	add_child(container)
 	
 	if Engine.is_editor_hint():
 		container.owner = get_tree().edited_scene_root
+
+	# Placer les pylônes
+	if pilone_count > 0:
+		_generate_pilones(N, M, hm, bloc_size, rng, container, center, ramp_positions)
 
 	print("MapGenerator: génération terminée. size=", N, "x", M, " blocs:", blocs_placed, " plateformes:", placed_platforms.size())
 
@@ -329,10 +329,10 @@ func _add_ramp(origin: Vector3, dir: Vector2, bloc_size: float, level: int, cont
 		mesh_rotation = Vector3(0, 0, 0)
 	elif dir.y > 0:
 		mesh.left_to_right = 0.0
-		mesh_rotation = Vector3(0, 90, 0)
+		mesh_rotation = Vector3(0, -45, 0)
 	elif dir.y < 0:
 		mesh.left_to_right = 1.0
-		mesh_rotation = Vector3(0, 90, 0)
+		mesh_rotation = Vector3(0, -45, 0)
 	
 	ramp_mi.rotation_degrees = mesh_rotation
 	ramp_body.position = Vector3(x_pos, base_height + bloc_size * 0.5, z_pos) - center
@@ -345,7 +345,6 @@ func _add_ramp(origin: Vector3, dir: Vector2, bloc_size: float, level: int, cont
 	var st = SurfaceTool.new()
 	st.create_from(mesh, 0)
 	var ramp_mesh = st.commit()
-	
 	if ramp_mesh.get_surface_count() > 0:
 		var arrs = ramp_mesh.surface_get_arrays(0)
 		if arrs.size() > Mesh.ARRAY_VERTEX and arrs[Mesh.ARRAY_VERTEX]:
@@ -353,6 +352,7 @@ func _add_ramp(origin: Vector3, dir: Vector2, bloc_size: float, level: int, cont
 			var convex = ConvexPolygonShape3D.new()
 			convex.points = verts
 			cs_ramp.shape = convex
+			cs_ramp.rotation_degrees = mesh_rotation
 	
 	ramp_body.add_child(cs_ramp)
 	container.add_child(ramp_body)
