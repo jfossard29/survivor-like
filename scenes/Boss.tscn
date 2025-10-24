@@ -1,7 +1,7 @@
 [gd_scene load_steps=20 format=4 uid="uid://b1stvgy2g2801"]
 
-[ext_resource type="Shader" uid="uid://d8qy4jn630ck" path="res://Hologram.tres" id="1_4jvlg"]
-[ext_resource type="Texture2D" uid="uid://dtwnaf3imfq4v" path="res://HologramLines.png" id="2_paxtu"]
+[ext_resource type="Texture2D" uid="uid://dtwnaf3imfq4v" path="res://assets/HologramLines.png" id="1_6ig5k"]
+[ext_resource type="Shader" uid="uid://d8qy4jn630ck" path="res://shaders/Hologram.tres" id="2_gw42l"]
 
 [sub_resource type="Animation" id="Animation_paxtu"]
 length = 0.001
@@ -97,7 +97,7 @@ radius = 6.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_paxtu"]
 albedo_color = Color(0.24, 0.050399993, 0.050399993, 1)
-albedo_texture = ExtResource("2_paxtu")
+albedo_texture = ExtResource("1_6ig5k")
 metallic = 0.5
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_4jvlg"]
@@ -114,7 +114,7 @@ _surfaces = [{
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bgi7q"]
 albedo_color = Color(0.23921569, 0.050980393, 0.050980393, 1)
-albedo_texture = ExtResource("2_paxtu")
+albedo_texture = ExtResource("1_6ig5k")
 metallic = 0.6
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_paxtu"]
@@ -131,7 +131,7 @@ _surfaces = [{
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d2uyg"]
 albedo_color = Color(0.23921569, 0.050980393, 0.050980393, 1)
-albedo_texture = ExtResource("2_paxtu")
+albedo_texture = ExtResource("1_6ig5k")
 metallic = 0.6
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_ohn0q"]
@@ -172,11 +172,11 @@ size = Vector3(2, 2, 0)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_paxtu"]
 render_priority = 0
-shader = ExtResource("1_4jvlg")
+shader = ExtResource("2_gw42l")
 shader_parameter/Scanline_Color = Color(1.6886812, 0.12859394, 0.12859394, 0.28235295)
 shader_parameter/Scanline_Scroll_Speed = 1.0
 shader_parameter/Scanline_Scale = 10.0
-shader_parameter/Scanline_Texture = ExtResource("2_paxtu")
+shader_parameter/Scanline_Texture = ExtResource("1_6ig5k")
 shader_parameter/Fresnel_Power = 1.0
 shader_parameter/Fresnel_Color = Color(0.36, 0, 0, 1)
 

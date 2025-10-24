@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=3 uid="uid://1w0ttl831ipd"]
 
 [ext_resource type="Script" uid="uid://btstq576glhq2" path="res://script/experience.gd" id="1_eu0gq"]
-[ext_resource type="Shader" uid="uid://d8qy4jn630ck" path="res://Hologram.tres" id="2_j7eut"]
-[ext_resource type="Texture2D" uid="uid://dtwnaf3imfq4v" path="res://HologramLines.png" id="3_0bgji"]
+[ext_resource type="Shader" uid="uid://d8qy4jn630ck" path="res://shaders/Hologram.tres" id="2_j7eut"]
+[ext_resource type="Texture2D" uid="uid://dtwnaf3imfq4v" path="res://assets/HologramLines.png" id="3_0bgji"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_k42go"]
 radius = 0.3

@@ -1,9 +1,9 @@
 [gd_scene load_steps=19 format=3 uid="uid://61c8mu2pkxgh"]
 
 [ext_resource type="Script" uid="uid://bpafwtxkb2gqg" path="res://script/player.gd" id="1_ob1jx"]
-[ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://projectile.tscn" id="2_gk8k0"]
+[ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://scenes/projectile.tscn" id="2_gk8k0"]
 [ext_resource type="Script" uid="uid://b6g6rerfmvwhp" path="res://script/HarvestZone.gd" id="3_yg2ly"]
-[ext_resource type="Shader" uid="uid://p6i28ung6ymp" path="res://test.gdshader" id="4_gk8k0"]
+[ext_resource type="Shader" uid="uid://p6i28ung6ymp" path="res://shaders/sky.gdshader" id="4_gk8k0"]
 
 [sub_resource type="Animation" id="Animation_gi8kb"]
 length = 0.001
