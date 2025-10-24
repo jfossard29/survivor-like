@@ -4,10 +4,15 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var has_attacked = false
 var cached_direction = Vector3.ZERO
 
-@export var speed = 5.0
-@export var damage = 10
+@export var speed: float = 3.0
+@export var damage: int = 10
+@export var max_health: int = 100
+@export var experience_scene: PackedScene
+@export var debug : bool
+var current_health: int = 10
 
 func _ready():
+	add_to_group("enemy")
 	GameManager.register_enemy(self)
 
 func _exit_tree():
@@ -45,3 +50,21 @@ func _check_player_collision() -> void:
 			has_attacked = true
 			queue_free()
 			return  # Sortir immédiatement
+
+func take_damage(amount: int) -> void:
+	current_health -= amount
+	if debug:
+		print("PNJ touché ! PV restants :", current_health)
+	
+	if current_health <= 0:
+		die()
+
+func die() -> void:
+	
+	# Dropper l'expérience si la scène existe
+	if experience_scene:
+		var experience = experience_scene.instantiate()
+		get_parent().add_child(experience)
+		experience.global_position = global_position
+	
+	queue_free()

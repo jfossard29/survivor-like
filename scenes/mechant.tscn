@@ -1,6 +1,7 @@
-[gd_scene load_steps=18 format=4 uid="uid://cgbo35opsgy86"]
+[gd_scene load_steps=19 format=4 uid="uid://cgbo35opsgy86"]
 
 [ext_resource type="Script" uid="uid://dgqdnluy2assq" path="res://script/mechant_script.gd" id="1_56eqi"]
+[ext_resource type="PackedScene" uid="uid://1w0ttl831ipd" path="res://scenes/experience.tscn" id="2_gpwhr"]
 [ext_resource type="Shader" uid="uid://d8qy4jn630ck" path="res://shaders/Hologram.tres" id="3_h2wir"]
 [ext_resource type="Texture2D" uid="uid://dtwnaf3imfq4v" path="res://assets/HologramLines.png" id="4_rorym"]
 
@@ -72,6 +73,45 @@ shader_parameter/Scanline_Texture = ExtResource("4_rorym")
 shader_parameter/Fresnel_Power = 1.0
 shader_parameter/Fresnel_Color = Color(0, 0.5921569, 0.8235294, 0.64705884)
 
+[sub_resource type="Animation" id="Animation_h2wir"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Corps/Vertical:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Corps/Diagonal:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Corps/Horizontal:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
 [sub_resource type="Animation" id="Animation_jca2d"]
 resource_name = "tourner"
 length = 2.0
@@ -113,45 +153,6 @@ tracks/2/keys = {
 "values": [Vector3(0, 0, 0), Vector3(0, 1.5707964, 0), Vector3(0, 3.1415927, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_h2wir"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Corps/Vertical:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Corps/Diagonal:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Corps/Horizontal:rotation")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_rorym"]
 _data = {
 &"RESET": SubResource("Animation_h2wir"),
@@ -162,6 +163,7 @@ _data = {
 collision_layer = 16
 collision_mask = 30
 script = ExtResource("1_56eqi")
+experience_scene = ExtResource("2_gpwhr")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_30oyp")

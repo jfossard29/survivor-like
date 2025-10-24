@@ -5,7 +5,7 @@ extends Node3D
 @export var detection_radius: float = 13.0
 @export var begin_color: Color = Color("#ff0004") # Couleur de départ (rouge)
 @export var end_color: Color = Color("#00ffff") # Couleur finale (cyan)
-@export var debug_mode: bool = true
+@export var debug_mode: bool = false
 
 # Références internes
 var area_3d: Area3D

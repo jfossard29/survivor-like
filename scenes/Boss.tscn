@@ -1,6 +1,8 @@
-[gd_scene load_steps=20 format=4 uid="uid://b1stvgy2g2801"]
+[gd_scene load_steps=24 format=4 uid="uid://b1stvgy2g2801"]
 
 [ext_resource type="Texture2D" uid="uid://dtwnaf3imfq4v" path="res://assets/HologramLines.png" id="1_6ig5k"]
+[ext_resource type="Script" uid="uid://dodjdf2by6t77" path="res://scenes/boss.gd" id="1_gw42l"]
+[ext_resource type="PackedScene" uid="uid://1w0ttl831ipd" path="res://scenes/experience.tscn" id="2_edv8j"]
 [ext_resource type="Shader" uid="uid://d8qy4jn630ck" path="res://shaders/Hologram.tres" id="2_gw42l"]
 
 [sub_resource type="Animation" id="Animation_paxtu"]
@@ -89,8 +91,8 @@ _data = {
 &"tourner": SubResource("Animation_4jvlg")
 }
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_4jvlg"]
-radius = 6.0
+[sub_resource type="BoxShape3D" id="BoxShape3D_edv8j"]
+size = Vector3(10, 10, 10)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_paxtu"]
 radius = 6.0
@@ -185,7 +187,17 @@ material = SubResource("ShaderMaterial_paxtu")
 radius = 2.5
 height = 5.0
 
+[sub_resource type="LabelSettings" id="LabelSettings_6ig5k"]
+font_size = 40
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6ig5k"]
+bg_color = Color(1, 0, 0, 1)
+
 [node name="Boss" type="CharacterBody3D"]
+collision_layer = 256
+collision_mask = 7
+script = ExtResource("1_gw42l")
+experience_scene = ExtResource("2_edv8j")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -194,9 +206,11 @@ libraries = {
 autoplay = "tourner"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("SphereShape3D_4jvlg")
+shape = SubResource("BoxShape3D_edv8j")
 
 [node name="Area3D" type="Area3D" parent="."]
+collision_layer = 256
+collision_mask = 12
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 shape = SubResource("SphereShape3D_paxtu")
@@ -227,3 +241,29 @@ skeleton = NodePath("../..")
 [node name="Orbe" type="MeshInstance3D" parent="Corps"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.38046205, 0)
 mesh = SubResource("SphereMesh_dtosr")
+
+[node name="PV" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="PV"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -57.5
+offset_right = 57.5
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "Esprit tutélaire"
+label_settings = SubResource("LabelSettings_6ig5k")
+
+[node name="ProgressBar" type="ProgressBar" parent="PV"]
+custom_minimum_size = Vector2(800, 0)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -400.0
+offset_top = 67.0
+offset_right = 400.0
+offset_bottom = 94.0
+grow_horizontal = 2
+theme_override_styles/fill = SubResource("StyleBoxFlat_6ig5k")
+show_percentage = false
