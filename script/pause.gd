@@ -9,4 +9,5 @@ func _input(event: InputEvent) -> void:
 func toggle_pause() -> void:
 	get_tree().paused = not get_tree().paused
 	visible = get_tree().paused
+	MusicManager.set_game_paused(get_tree().paused)
 	game_paused.emit(get_tree().paused)

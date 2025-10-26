@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://dgqdnluy2assq" path="res://script/mechant_script.gd" id="1_56eqi"]
 [ext_resource type="PackedScene" uid="uid://1w0ttl831ipd" path="res://scenes/experience.tscn" id="2_gpwhr"]
 [ext_resource type="Shader" uid="uid://d8qy4jn630ck" path="res://shaders/Hologram.tres" id="3_h2wir"]
-[ext_resource type="Texture2D" uid="uid://dtwnaf3imfq4v" path="res://assets/HologramLines.png" id="4_rorym"]
+[ext_resource type="Texture2D" uid="uid://d0557kr5bkffc" path="res://assets/HologramLines.png" id="4_rorym"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_30oyp"]
 
@@ -163,6 +163,7 @@ _data = {
 collision_layer = 16
 collision_mask = 30
 script = ExtResource("1_56eqi")
+max_health = 20
 experience_scene = ExtResource("2_gpwhr")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

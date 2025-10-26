@@ -3,7 +3,7 @@ extends Node
 @export var difficulty_ramp_per_minute: float = 0.1
 @export var enemy_update_rate: float = 0.1
 @export var game_duration: float = 600.0  # 10 minutes
-@export var boss_spawn_interval: float = 10.0  # 3 minutes
+@export var boss_spawn_interval: float = 10.0  # Temps entre chaque boss
 
 var elapsed_time: float = 0.0
 var difficulty_factor: float = 1.0
@@ -26,7 +26,7 @@ signal timer_updated(remaining_time: float, elapsed_time: float)
 
 var enemy_tick_timer: float = 0.0
 var registered_enemies: Array = []
-var player_reference: CharacterBody3D = null
+var player_reference: CharacterBody3D = null  # Référence au CharacterBody3D du joueur
 
 # Optimisation : nettoyer moins souvent
 var cleanup_timer: float = 0.0
@@ -36,7 +36,7 @@ const CLEANUP_INTERVAL: float = 2.0
 var is_paused: bool = false
 
 # Gestion des boss
-var next_boss_time: float = 0.0  # Sera initialisé dans _ready()
+var next_boss_time: float = 0.0
 var game_active: bool = true
 
 func _ready() -> void:
@@ -47,7 +47,6 @@ func _ready() -> void:
 	call_deferred("_connect_pause_menu")
 
 func _connect_pause_menu() -> void:
-	# Chercher le menu pause dans la scène principale
 	var pause_menu = get_tree().root.find_child("PauseMenu", true, false)
 	if pause_menu and pause_menu.has_signal("game_paused"):
 		pause_menu.game_paused.connect(_on_game_paused)
@@ -126,20 +125,43 @@ func _cleanup_invalid_enemies() -> void:
 			registered_enemies.remove_at(i)
 		i -= 1
 
+func _get_player_position() -> Vector3:
+	"""Helper pour obtenir la position du joueur"""
+	if not player_reference or not is_instance_valid(player_reference):
+		return Vector3.ZERO
+	
+	# Le player_reference est maintenant toujours le CharacterBody3D
+	return player_reference.global_position
+
 func _update_enemies_tick() -> void:
 	if not player_reference or not is_instance_valid(player_reference):
 		return
 	
-	var player_pos = player_reference.global_position
+	# Vérifier que le joueur est dans l'arbre
+	if not player_reference.is_inside_tree():
+		return
 	
-	# Pas de filter() ici, juste une boucle directe
+	var player_pos = _get_player_position()
+	
 	for enemy in registered_enemies:
-		if not is_instance_valid(enemy) or enemy.has_attacked:
+		# Vérifier que l'ennemi est valide ET dans l'arbre
+		if not is_instance_valid(enemy) or not enemy.is_inside_tree():
 			continue
-			
+		
+		# Vérifier si l'ennemi a la propriété has_attacked
+		if enemy.has_method("get") and enemy.get("has_attacked"):
+			continue
+		
+		# Skip les boss - ils gèrent leur propre mouvement
+		if enemy.is_in_group("boss"):
+			continue
+		
 		var direction = (player_pos - enemy.global_position)
 		direction.y = 0
-		enemy.cached_direction = direction.normalized()
+		
+		# Vérifier si l'ennemi a la propriété cached_direction
+		if enemy.has_method("set"):
+			enemy.cached_direction = direction.normalized()
 
 func register_enemy(enemy: Node) -> void:
 	if not registered_enemies.has(enemy):
@@ -151,7 +173,14 @@ func unregister_enemy(enemy: Node) -> void:
 		registered_enemies.remove_at(idx)
 
 func set_player(player: CharacterBody3D) -> void:
+	"""Enregistre le CharacterBody3D du joueur"""
 	player_reference = player
+	print("✅ Joueur enregistré dans GameManager: ", player.name, " (Type: ", player.get_class(), ")")
+	print("   Position initiale: ", player.global_position)
+
+func get_player() -> CharacterBody3D:
+	"""Retourne le CharacterBody3D du joueur"""
+	return player_reference
 
 func _set_difficulty(value: float) -> void:
 	if is_equal_approx(difficulty_factor, value):

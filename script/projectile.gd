@@ -12,8 +12,6 @@ func _ready():
 	add_to_group("projectile")
 	add_to_group("player_projectile")  # Groupe pour identification par les ennemis
 	
-	# Connecte les signaux de collision
-	connect("area_entered", Callable(self, "_on_area_entered"))
 	connect("body_entered", Callable(self, "_on_body_entered"))
 	
 	# Recherche de l'ennemi le plus proche (PNJ ou boss)
@@ -48,14 +46,6 @@ func _physics_process(delta: float) -> void:
 		global_position += direction * speed * delta
 		look_at(global_position + direction, Vector3.UP)
 	else:
-		queue_free()
-
-func _on_area_entered(area: Area3D) -> void:
-	# Détecte les ennemis (PNJ et boss)
-	if area.is_in_group("enemy") or area.get_parent().is_in_group("enemy"):
-		var enemy = area if area.is_in_group("enemy") else area.get_parent()
-		if enemy.has_method("take_damage"):
-			enemy.take_damage(damage)
 		queue_free()
 
 func _on_body_entered(body: Node) -> void:

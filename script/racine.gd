@@ -2,7 +2,7 @@ extends Node3D
 
 @export var pnj_scene: PackedScene
 @export var boss_scene: PackedScene
-@export var player: CharacterBody3D
+@export var player_scene: PackedScene
 @export var spawn_interval: float = 3.0
 @export var max_pnjs: int = 50
 @export var min_spawn_distance: float = 8.0
@@ -12,15 +12,29 @@ var current_pnjs: Array = []
 var spawn_radius: float = 5.0
 var spawn_zone: Area3D = null
 var is_paused: bool = false
+var player: CharacterBody3D = null  # Le joueur est maintenant directement le CharacterBody3D
 
 func _ready():
-	print("🔧 Spawner _ready() appelé")
+	# Récupérer le joueur qui est maintenant un CharacterBody3D
+	player = get_tree().get_first_node_in_group("player")
 	
-	if player:
-		GameManager.set_player(player)
-		_cache_spawn_zone()
-	else:
+	if not player:
+		player = get_tree().root.find_child("Joueur", true, false)
+	
+	if not player:
 		push_error("❌ SPAWNER: Pas de référence au player!")
+		return
+	
+	print("✅ Spawner a trouvé le joueur: ", player.name, " (Type: ", player.get_class(), ")")
+	
+	# Assigner les musiques principales uniquement
+	MusicManager.main_tracks = [
+		preload("res://sounds/Endless Spiral of Chaos.ogg"),
+		preload("res://sounds/Endless Spiral of Fight.ogg")
+	]
+	# ❌ SUPPRIMÉ : MusicManager.pause_music = ...
+	MusicManager.set_volume(-12.0)
+	MusicManager.start_music()
 	
 	# Vérifier que la scène de boss existe
 	if not boss_scene:
@@ -31,14 +45,33 @@ func _ready():
 	# Connecter au signal de pause
 	call_deferred("_connect_pause_menu")
 	
-	# Connecter au signal de boss AVANT que le timer ne démarre
+	# Connecter au signal de boss
 	if GameManager:
 		print("✅ Connexion au signal boss_spawn_requested")
 		GameManager.boss_spawn_requested.connect(_on_boss_spawn_requested)
 	else:
 		push_error("❌ GameManager n'existe pas!")
 	
-	spawn_loop()
+	# Attendre que le joueur soit complètement dans l'arbre avant de cacher spawn_zone
+	call_deferred("_initialize_spawn_system")
+
+func _initialize_spawn_system():
+	# Attendre plusieurs frames pour que tout soit bien dans l'arbre
+	for i in range(3):
+		await get_tree().process_frame
+	
+	_cache_spawn_zone()
+	
+	# Vérifier que spawn_zone est bien dans l'arbre avant de démarrer
+	if spawn_zone and spawn_zone.is_inside_tree():
+		print("✅ SpawnZone confirmée dans l'arbre, démarrage du spawn_loop")
+		spawn_loop()
+	else:
+		push_error("❌ Impossible d'initialiser le système de spawn")
+		if spawn_zone:
+			push_error("   SpawnZone existe mais n'est pas dans l'arbre")
+		else:
+			push_error("   SpawnZone n'existe pas")
 
 func _connect_pause_menu() -> void:
 	var pause_menu = get_tree().root.find_child("PauseMenu", true, false)
@@ -47,16 +80,32 @@ func _connect_pause_menu() -> void:
 
 func _on_game_paused(paused: bool) -> void:
 	is_paused = paused
-
+	MusicManager.set_game_paused(paused)
+	
 func _on_boss_spawn_requested() -> void:
 	print("🔥 Signal boss_spawn_requested reçu!")
 	spawn_boss()
 
 func _cache_spawn_zone():
+	if not player:
+		push_error("❌ Player n'existe pas")
+		return
+	
+	if not player.is_inside_tree():
+		push_error("❌ Player n'est pas dans l'arbre")
+		return
+	
+	# La SpawnZone est maintenant directement dans le CharacterBody3D
 	spawn_zone = player.get_node_or_null("SpawnZone")
 	if not spawn_zone:
 		push_warning("⚠️ Le joueur n'a pas de SpawnZone (Area3D).")
+		print("   Structure du joueur:")
+		for child in player.get_children():
+			print("   - ", child.name, " (", child.get_class(), ")")
 		return
+	
+	print("✅ SpawnZone trouvée: ", spawn_zone.name)
+	print("   Dans l'arbre: ", spawn_zone.is_inside_tree())
 	
 	var shape_node = spawn_zone.get_node_or_null("CollisionShape3D")
 	if not shape_node or not shape_node.shape:
@@ -93,6 +142,11 @@ func cleanup_pnjs():
 
 func spawn_pnj():
 	if not player or not spawn_zone:
+		return
+	
+	# Vérification de sécurité
+	if not spawn_zone.is_inside_tree():
+		push_warning("⚠️ spawn_zone n'est pas dans l'arbre")
 		return
 	
 	var space_state = get_world_3d().direct_space_state
@@ -140,7 +194,13 @@ func spawn_boss() -> void:
 		push_error("❌ spawn_zone est null!")
 		return
 	
+	# Vérification de sécurité
+	if not spawn_zone.is_inside_tree():
+		push_error("❌ spawn_zone n'est pas dans l'arbre")
+		return
+	
 	print("✅ Toutes les références sont valides")
+	print("✅ Position du joueur: ", player.global_position)
 	
 	var space_state = get_world_3d().direct_space_state
 	var boss_spawned = false

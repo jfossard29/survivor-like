@@ -4,9 +4,5 @@
 
 [node name="Map" type="Node3D"]
 script = ExtResource("1_8rdwr")
-tile_size = 5.0
 platform_coverage = 25.0
-min_platform_tiles = 10
-max_platform_tiles = 30
 seed = 3
-auto_generate_on_play = false

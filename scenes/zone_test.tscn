@@ -1,240 +1,14 @@
-[gd_scene load_steps=19 format=3 uid="uid://61c8mu2pkxgh"]
+[gd_scene load_steps=9 format=3 uid="uid://61c8mu2pkxgh"]
 
-[ext_resource type="Script" uid="uid://bpafwtxkb2gqg" path="res://script/player.gd" id="1_ob1jx"]
-[ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://scenes/projectile.tscn" id="2_gk8k0"]
-[ext_resource type="Script" uid="uid://b6g6rerfmvwhp" path="res://script/HarvestZone.gd" id="3_yg2ly"]
+[ext_resource type="PackedScene" uid="uid://bcl5krgds1wpe" path="res://scenes/Joueur.tscn" id="3_ciifq"]
 [ext_resource type="Shader" uid="uid://p6i28ung6ymp" path="res://shaders/sky.gdshader" id="4_gk8k0"]
-
-[sub_resource type="Animation" id="Animation_gi8kb"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("MeshInstance3D/MeshInstance3D2:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(-0.12893681, -0.56999993, 0.15288973)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("MeshInstance3D/MeshInstance3D:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0.12893681, -0.56999993, -0.15288973)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("MeshInstance3D/MeshInstance3D2:rotation")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(3.7382314e-08, 0.8701862, -0.408407)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("MeshInstance3D/MeshInstance3D:rotation")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(3.1758596e-09, 0.8701864, 0.40840703)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("MeshInstance3D/MeshInstance3D5:position")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0.18856002, -0.032000065, 0.23333502)]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("MeshInstance3D/MeshInstance3D6:position")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(-0.18856002, -0.032000065, -0.23333502)]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("MeshInstance3D/MeshInstance3D5:rotation")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, -0.8911302, 0.7263711)]
-}
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("MeshInstance3D/MeshInstance3D6:rotation")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, -0.8911302, -0.74932224)]
-}
-
-[sub_resource type="Animation" id="Animation_6qlrk"]
-resource_name = "bouger"
-length = 2.0
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("MeshInstance3D/MeshInstance3D2:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1e-05, 1e-05),
-"update": 0,
-"values": [Vector3(-0.12893681, -0.56999993, 0.15288973), Vector3(-0.11778561, -0.56999993, -0.16163683)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("MeshInstance3D/MeshInstance3D:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1e-05, 1e-05),
-"update": 0,
-"values": [Vector3(0.12893681, -0.56999993, -0.15288973), Vector3(0.11778561, -0.56999993, 0.16163683)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("MeshInstance3D/MeshInstance3D2:rotation")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1e-05, 1e-05),
-"update": 0,
-"values": [Vector3(3.7382314e-08, 0.8701862, -0.408407), Vector3(-3.0424477e-08, -0.9410641, -0.40840706)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("MeshInstance3D/MeshInstance3D:rotation")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1e-05, 1e-05),
-"update": 0,
-"values": [Vector3(3.1758596e-09, 0.8701864, 0.40840703), Vector3(6.351719e-09, -0.941064, 0.408407)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("MeshInstance3D/MeshInstance3D5:position")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1e-05, 1e-05),
-"update": 0,
-"values": [Vector3(0.18856002, -0.032000065, 0.23333502), Vector3(0.17943886, -0.032000065, -0.24041986)]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("MeshInstance3D/MeshInstance3D6:position")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1e-05, 1e-05),
-"update": 0,
-"values": [Vector3(-0.18856002, -0.032000065, -0.23333502), Vector3(-0.17943886, -0.032000065, 0.24041986)]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("MeshInstance3D/MeshInstance3D5:rotation")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1e-05, 1e-05),
-"update": 0,
-"values": [Vector3(0, -0.8911302, 0.7263711), Vector3(6.3990576e-08, 0.9296321, 0.72637105)]
-}
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("MeshInstance3D/MeshInstance3D6:rotation")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1e-05, 1e-05),
-"update": 0,
-"values": [Vector3(0, -0.8911302, -0.74932224), Vector3(-6.6595504e-08, 0.9296322, -0.7493223)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_obkj5"]
-_data = {
-&"RESET": SubResource("Animation_gi8kb"),
-&"bouger": SubResource("Animation_6qlrk")
-}
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_4f6sl"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_xfq1h"]
-size = Vector3(0.1, 0.5, 0.1)
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_pqehc"]
-top_radius = 0.15
-bottom_radius = 0.15
-height = 0.05
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_tk6bf"]
-radius = 2.0
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_8ami1"]
-height = 10.0
-radius = 15.0
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_g5b5y"]
+[ext_resource type="PackedScene" uid="uid://b1stvgy2g2801" path="res://scenes/Boss.tscn" id="5_l6now"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yg2ly"]
-size = Vector2(25, 25)
+size = Vector2(100, 100)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_4f6sl"]
-size = Vector3(25, 0, 25)
+[sub_resource type="BoxShape3D" id="BoxShape3D_jhha7"]
+size = Vector3(100, 1, 100)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_xfq1h"]
 shader = ExtResource("4_gk8k0")
@@ -262,82 +36,15 @@ glow_enabled = true
 
 [node name="ZoneTest" type="Node3D"]
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="." node_paths=PackedStringArray("camera", "pivot_camera")]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.1756115, 0)
-collision_layer = 4
-collision_mask = 187
-script = ExtResource("1_ob1jx")
-projectile_scene = ExtResource("2_gk8k0")
-base_fire_interval = 90.0
-camera = NodePath("PivotCamera/Camera3D")
-xp_to_next_level = 30.0
-pivot_camera = NodePath("PivotCamera")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CharacterBody3D"]
-libraries = {
-&"": SubResource("AnimationLibrary_obkj5")
-}
-autoplay = "bouger"
-
-[node name="PivotCamera" type="Node3D" parent="CharacterBody3D"]
-
-[node name="Camera3D" type="Camera3D" parent="CharacterBody3D/PivotCamera"]
-transform = Transform3D(1, 0, 0, 0, 0.9551441, 0.29614154, 0, -0.29614154, 0.95514405, 0, 3.5464163, 7.6848617)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
-mesh = SubResource("ArrayMesh_4f6sl")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
-transform = Transform3D(0.59166175, -0.25603494, 0.764449, 0.39714783, 0.91775477, -3.1758591e-09, -0.70157665, 0.3035994, 0.644684, 0.12893681, -0.56999993, -0.15288973)
-mesh = SubResource("BoxMesh_xfq1h")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
-transform = Transform3D(0.591662, 0.25603503, 0.7644489, -0.39714792, 0.9177549, -3.738231e-08, -0.7015767, -0.30359933, 0.64468414, -0.12893681, -0.56999993, 0.15288973)
-mesh = SubResource("BoxMesh_xfq1h")
-skeleton = NodePath("../MeshInstance3D")
-
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
-transform = Transform3D(1.0000002, 0, 0, 0, 1.0000002, 0, 0, 0, 1, 0, 0.02, 0)
-mesh = SubResource("BoxMesh_xfq1h")
-skeleton = NodePath("../MeshInstance3D")
-
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
-transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, 0, 0.48622727, 0)
-mesh = SubResource("CylinderMesh_pqehc")
-
-[node name="MeshInstance3D5" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
-transform = Transform3D(0.46988487, -0.41744724, -0.7777825, 0.664161, 0.74758923, 0, 0.581462, -0.5165728, 0.62853324, 0.18856002, -0.032000065, 0.23333502)
-mesh = SubResource("BoxMesh_xfq1h")
-
-[node name="MeshInstance3D6" type="MeshInstance3D" parent="CharacterBody3D/MeshInstance3D"]
-transform = Transform3D(0.46018106, 0.42812085, -0.7777826, -0.6811426, 0.7321506, 0, 0.569454, 0.52978086, 0.62853336, -0.18856002, -0.032000065, -0.23333502)
-mesh = SubResource("BoxMesh_xfq1h")
-
-[node name="Recolte" type="Area3D" parent="CharacterBody3D"]
-collision_layer = 64
-collision_mask = 32
-script = ExtResource("3_yg2ly")
-
-[node name="Zone" type="CollisionShape3D" parent="CharacterBody3D/Recolte"]
-unique_name_in_owner = true
-shape = SubResource("SphereShape3D_tk6bf")
-
-[node name="SpawnZone" type="Area3D" parent="CharacterBody3D"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D/SpawnZone"]
-shape = SubResource("CylinderShape3D_8ami1")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
-shape = SubResource("CapsuleShape3D_g5b5y")
-
 [node name="sol" type="StaticBody3D" parent="."]
+collision_layer = 2
+collision_mask = 260
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="sol"]
 mesh = SubResource("PlaneMesh_yg2ly")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="sol"]
-shape = SubResource("BoxShape3D_4f6sl")
+shape = SubResource("BoxShape3D_jhha7")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 unique_name_in_owner = true
@@ -347,3 +54,24 @@ environment = SubResource("Environment_pqehc")
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 0.9945165, 0.10458055, 0, -0.10458055, 0.9945165, -0.10938668, 24.840767, 301.89688)
 light_color = Color(0.9116014, 0.48098278, 0.4881596, 1)
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2611074, 0)
+visible = false
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="CSGCombiner3D"]
+radius = 2.0
+height = 0.5
+sides = 64
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="CSGCombiner3D"]
+operation = 2
+radius = 1.95
+radial_segments = 64
+rings = 64
+
+[node name="Joueur" parent="." instance=ExtResource("3_ciifq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 19.738197, 27.355022)
+
+[node name="Boss" parent="." instance=ExtResource("5_l6now")]
+transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 0, 13.063533, 0)

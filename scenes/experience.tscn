@@ -1,8 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://1w0ttl831ipd"]
+[gd_scene load_steps=8 format=3 uid="uid://1w0ttl831ipd"]
 
 [ext_resource type="Script" uid="uid://btstq576glhq2" path="res://script/experience.gd" id="1_eu0gq"]
 [ext_resource type="Shader" uid="uid://d8qy4jn630ck" path="res://shaders/Hologram.tres" id="2_j7eut"]
-[ext_resource type="Texture2D" uid="uid://dtwnaf3imfq4v" path="res://assets/HologramLines.png" id="3_0bgji"]
+[ext_resource type="Texture2D" uid="uid://d0557kr5bkffc" path="res://assets/HologramLines.png" id="3_0bgji"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_k42go"]
 radius = 0.3
@@ -21,9 +21,16 @@ shader_parameter/Scanline_Texture = ExtResource("3_0bgji")
 shader_parameter/Fresnel_Power = 2.0
 shader_parameter/Fresnel_Color = Color(0, 0.78431374, 1, 1)
 
-[node name="Experience" type="Area3D"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_i3cgv"]
+
+[node name="Experience" type="RigidBody3D"]
 collision_layer = 32
-collision_mask = 64
+collision_mask = 66
+mass = 0.5
+lock_rotation = true
+continuous_cd = true
+linear_damp = 1.0
+angular_damp = 2.0
 script = ExtResource("1_eu0gq")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -34,3 +41,10 @@ metadata/_edit_lock_ = true
 mesh = SubResource("SphereMesh_w8b7j")
 surface_material_override/0 = SubResource("ShaderMaterial_j7eut")
 metadata/_edit_lock_ = true
+
+[node name="RecolteDetector" type="Area3D" parent="."]
+collision_layer = 32
+collision_mask = 64
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RecolteDetector"]
+shape = SubResource("SphereShape3D_i3cgv")

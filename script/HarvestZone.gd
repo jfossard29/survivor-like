@@ -1,25 +1,39 @@
 extends Area3D
 
 @export var base_radius: float = 1.0
+
 var radius_multiplier: float = 1.0
 
 @onready var zone: CollisionShape3D = $Zone
 
 func _ready() -> void:
+	
 	connect("area_entered", Callable(self, "_on_area_entered"))
-	# rendre la shape unique pour être sûr que changement de radius ait effet
+	
+	# Rendre la shape unique
 	if zone and zone.shape:
 		zone.shape = zone.shape.duplicate()
-	# se connecter seulement si singleton présent
+	
+	# Se connecter au GameManager
 	if Engine.has_singleton("GameManager"):
 		GameManager.connect("multipliers_changed", Callable(self, "_on_game_manager_changed"))
 	else:
 		print("HarvestZone: GameManager singleton absent au ready")
+	
 	_update_collision_shape()
+	
+	print("✅ Zone Recolte configurée - Layer: ", collision_layer, " Mask: ", collision_mask)
 
 func _on_area_entered(area: Area3D) -> void:
-	if area.is_in_group("experience"):
-		area.start_following(get_parent())
+	print("🔍 Recolte détecte Area: ", area.name, " Parent: ", area.get_parent().name if area.get_parent() else "null")
+	
+	# ✅ L'area détectée est le RecolteDetector de l'orbe (RigidBody3D)
+	var orbe = area.get_parent()
+	if orbe and orbe.is_in_group("experience"):
+		print("✅ Orbe trouvé, démarrage de l'attraction")
+		orbe.start_following(get_parent())
+	else:
+		print("⚠️ Area détectée mais pas un orbe d'XP")
 
 func set_pickup_radius_multiplier(mult: float) -> void:
 	radius_multiplier = mult

@@ -10,16 +10,16 @@ extends CharacterBody3D
 @export var turn_speed: float = 0.8
 @export var camera: Camera3D
 @export var xp_to_next_level: float = 100.0
-@export var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
+@export var gravity_force: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @export var mouse_sensitivity: float = 0.002
-@export var pivot_camera: Node3D
 @export var jump_speed: float = 5.0
 
-@onready var health_bar: ProgressBar = $"../CanvasLayer/Panel/PV/ProgressBar"
-@onready var experience_bar: ProgressBar = $"../CanvasLayer/Panel/Experience/ProgressBar"
+@onready var pivot_camera: Node3D = $CameraPivot
+@onready var health_bar: ProgressBar = $CanvasLayer/Panel/PV/ProgressBar
+@onready var experience_bar: ProgressBar = $CanvasLayer/Panel/Experience/ProgressBar
 @onready var recolte: Area3D = $Recolte
-@onready var popup_multi: CanvasLayer = $"../Amelioration"
-@onready var amelioration_manager: Node = $"../AmeliorationManager"
+@onready var popup_multi: CanvasLayer = $Amelioration
+@onready var amelioration_manager: Node = $AmeliorationManager
 
 var camera_pitch: float = 0.0
 var current_health: float = 100.0
@@ -43,16 +43,24 @@ var xp_tween: Tween = null
 
 func _ready():
 	add_to_group("player")
+	print("✅ Joueur (CharacterBody3D racine) ajouté au groupe 'player'")
+	
 	update_stats()
 	update_health_display()
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
-	if recolte:
-		recolte.connect("area_entered", Callable(self, "_on_harvest_zone_entered"))
+	if not pivot_camera:
+		push_error("CameraPivot non trouvé! Chemin attendu: CameraPivot")
+	
+	if not recolte:
+		push_error("❌ Zone Recolte non trouvée!")
+	else:
+		print("✅ Zone Recolte trouvée")
 	
 	# Enregistrer le joueur dans le GameManager
 	if GameManager:
 		GameManager.set_player(self)
+		print("✅ Joueur enregistré dans GameManager")
 
 func update_stats():
 	damage = base_damage + (level - 1) * 2
@@ -81,42 +89,23 @@ func level_up():
 	popup_multi.afficher(choix)
 
 func _physics_process(delta: float) -> void:
-	var start = Time.get_ticks_usec()
-	
 	# Gestion du timer de tir
 	if not can_fire:
 		fire_timer -= delta
 		if fire_timer <= 0:
 			can_fire = true
 	
-	var fire_time = Time.get_ticks_usec()
-	
 	# Tir automatique
 	if can_fire:
 		fire_projectile()
 	
-	var projectile_time = Time.get_ticks_usec()
-	
 	# Appliquer la gravité
 	if not is_on_floor():
-		velocity.y -= gravity * delta
+		velocity.y -= gravity_force * delta
 	
 	get_input(delta)
 	
-	var input_time = Time.get_ticks_usec()
-	
 	move_and_slide()
-	
-	var total_time = Time.get_ticks_usec() - start
-	
-	# Logger si c'est lent (plus de 5ms)
-	if total_time > 5000:
-		print("⚠️ FRAME LENTE:")
-		print("  Fire check: %.2f ms" % ((fire_time - start) / 1000.0))
-		print("  Projectile: %.2f ms" % ((projectile_time - fire_time) / 1000.0))
-		print("  Input: %.2f ms" % ((input_time - projectile_time) / 1000.0))
-		print("  Move: %.2f ms" % ((Time.get_ticks_usec() - input_time) / 1000.0))
-		print("  TOTAL: %.2f ms" % (total_time / 1000.0))
 
 func get_input(delta: float) -> void:
 	var vy: float = velocity.y
@@ -152,13 +141,14 @@ func get_input(delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
-		# rotation horizontale du joueur (yaw)
+		# rotation horizontale du joueur (yaw) - maintenant self car CharacterBody3D est racine
 		rotate_y(-event.relative.x * mouse_sensitivity)
 		
 		# rotation verticale du pivot de la caméra (pitch)
-		camera_pitch -= event.relative.y * mouse_sensitivity
-		camera_pitch = clamp(camera_pitch, -1.5, 1.5)
-		pivot_camera.rotation.x = camera_pitch
+		if pivot_camera:
+			camera_pitch -= event.relative.y * mouse_sensitivity
+			camera_pitch = clamp(camera_pitch, -1.5, 1.5)
+			pivot_camera.rotation.x = camera_pitch
 
 func take_damage(amount: int):
 	current_health -= amount
@@ -196,7 +186,8 @@ func update_health_display():
 		color_tween.tween_property(stylebox, "bg_color", Color(1, 0, 0), 0.3)
 
 func die():
-	print("Le joueur est mort !")
+	print("💀 Le joueur est mort !")
+	GameManager.player_died()
 
 func fire_projectile():
 	if projectile_scene == null or not can_fire:
@@ -208,7 +199,7 @@ func fire_projectile():
 	# Utiliser le cache d'ennemis du GameManager au lieu de get_nodes_in_group
 	if GameManager and GameManager.registered_enemies:
 		for p in GameManager.registered_enemies:
-			if not is_instance_valid(p) or p.has_attacked:
+			if not is_instance_valid(p) or p.can_attack:
 				continue
 			var d = global_position.distance_to(p.global_position)
 			if d <= fire_range and d < closest_dist:
@@ -238,9 +229,14 @@ func fire_projectile():
 	can_fire = false
 	fire_timer = fire_interval
 
-func _on_harvest_zone_entered(body: Node) -> void:
-	if body.is_in_group("experience"):
-		body.start_following(self)
+func _on_harvest_zone_entered(area: Area3D) -> void:
+	print("🔍 Zone Recolte détecte: ", area.name, " du parent: ", area.get_parent().name if area.get_parent() else "null")
+	
+	# L'area détectée est celle créée par l'orbe (RecolteDetector)
+	var orbe = area.get_parent()
+	if orbe and orbe.is_in_group("experience"):
+		print("✅ Orbe détecté, démarrage de l'attraction")
+		orbe.start_following(self)
 
 func add_experience(amount: float):
 	current_experience += amount
@@ -273,3 +269,7 @@ func update_experience_bar():
 func apply_pickup_multiplier(mult: float) -> void:
 	if recolte and recolte.has_method("add_pickup_radius_multiplier"):
 		recolte.add_pickup_radius_multiplier(mult)
+
+# Fonction utilitaire pour accéder à la position du personnage
+func get_player_position() -> Vector3:
+	return global_position

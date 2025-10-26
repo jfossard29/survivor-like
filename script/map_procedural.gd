@@ -14,14 +14,14 @@ extends Node3D
 @export var auto_generate_on_play: bool = true
 @export var generate_ground: bool = true
 @export var ground_height: float = -5.0
-@export_file("*.glb") var bloc_path: String = "res://bloc.glb"
+@export_file("*.glb") var bloc_path: String = "res://scenes/bloc.glb"
 
 # Paramètres pylônes
 @export_group("Pylône")
 @export var pilone_count: int = 10
-@export_file("*.vox") var pylone_path: String = "res://pylone.vox"
-@export_file("*.gdshader") var pylone_shader_path: String = "res://pylone.gdshader"
-@export_file("*.gd") var pylone_script_path: String = "res://pylone_charge.gd"
+@export_file("*.vox") var pylone_path: String = "res://assets/pylone.vox"
+@export_file("*.gdshader") var pylone_shader_path: String = "res://shaders/pylone.gdshader"
+@export_file("*.gd") var pylone_script_path: String = "res://script/pylone_charge.gd"
 
 @export var Generate: bool:
 	get:

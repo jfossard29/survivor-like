@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://dgj6vfkt8w7oj"]
+
+[ext_resource type="Script" uid="uid://vgk3cqgh0t5o" path="res://script/boss_health_manager.gd" id="1_v1lah"]
+
+[node name="BossHealthUI" type="CanvasLayer"]
+script = ExtResource("1_v1lah")
+single_bar_margin = 90.0
