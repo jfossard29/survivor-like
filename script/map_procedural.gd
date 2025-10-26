@@ -23,6 +23,10 @@ extends Node3D
 @export_file("*.gdshader") var pylone_shader_path: String = "res://shaders/pylone.gdshader"
 @export_file("*.gd") var pylone_script_path: String = "res://script/pylone_charge.gd"
 
+@export_group("Audio Wall")
+@export_file("*.gd") var audio_wall_script_path: String = "res://script/audio_wall.gd"
+
+@export_group("Generate")
 @export var Generate: bool:
 	get:
 		return false
@@ -212,7 +216,13 @@ func generate() -> void:
 	# Placer les pylônes
 	if pilone_count > 0:
 		_generate_pilones(N, M, hm, bloc_size, rng, container, center, ramp_positions)
-
+		
+	var audio_wall = Node3D.new()
+	audio_wall.name = "Audio_wall"
+	audio_wall.set_script(load(audio_wall_script_path))
+	audio_wall.set("map_size", map_size -10.5)
+	container.add_child(audio_wall)
+	
 	print("MapGenerator: génération terminée. size=", N, "x", M, " blocs:", blocs_placed, " plateformes:", placed_platforms.size())
 
 func _generate_platform_collisions(platforms: Array, bloc_size: float, center: Vector3, container: Node3D) -> void:
