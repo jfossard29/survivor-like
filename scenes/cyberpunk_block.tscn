@@ -1,0 +1,705 @@
+[gd_scene load_steps=17 format=3 uid="uid://7eq667phpr05"]
+
+[ext_resource type="Shader" uid="uid://p6i28ung6ymp" path="res://shaders/sky.gdshader" id="1_my0tv"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_r7ejb"]
+size = Vector3(5, 5, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="Material_metal"]
+albedo_color = Color(0.3, 0.32, 0.35, 1)
+metallic = 0.95
+roughness = 0.25
+
+[sub_resource type="PrismMesh" id="PrismMesh_my0tv"]
+material = SubResource("Material_metal")
+left_to_right = 1.0
+size = Vector3(4.5, 4.5, 0.1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_uin85"]
+material = SubResource("Material_metal")
+size = Vector3(9, 4.5, 0.1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_r7ejb"]
+size = Vector2(1, 1)
+
+[sub_resource type="StandardMaterial3D" id="Material_neon"]
+albedo_color = Color(0, 0.8, 1, 1)
+roughness = 0.1
+emission_enabled = true
+emission = Color(0, 1, 1.5, 1)
+emission_energy_multiplier = 2.5
+
+[sub_resource type="PrismMesh" id="PrismMesh_l3c2x"]
+left_to_right = 1.0
+size = Vector3(1, 1, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_my0tv"]
+albedo_color = Color(0.3019608, 0.32156864, 0.34901962, 1)
+metallic = 0.95
+roughness = 0.25
+
+[sub_resource type="PrismMesh" id="PrismMesh_8cmkh"]
+left_to_right = 0.0
+size = Vector3(4.5, 4.5, 0.1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uin85"]
+shader = ExtResource("1_my0tv")
+shader_parameter/sky_color = Color(0.1, 0, 0.2, 1)
+shader_parameter/grid_color = Color(0.827451, 0.34117648, 1, 1)
+shader_parameter/horizon_color = Color(0.1, 0.1, 0.15, 1)
+shader_parameter/mountain_color = Color(0.15, 0.15, 0.25, 1)
+shader_parameter/mountain_outline = Color(1, 0.2, 0.8, 1)
+shader_parameter/grid_size = 2.0
+shader_parameter/line_width = 0.02
+shader_parameter/intersection_glow = 0.5
+shader_parameter/horizon_height = -0.10899995767750004
+shader_parameter/grid_fade_distance = 20.0
+shader_parameter/mountain_height = 0.15
+shader_parameter/mountain_scale = 2.0
+shader_parameter/outline_width = 0.05000000074506
+
+[sub_resource type="Sky" id="Sky_6mm8b"]
+sky_material = SubResource("ShaderMaterial_uin85")
+
+[sub_resource type="Environment" id="Environment_l3c2x"]
+background_mode = 2
+sky = SubResource("Sky_6mm8b")
+glow_enabled = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_my0tv"]
+size = Vector3(9.5, 9.5, 9.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uin85"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_r7ejb"]
+size = Vector3(0.5, 0.5, 0.1)
+
+[node name="FuturisticBlock" type="Node3D"]
+
+[node name="gauche" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
+
+[node name="milieu" type="MeshInstance3D" parent="gauche"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 2.5, 0)
+mesh = SubResource("PrismMesh_r7ejb")
+surface_material_override/0 = SubResource("Material_metal")
+
+[node name="gauche" type="MeshInstance3D" parent="gauche"]
+transform = Transform3D(-4.371139e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.821371e-15, 4.371139e-08, 0, 7.5, -2.5)
+mesh = SubResource("PrismMesh_my0tv")
+
+[node name="droite" type="MeshInstance3D" parent="gauche"]
+transform = Transform3D(4.371139e-08, -3.821371e-15, 1, -8.742278e-08, -1, 0, 1, -8.742278e-08, -4.371139e-08, 0, 7.5, 2.5)
+mesh = SubResource("PrismMesh_my0tv")
+surface_material_override/0 = SubResource("Material_metal")
+
+[node name="centre" type="MeshInstance3D" parent="gauche"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 7.5, 0)
+mesh = SubResource("PrismMesh_uin85")
+
+[node name="forme1" type="Node3D" parent="gauche"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.8)
+
+[node name="Neon1" type="MeshInstance3D" parent="gauche/forme1"]
+transform = Transform3D(-4.371139e-08, -1, 4.371139e-08, 0, -4.371139e-08, -1, 1, -4.371139e-08, 1.9106855e-15, 0, 1.0919682, -0.83519435)
+mesh = SubResource("PlaneMesh_r7ejb")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="H_G" type="MeshInstance3D" parent="gauche/forme1"]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 0, 1.7319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="H_D" type="MeshInstance3D" parent="gauche/forme1"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1.7319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_G" type="MeshInstance3D" parent="gauche/forme1"]
+transform = Transform3D(4.3711367e-08, -1.7484555e-07, 1, -8.742278e-08, -1, -1.7484555e-07, 1, -8.742276e-08, -4.371138e-08, 0, 0.5319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../B_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_D" type="MeshInstance3D" parent="gauche/forme1"]
+transform = Transform3D(-4.371138e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.8213705e-15, 4.371138e-08, 0, 0.5319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../H_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="forme2" type="Node3D" parent="gauche"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -1.5)
+
+[node name="Neon1" type="MeshInstance3D" parent="gauche/forme2"]
+transform = Transform3D(-4.371139e-08, -1, 4.371139e-08, 0, -4.371139e-08, -1, 1, -4.371139e-08, 1.9106855e-15, 0, 1.0919682, -0.83519435)
+mesh = SubResource("PlaneMesh_r7ejb")
+skeleton = NodePath("../../forme2")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="H_G" type="MeshInstance3D" parent="gauche/forme2"]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 0, 1.7319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../../forme2")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="H_D" type="MeshInstance3D" parent="gauche/forme2"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1.7319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_G" type="MeshInstance3D" parent="gauche/forme2"]
+transform = Transform3D(4.3711367e-08, -1.7484555e-07, 1, -8.742278e-08, -1, -1.7484555e-07, 1, -8.742276e-08, -4.371138e-08, 0, 0.5319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../B_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_D" type="MeshInstance3D" parent="gauche/forme2"]
+transform = Transform3D(-4.371138e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.8213705e-15, 4.371138e-08, 0, 0.5319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../H_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="forme3" type="Node3D" parent="gauche"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 3.2)
+
+[node name="Neon1" type="MeshInstance3D" parent="gauche/forme3"]
+transform = Transform3D(-4.371139e-08, -1, 4.371139e-08, 0, -4.371139e-08, -1, 1, -4.371139e-08, 1.9106855e-15, 0, 1.0919682, -0.83519435)
+mesh = SubResource("PlaneMesh_r7ejb")
+skeleton = NodePath("../../forme3")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="H_G" type="MeshInstance3D" parent="gauche/forme3"]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 0, 1.7319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../../forme3")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="H_D" type="MeshInstance3D" parent="gauche/forme3"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1.7319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../../forme3")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_G" type="MeshInstance3D" parent="gauche/forme3"]
+transform = Transform3D(4.3711367e-08, -1.7484555e-07, 1, -8.742278e-08, -1, -1.7484555e-07, 1, -8.742276e-08, -4.371138e-08, 0, 0.5319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../B_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_D" type="MeshInstance3D" parent="gauche/forme3"]
+transform = Transform3D(-4.371138e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.8213705e-15, 4.371138e-08, 0, 0.5319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../H_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="forme4" type="Node3D" parent="gauche"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.5)
+
+[node name="Neon1" type="MeshInstance3D" parent="gauche/forme4"]
+transform = Transform3D(-4.371139e-08, -1, 4.371139e-08, 0, -4.371139e-08, -1, 1, -4.371139e-08, 1.9106855e-15, 0, 1.0919682, -0.83519435)
+mesh = SubResource("PlaneMesh_r7ejb")
+skeleton = NodePath("../../forme4")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="H_G" type="MeshInstance3D" parent="gauche/forme4"]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 0, 1.7319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../../forme4")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="H_D" type="MeshInstance3D" parent="gauche/forme4"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1.7319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_G" type="MeshInstance3D" parent="gauche/forme4"]
+transform = Transform3D(4.3711367e-08, -1.7484555e-07, 1, -8.742278e-08, -1, -1.7484555e-07, 1, -8.742276e-08, -4.371138e-08, 0, 0.5319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../B_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_D" type="MeshInstance3D" parent="gauche/forme4"]
+transform = Transform3D(-4.371138e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.8213705e-15, 4.371138e-08, 0, 0.5319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../H_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="droite" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 5, 0, 0)
+
+[node name="milieu" type="MeshInstance3D" parent="droite"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 2.5, 0)
+mesh = SubResource("PrismMesh_r7ejb")
+surface_material_override/0 = SubResource("Material_metal")
+
+[node name="gauche" type="MeshInstance3D" parent="droite"]
+transform = Transform3D(-4.371139e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.821371e-15, 4.371139e-08, 0, 7.5, -2.5)
+mesh = SubResource("PrismMesh_my0tv")
+
+[node name="droite" type="MeshInstance3D" parent="droite"]
+transform = Transform3D(4.371139e-08, -3.821371e-15, 1, -8.742278e-08, -1, 0, 1, -8.742278e-08, -4.371139e-08, 0, 7.5, 2.5)
+mesh = SubResource("PrismMesh_my0tv")
+
+[node name="centre" type="MeshInstance3D" parent="droite"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 7.5, 0)
+mesh = SubResource("PrismMesh_uin85")
+
+[node name="forme1" type="Node3D" parent="droite"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.8)
+
+[node name="Neon1" type="MeshInstance3D" parent="droite/forme1"]
+transform = Transform3D(-4.371139e-08, -1, 4.371139e-08, 0, -4.371139e-08, -1, 1, -4.371139e-08, 1.9106855e-15, 0, 1.0919682, -0.83519435)
+mesh = SubResource("PlaneMesh_r7ejb")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="H_G" type="MeshInstance3D" parent="droite/forme1"]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 0, 1.7319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="H_D" type="MeshInstance3D" parent="droite/forme1"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1.7319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_G" type="MeshInstance3D" parent="droite/forme1"]
+transform = Transform3D(4.3711367e-08, -1.7484555e-07, 1, -8.742278e-08, -1, -1.7484555e-07, 1, -8.742276e-08, -4.371138e-08, 0, 0.5319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../B_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_D" type="MeshInstance3D" parent="droite/forme1"]
+transform = Transform3D(-4.371138e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.8213705e-15, 4.371138e-08, 0, 0.5319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../H_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="forme2" type="Node3D" parent="droite"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -1.5)
+
+[node name="Neon1" type="MeshInstance3D" parent="droite/forme2"]
+transform = Transform3D(-4.371139e-08, -1, 4.371139e-08, 0, -4.371139e-08, -1, 1, -4.371139e-08, 1.9106855e-15, 0, 1.0919682, -0.83519435)
+mesh = SubResource("PlaneMesh_r7ejb")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="H_G" type="MeshInstance3D" parent="droite/forme2"]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 0, 1.7319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="H_D" type="MeshInstance3D" parent="droite/forme2"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1.7319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_G" type="MeshInstance3D" parent="droite/forme2"]
+transform = Transform3D(4.3711367e-08, -1.7484555e-07, 1, -8.742278e-08, -1, -1.7484555e-07, 1, -8.742276e-08, -4.371138e-08, 0, 0.5319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../B_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_D" type="MeshInstance3D" parent="droite/forme2"]
+transform = Transform3D(-4.371138e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.8213705e-15, 4.371138e-08, 0, 0.5319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../H_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="forme3" type="Node3D" parent="droite"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 3.2)
+
+[node name="Neon1" type="MeshInstance3D" parent="droite/forme3"]
+transform = Transform3D(-4.371139e-08, -1, 4.371139e-08, 0, -4.371139e-08, -1, 1, -4.371139e-08, 1.9106855e-15, 0, 1.0919682, -0.83519435)
+mesh = SubResource("PlaneMesh_r7ejb")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="H_G" type="MeshInstance3D" parent="droite/forme3"]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 0, 1.7319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="H_D" type="MeshInstance3D" parent="droite/forme3"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1.7319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_G" type="MeshInstance3D" parent="droite/forme3"]
+transform = Transform3D(4.3711367e-08, -1.7484555e-07, 1, -8.742278e-08, -1, -1.7484555e-07, 1, -8.742276e-08, -4.371138e-08, 0, 0.5319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../B_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_D" type="MeshInstance3D" parent="droite/forme3"]
+transform = Transform3D(-4.371138e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.8213705e-15, 4.371138e-08, 0, 0.5319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../H_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="forme4" type="Node3D" parent="droite"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.5)
+
+[node name="Neon1" type="MeshInstance3D" parent="droite/forme4"]
+transform = Transform3D(-4.371139e-08, -1, 4.371139e-08, 0, -4.371139e-08, -1, 1, -4.371139e-08, 1.9106855e-15, 0, 1.0919682, -0.83519435)
+mesh = SubResource("PlaneMesh_r7ejb")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="H_G" type="MeshInstance3D" parent="droite/forme4"]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 0, 1.7319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="H_D" type="MeshInstance3D" parent="droite/forme4"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1.7319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_G" type="MeshInstance3D" parent="droite/forme4"]
+transform = Transform3D(4.3711367e-08, -1.7484555e-07, 1, -8.742278e-08, -1, -1.7484555e-07, 1, -8.742276e-08, -4.371138e-08, 0, 0.5319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../B_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_D" type="MeshInstance3D" parent="droite/forme4"]
+transform = Transform3D(-4.371138e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.8213705e-15, 4.371138e-08, 0, 0.5319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../H_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="devant" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 5)
+
+[node name="milieu" type="MeshInstance3D" parent="devant"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 2.5, 0)
+mesh = SubResource("PrismMesh_r7ejb")
+surface_material_override/0 = SubResource("Material_metal")
+
+[node name="gauche" type="MeshInstance3D" parent="devant"]
+transform = Transform3D(-4.371139e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.821371e-15, 4.371139e-08, 0, 7.5, -2.5)
+mesh = SubResource("PrismMesh_my0tv")
+
+[node name="droite" type="MeshInstance3D" parent="devant"]
+transform = Transform3D(4.371139e-08, -3.821371e-15, 1, -8.742278e-08, -1, 0, 1, -8.742278e-08, -4.371139e-08, 0, 7.5, 2.5)
+mesh = SubResource("PrismMesh_my0tv")
+
+[node name="centre" type="MeshInstance3D" parent="devant"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 7.5, 0)
+mesh = SubResource("PrismMesh_uin85")
+
+[node name="forme1" type="Node3D" parent="devant"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.8)
+
+[node name="Neon1" type="MeshInstance3D" parent="devant/forme1"]
+transform = Transform3D(-4.371139e-08, -1, 4.371139e-08, 0, -4.371139e-08, -1, 1, -4.371139e-08, 1.9106855e-15, 0, 1.0919682, -0.83519435)
+mesh = SubResource("PlaneMesh_r7ejb")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="H_G" type="MeshInstance3D" parent="devant/forme1"]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 0, 1.7319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="H_D" type="MeshInstance3D" parent="devant/forme1"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1.7319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_G" type="MeshInstance3D" parent="devant/forme1"]
+transform = Transform3D(4.3711367e-08, -1.7484555e-07, 1, -8.742278e-08, -1, -1.7484555e-07, 1, -8.742276e-08, -4.371138e-08, 0, 0.5319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../B_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_D" type="MeshInstance3D" parent="devant/forme1"]
+transform = Transform3D(-4.371138e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.8213705e-15, 4.371138e-08, 0, 0.5319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../H_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="forme2" type="Node3D" parent="devant"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -1.5)
+
+[node name="Neon1" type="MeshInstance3D" parent="devant/forme2"]
+transform = Transform3D(-4.371139e-08, -1, 4.371139e-08, 0, -4.371139e-08, -1, 1, -4.371139e-08, 1.9106855e-15, 0, 1.0919682, -0.83519435)
+mesh = SubResource("PlaneMesh_r7ejb")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="H_G" type="MeshInstance3D" parent="devant/forme2"]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 0, 1.7319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="H_D" type="MeshInstance3D" parent="devant/forme2"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1.7319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_G" type="MeshInstance3D" parent="devant/forme2"]
+transform = Transform3D(4.3711367e-08, -1.7484555e-07, 1, -8.742278e-08, -1, -1.7484555e-07, 1, -8.742276e-08, -4.371138e-08, 0, 0.5319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../B_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_D" type="MeshInstance3D" parent="devant/forme2"]
+transform = Transform3D(-4.371138e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.8213705e-15, 4.371138e-08, 0, 0.5319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../H_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="forme3" type="Node3D" parent="devant"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 3.2)
+
+[node name="Neon1" type="MeshInstance3D" parent="devant/forme3"]
+transform = Transform3D(-4.371139e-08, -1, 4.371139e-08, 0, -4.371139e-08, -1, 1, -4.371139e-08, 1.9106855e-15, 0, 1.0919682, -0.83519435)
+mesh = SubResource("PlaneMesh_r7ejb")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="H_G" type="MeshInstance3D" parent="devant/forme3"]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 0, 1.7319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="H_D" type="MeshInstance3D" parent="devant/forme3"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1.7319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_G" type="MeshInstance3D" parent="devant/forme3"]
+transform = Transform3D(4.3711367e-08, -1.7484555e-07, 1, -8.742278e-08, -1, -1.7484555e-07, 1, -8.742276e-08, -4.371138e-08, 0, 0.5319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../B_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_D" type="MeshInstance3D" parent="devant/forme3"]
+transform = Transform3D(-4.371138e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.8213705e-15, 4.371138e-08, 0, 0.5319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../H_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="forme4" type="Node3D" parent="devant"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.5)
+
+[node name="Neon1" type="MeshInstance3D" parent="devant/forme4"]
+transform = Transform3D(-4.371139e-08, -1, 4.371139e-08, 0, -4.371139e-08, -1, 1, -4.371139e-08, 1.9106855e-15, 0, 1.0919682, -0.83519435)
+mesh = SubResource("PlaneMesh_r7ejb")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="H_G" type="MeshInstance3D" parent="devant/forme4"]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 0, 1.7319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="H_D" type="MeshInstance3D" parent="devant/forme4"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1.7319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_G" type="MeshInstance3D" parent="devant/forme4"]
+transform = Transform3D(4.3711367e-08, -1.7484555e-07, 1, -8.742278e-08, -1, -1.7484555e-07, 1, -8.742276e-08, -4.371138e-08, 0, 0.5319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../B_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_D" type="MeshInstance3D" parent="devant/forme4"]
+transform = Transform3D(-4.371138e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.8213705e-15, 4.371138e-08, 0, 0.5319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../H_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="derriere" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, -5)
+
+[node name="milieu" type="MeshInstance3D" parent="derriere"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 2.5, 0)
+mesh = SubResource("PrismMesh_r7ejb")
+surface_material_override/0 = SubResource("Material_metal")
+
+[node name="gauche" type="MeshInstance3D" parent="derriere"]
+transform = Transform3D(-4.371139e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.821371e-15, 4.371139e-08, 0, 7.5, -2.5)
+mesh = SubResource("PrismMesh_my0tv")
+
+[node name="droite" type="MeshInstance3D" parent="derriere"]
+transform = Transform3D(4.371139e-08, -3.821371e-15, 1, -8.742278e-08, -1, 0, 1, -8.742278e-08, -4.371139e-08, 0, 7.5, 2.5)
+mesh = SubResource("PrismMesh_my0tv")
+
+[node name="centre" type="MeshInstance3D" parent="derriere"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 7.5, 0)
+mesh = SubResource("PrismMesh_uin85")
+
+[node name="forme1" type="Node3D" parent="derriere"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.8)
+
+[node name="Neon1" type="MeshInstance3D" parent="derriere/forme1"]
+transform = Transform3D(-4.371139e-08, -1, 4.371139e-08, 0, -4.371139e-08, -1, 1, -4.371139e-08, 1.9106855e-15, 0, 1.0919682, -0.83519435)
+mesh = SubResource("PlaneMesh_r7ejb")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="H_G" type="MeshInstance3D" parent="derriere/forme1"]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 0, 1.7319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="H_D" type="MeshInstance3D" parent="derriere/forme1"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1.7319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_G" type="MeshInstance3D" parent="derriere/forme1"]
+transform = Transform3D(4.3711367e-08, -1.7484555e-07, 1, -8.742278e-08, -1, -1.7484555e-07, 1, -8.742276e-08, -4.371138e-08, 0, 0.5319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../B_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_D" type="MeshInstance3D" parent="derriere/forme1"]
+transform = Transform3D(-4.371138e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.8213705e-15, 4.371138e-08, 0, 0.5319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../H_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="forme2" type="Node3D" parent="derriere"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -1.5)
+
+[node name="Neon1" type="MeshInstance3D" parent="derriere/forme2"]
+transform = Transform3D(-4.371139e-08, -1, 4.371139e-08, 0, -4.371139e-08, -1, 1, -4.371139e-08, 1.9106855e-15, 0, 1.0919682, -0.83519435)
+mesh = SubResource("PlaneMesh_r7ejb")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="H_G" type="MeshInstance3D" parent="derriere/forme2"]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 0, 1.7319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="H_D" type="MeshInstance3D" parent="derriere/forme2"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1.7319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_G" type="MeshInstance3D" parent="derriere/forme2"]
+transform = Transform3D(4.3711367e-08, -1.7484555e-07, 1, -8.742278e-08, -1, -1.7484555e-07, 1, -8.742276e-08, -4.371138e-08, 0, 0.5319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../B_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_D" type="MeshInstance3D" parent="derriere/forme2"]
+transform = Transform3D(-4.371138e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.8213705e-15, 4.371138e-08, 0, 0.5319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../H_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="forme3" type="Node3D" parent="derriere"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 3.2)
+
+[node name="Neon1" type="MeshInstance3D" parent="derriere/forme3"]
+transform = Transform3D(-4.371139e-08, -1, 4.371139e-08, 0, -4.371139e-08, -1, 1, -4.371139e-08, 1.9106855e-15, 0, 1.0919682, -0.83519435)
+mesh = SubResource("PlaneMesh_r7ejb")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="H_G" type="MeshInstance3D" parent="derriere/forme3"]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 0, 1.7319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="H_D" type="MeshInstance3D" parent="derriere/forme3"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1.7319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_G" type="MeshInstance3D" parent="derriere/forme3"]
+transform = Transform3D(4.3711367e-08, -1.7484555e-07, 1, -8.742278e-08, -1, -1.7484555e-07, 1, -8.742276e-08, -4.371138e-08, 0, 0.5319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../B_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_D" type="MeshInstance3D" parent="derriere/forme3"]
+transform = Transform3D(-4.371138e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.8213705e-15, 4.371138e-08, 0, 0.5319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../H_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="forme4" type="Node3D" parent="derriere"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.5)
+
+[node name="Neon1" type="MeshInstance3D" parent="derriere/forme4"]
+transform = Transform3D(-4.371139e-08, -1, 4.371139e-08, 0, -4.371139e-08, -1, 1, -4.371139e-08, 1.9106855e-15, 0, 1.0919682, -0.83519435)
+mesh = SubResource("PlaneMesh_r7ejb")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="H_G" type="MeshInstance3D" parent="derriere/forme4"]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 0, 1.7319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="H_D" type="MeshInstance3D" parent="derriere/forme4"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1.7319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_G" type="MeshInstance3D" parent="derriere/forme4"]
+transform = Transform3D(4.3711367e-08, -1.7484555e-07, 1, -8.742278e-08, -1, -1.7484555e-07, 1, -8.742276e-08, -4.371138e-08, 0, 0.5319682, -1.4241943)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../B_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="B_D" type="MeshInstance3D" parent="derriere/forme4"]
+transform = Transform3D(-4.371138e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.8213705e-15, 4.371138e-08, 0, 0.5319682, -0.22419429)
+mesh = SubResource("PrismMesh_l3c2x")
+skeleton = NodePath("../H_D")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="plafond" type="MeshInstance3D" parent="."]
+
+[node name="C_H_G_1" type="MeshInstance3D" parent="plafond"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -2.7, 10, 2.5)
+mesh = SubResource("PrismMesh_8cmkh")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="C_H_G_2" type="MeshInstance3D" parent="plafond/C_H_G_1"]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, -1, 4.3711392e-08, -4.3711385e-08, 4.371139e-08, 4.3711385e-08, -1, 0.20000005, 0.20000005, 0)
+mesh = SubResource("PrismMesh_8cmkh")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="C_B_G_1" type="MeshInstance3D" parent="plafond"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 2.5, 10, 2.7)
+mesh = SubResource("PrismMesh_8cmkh")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="C_B_G_2" type="MeshInstance3D" parent="plafond/C_B_G_1"]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, -1, 4.3711392e-08, -4.3711385e-08, 4.371139e-08, 4.3711385e-08, -1, 0.20000005, 0.20000005, 0)
+mesh = SubResource("PrismMesh_8cmkh")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="plafond/C_B_G_1/C_B_G_2"]
+environment = SubResource("Environment_l3c2x")
+
+[node name="C_H_D_1" type="MeshInstance3D" parent="plafond"]
+transform = Transform3D(-4.371139e-08, 1, -4.371139e-08, 0, -4.371139e-08, -1, -1, -4.371139e-08, 1.9106855e-15, -2.7, 10, -2.5)
+mesh = SubResource("PrismMesh_8cmkh")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="C_H_D_2" type="MeshInstance3D" parent="plafond/C_H_D_1"]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, -1, 4.3711392e-08, -4.3711385e-08, 4.371139e-08, 4.3711385e-08, -1, 0.20000005, 0.20000005, 0)
+mesh = SubResource("PrismMesh_8cmkh")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="C_B_D_1" type="MeshInstance3D" parent="plafond"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 2.5, 10, -2.7)
+mesh = SubResource("PrismMesh_8cmkh")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="C_B_D_2" type="MeshInstance3D" parent="plafond/C_B_D_1"]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, -1, 4.3711392e-08, -4.3711385e-08, 4.371139e-08, 4.3711385e-08, -1, 0.20000005, 0.20000005, 0)
+mesh = SubResource("PrismMesh_8cmkh")
+surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+mesh = SubResource("BoxMesh_my0tv")
+surface_material_override/0 = SubResource("StandardMaterial3D_uin85")
+
+[node name="diamant" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.70710677, 0.70710677, -3.090862e-08, 0, -4.371139e-08, -1, -0.70710677, 0.70710677, -3.090862e-08, 0, 10, 0)
+mesh = SubResource("BoxMesh_r7ejb")
+surface_material_override/0 = SubResource("Material_neon")

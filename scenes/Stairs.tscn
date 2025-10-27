@@ -1,0 +1,1029 @@
+[gd_scene load_steps=12 format=3 uid="uid://8mgqrr77jqdr"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_step"]
+size = Vector3(10, 0.3, 1)
+
+[sub_resource type="StandardMaterial3D" id="Material_metal"]
+albedo_color = Color(0.3, 0.32, 0.35, 1)
+metallic = 0.95
+roughness = 0.25
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_neon"]
+top_radius = 0.05
+bottom_radius = 0.05
+height = 10.0
+
+[sub_resource type="StandardMaterial3D" id="Material_neon"]
+albedo_color = Color(0, 0.8, 1, 1)
+roughness = 0.1
+emission_enabled = true
+emission = Color(0, 1, 1.5, 1)
+emission_energy_multiplier = 2.5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_hexagon"]
+top_radius = 0.8
+bottom_radius = 0.8
+height = 0.3
+radial_segments = 6
+
+[sub_resource type="StandardMaterial3D" id="Material_hexagon"]
+albedo_color = Color(0.28, 0.3, 0.33, 1)
+metallic = 0.9
+roughness = 0.3
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_hexagon_small"]
+top_radius = 0.15
+bottom_radius = 0.15
+height = 0.35
+radial_segments = 6
+
+[sub_resource type="StandardMaterial3D" id="Material_hexagon_glow"]
+albedo_color = Color(0.2, 0.25, 0.3, 1)
+metallic = 0.85
+roughness = 0.25
+emission_enabled = true
+emission = Color(0, 0.8, 1, 1)
+emission_energy_multiplier = 0.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bq74u"]
+albedo_color = Color(0, 0, 0, 1)
+metallic = 0.95
+
+[sub_resource type="PrismMesh" id="PrismMesh_bq74u"]
+material = SubResource("StandardMaterial3D_bq74u")
+left_to_right = 0.0
+size = Vector3(9, 9, 9)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_s7ff5"]
+data = PackedVector3Array(-5, 5, 5, 5, -5, 5, -5, -5, 5, -5, 5, -5, -5, -5, -5, 5, -5, -5, -5, 5, 5, -5, 5, -5, 5, -5, 5, -5, 5, -5, 5, -5, -5, 5, -5, 5, -5, 5, -5, -5, 5, 5, -5, -5, -5, -5, 5, 5, -5, -5, 5, -5, -5, -5, -5, -5, 5, 5, -5, 5, -5, -5, -5, 5, -5, 5, 5, -5, -5, -5, -5, -5)
+
+[node name="FuturisticStairs" type="Node3D"]
+
+[node name="Steps" type="Node3D" parent="."]
+
+[node name="Step1" type="MeshInstance3D" parent="Steps"]
+mesh = SubResource("BoxMesh_step")
+surface_material_override/0 = SubResource("Material_metal")
+
+[node name="NeonUnderStep1" type="MeshInstance3D" parent="Steps/Step1"]
+transform = Transform3D(-4.371139e-08, -1, 0, -4.371139e-08, 1.9106855e-15, -1, 1, -4.371139e-08, -4.371139e-08, 2.1855694e-08, 0.5, -0.5)
+mesh = SubResource("CylinderMesh_neon")
+skeleton = NodePath("")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="Step2" type="MeshInstance3D" parent="Steps/Step1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1)
+mesh = SubResource("BoxMesh_step")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_metal")
+
+[node name="NeonUnderStep2" type="MeshInstance3D" parent="Steps/Step1/Step2"]
+transform = Transform3D(-4.371139e-08, -1, 0, -4.371139e-08, 1.9106855e-15, -1, 1, -4.371139e-08, -4.371139e-08, 6.556708e-08, 0.5, -0.5)
+mesh = SubResource("CylinderMesh_neon")
+skeleton = NodePath("../../NeonUnderStep1")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="Step3" type="MeshInstance3D" parent="Steps/Step1/Step2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1)
+mesh = SubResource("BoxMesh_step")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("Material_metal")
+
+[node name="NeonUnderStep3" type="MeshInstance3D" parent="Steps/Step1/Step2/Step3"]
+transform = Transform3D(-4.371139e-08, -1, 0, -4.371139e-08, 1.9106855e-15, -1, 1, -4.371139e-08, -4.371139e-08, 1.0927847e-07, 0.5, -0.5)
+mesh = SubResource("CylinderMesh_neon")
+skeleton = NodePath("../../NeonUnderStep2")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="Step4" type="MeshInstance3D" parent="Steps/Step1/Step2/Step3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1)
+mesh = SubResource("BoxMesh_step")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("Material_metal")
+
+[node name="NeonUnderStep4" type="MeshInstance3D" parent="Steps/Step1/Step2/Step3/Step4"]
+transform = Transform3D(-4.371139e-08, -1, 0, -4.371139e-08, 1.9106855e-15, -1, 1, -4.371139e-08, -4.371139e-08, 1.5298986e-07, 0.5, -0.5)
+mesh = SubResource("CylinderMesh_neon")
+skeleton = NodePath("../../NeonUnderStep3")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="Step5" type="MeshInstance3D" parent="Steps/Step1/Step2/Step3/Step4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1)
+mesh = SubResource("BoxMesh_step")
+skeleton = NodePath("../../../../..")
+surface_material_override/0 = SubResource("Material_metal")
+
+[node name="NeonUnderStep5" type="MeshInstance3D" parent="Steps/Step1/Step2/Step3/Step4/Step5"]
+transform = Transform3D(-4.371139e-08, -1, 0, -4.371139e-08, 1.9106855e-15, -1, 1, -4.371139e-08, -4.371139e-08, 1.9670125e-07, 0.5, -0.5)
+mesh = SubResource("CylinderMesh_neon")
+skeleton = NodePath("../../NeonUnderStep4")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="Step6" type="MeshInstance3D" parent="Steps/Step1/Step2/Step3/Step4/Step5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1)
+mesh = SubResource("BoxMesh_step")
+skeleton = NodePath("../../../../../..")
+surface_material_override/0 = SubResource("Material_metal")
+
+[node name="NeonUnderStep6" type="MeshInstance3D" parent="Steps/Step1/Step2/Step3/Step4/Step5/Step6"]
+transform = Transform3D(-4.371139e-08, -1, 0, -4.371139e-08, 1.9106855e-15, -1, 1, -4.371139e-08, -4.371139e-08, 2.4041265e-07, 0.5, -0.5)
+mesh = SubResource("CylinderMesh_neon")
+skeleton = NodePath("../../NeonUnderStep5")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="Step7" type="MeshInstance3D" parent="Steps/Step1/Step2/Step3/Step4/Step5/Step6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1)
+mesh = SubResource("BoxMesh_step")
+skeleton = NodePath("../../../../../../..")
+surface_material_override/0 = SubResource("Material_metal")
+
+[node name="NeonUnderStep7" type="MeshInstance3D" parent="Steps/Step1/Step2/Step3/Step4/Step5/Step6/Step7"]
+transform = Transform3D(-4.371139e-08, -1, 0, -4.371139e-08, 1.9106855e-15, -1, 1, -4.371139e-08, -4.371139e-08, 2.8412404e-07, 0.5, -0.5)
+mesh = SubResource("CylinderMesh_neon")
+skeleton = NodePath("../../NeonUnderStep6")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="Step8" type="MeshInstance3D" parent="Steps/Step1/Step2/Step3/Step4/Step5/Step6/Step7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1)
+mesh = SubResource("BoxMesh_step")
+skeleton = NodePath("../../../../../../../..")
+surface_material_override/0 = SubResource("Material_metal")
+
+[node name="NeonUnderStep8" type="MeshInstance3D" parent="Steps/Step1/Step2/Step3/Step4/Step5/Step6/Step7/Step8"]
+transform = Transform3D(-4.371139e-08, -1, 0, -4.371139e-08, 1.9106855e-15, -1, 1, -4.371139e-08, -4.371139e-08, 3.2783544e-07, 0.5, -0.5)
+mesh = SubResource("CylinderMesh_neon")
+skeleton = NodePath("../../NeonUnderStep7")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="Step9" type="MeshInstance3D" parent="Steps/Step1/Step2/Step3/Step4/Step5/Step6/Step7/Step8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1)
+mesh = SubResource("BoxMesh_step")
+skeleton = NodePath("../../../../../../../../..")
+surface_material_override/0 = SubResource("Material_metal")
+
+[node name="NeonUnderStep9" type="MeshInstance3D" parent="Steps/Step1/Step2/Step3/Step4/Step5/Step6/Step7/Step8/Step9"]
+transform = Transform3D(-4.371139e-08, -1, 0, -4.371139e-08, 1.9106855e-15, -1, 1, -4.371139e-08, -4.371139e-08, 3.7154683e-07, 0.5, -0.5)
+mesh = SubResource("CylinderMesh_neon")
+skeleton = NodePath("../../NeonUnderStep8")
+surface_material_override/0 = SubResource("Material_neon")
+
+[node name="Step10" type="MeshInstance3D" parent="Steps/Step1/Step2/Step3/Step4/Step5/Step6/Step7/Step8/Step9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1)
+mesh = SubResource("BoxMesh_step")
+skeleton = NodePath("../../../../../../../../../..")
+surface_material_override/0 = SubResource("Material_metal")
+
+[node name="HexagonalModules1" type="Node3D" parent="."]
+
+[node name="Row1" type="Node3D" parent="HexagonalModules1"]
+transform = Transform3D(-2.1855694e-08, 0.5, -2.1855694e-08, 0, -2.1855694e-08, -0.5, -0.5, -2.1855694e-08, 9.553427e-16, 4.5, 0.395, -3.1)
+
+[node name="Hex1" type="MeshInstance3D" parent="HexagonalModules1/Row1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Hex1"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex2" type="MeshInstance3D" parent="HexagonalModules1/Row1/Hex1"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex3" type="MeshInstance3D" parent="HexagonalModules1/Row1/Hex1/Hex2"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Hex1/Hex2/Hex3"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex4" type="MeshInstance3D" parent="HexagonalModules1/Row1/Hex1/Hex2/Hex3"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex5" type="MeshInstance3D" parent="HexagonalModules1/Row1/Hex1/Hex2/Hex3/Hex4"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Hex1/Hex2/Hex3/Hex4/Hex5"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex6" type="MeshInstance3D" parent="HexagonalModules1/Row1/Hex1/Hex2/Hex3/Hex4/Hex5"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex7" type="MeshInstance3D" parent="HexagonalModules1/Row1/Hex1/Hex2/Hex3/Hex4/Hex5/Hex6"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Hex1/Hex2/Hex3/Hex4/Hex5/Hex6/Hex7"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex8" type="MeshInstance3D" parent="HexagonalModules1/Row1/Hex1/Hex2/Hex3/Hex4/Hex5/Hex6/Hex7"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex9" type="MeshInstance3D" parent="HexagonalModules1/Row1/Hex1/Hex2/Hex3/Hex4/Hex5/Hex6/Hex7/Hex8"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Hex1/Hex2/Hex3/Hex4/Hex5/Hex6/Hex7/Hex8/Hex9"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Row2" type="Node3D" parent="HexagonalModules1/Row1"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2.0000005, 0, -2.01)
+
+[node name="Hex1" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Hex1"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex2" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Hex1"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex3" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Hex1/Hex2"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Hex1/Hex2/Hex3"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex4" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Hex1/Hex2/Hex3"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex5" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Hex1/Hex2/Hex3/Hex4"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Hex1/Hex2/Hex3/Hex4/Hex5"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex6" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Hex1/Hex2/Hex3/Hex4/Hex5"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex7" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Hex1/Hex2/Hex3/Hex4/Hex5/Hex6"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Hex1/Hex2/Hex3/Hex4/Hex5/Hex6/Hex7"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex8" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Hex1/Hex2/Hex3/Hex4/Hex5/Hex6/Hex7"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Row3" type="Node3D" parent="HexagonalModules1/Row1/Row2"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2.0000005, 0, -2.01)
+
+[node name="Hex1" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Hex1"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex2" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Hex1"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex3" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Hex1/Hex2"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Hex1/Hex2/Hex3"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex4" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Hex1/Hex2/Hex3"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex5" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Hex1/Hex2/Hex3/Hex4"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Hex1/Hex2/Hex3/Hex4/Hex5"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex6" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Hex1/Hex2/Hex3/Hex4/Hex5"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex7" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Hex1/Hex2/Hex3/Hex4/Hex5/Hex6"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Hex1/Hex2/Hex3/Hex4/Hex5/Hex6/Hex7"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Row4" type="Node3D" parent="HexagonalModules1/Row1/Row2/Row3"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2.0000005, 0, -2.01)
+
+[node name="Hex1" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Hex1"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex2" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Hex1"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex3" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Hex1/Hex2"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Hex1/Hex2/Hex3"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex4" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Hex1/Hex2/Hex3"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex5" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Hex1/Hex2/Hex3/Hex4"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Hex1/Hex2/Hex3/Hex4/Hex5"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex6" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Hex1/Hex2/Hex3/Hex4/Hex5"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Row5" type="Node3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2.0000005, 0, -2.01)
+
+[node name="Hex1" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Hex1"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex2" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Hex1"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex3" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Hex1/Hex2"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Hex1/Hex2/Hex3"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex4" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Hex1/Hex2/Hex3"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex5" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Hex1/Hex2/Hex3/Hex4"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Hex1/Hex2/Hex3/Hex4/Hex5"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Row6" type="Node3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2.0000005, 0, -2.01)
+
+[node name="Hex1" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Row6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Row6/Hex1"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex2" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Row6/Hex1"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex3" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Row6/Hex1/Hex2"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Row6/Hex1/Hex2/Hex3"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex4" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Row6/Hex1/Hex2/Hex3"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Row7" type="Node3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Row6"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2.0000005, 0, -2.01)
+
+[node name="Hex1" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Row6/Row7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Row6/Row7/Hex1"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex2" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Row6/Row7/Hex1"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex3" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Row6/Row7/Hex1/Hex2"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Row6/Row7/Hex1/Hex2/Hex3"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Row8" type="Node3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Row6/Row7"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2.0000005, 0, -2.01)
+
+[node name="Hex1" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Row6/Row7/Row8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Row6/Row7/Row8/Hex1"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex2" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Row6/Row7/Row8/Hex1"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Row9" type="Node3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Row6/Row7/Row8"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2.0000005, 0, -2.01)
+
+[node name="Hex1" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Row6/Row7/Row8/Row9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules1/Row1/Row2/Row3/Row4/Row5/Row6/Row7/Row8/Row9/Hex1"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="HexagonalModules2" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 0)
+
+[node name="Row1" type="Node3D" parent="HexagonalModules2"]
+transform = Transform3D(-2.1855694e-08, 0.5, -2.1855694e-08, 0, -2.1855694e-08, -0.5, -0.5, -2.1855694e-08, 9.553427e-16, 4.5, 0.395, -3.1)
+
+[node name="Hex1" type="MeshInstance3D" parent="HexagonalModules2/Row1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Hex1"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex2" type="MeshInstance3D" parent="HexagonalModules2/Row1/Hex1"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex3" type="MeshInstance3D" parent="HexagonalModules2/Row1/Hex1/Hex2"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Hex1/Hex2/Hex3"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex4" type="MeshInstance3D" parent="HexagonalModules2/Row1/Hex1/Hex2/Hex3"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex5" type="MeshInstance3D" parent="HexagonalModules2/Row1/Hex1/Hex2/Hex3/Hex4"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Hex1/Hex2/Hex3/Hex4/Hex5"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex6" type="MeshInstance3D" parent="HexagonalModules2/Row1/Hex1/Hex2/Hex3/Hex4/Hex5"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex7" type="MeshInstance3D" parent="HexagonalModules2/Row1/Hex1/Hex2/Hex3/Hex4/Hex5/Hex6"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Hex1/Hex2/Hex3/Hex4/Hex5/Hex6/Hex7"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex8" type="MeshInstance3D" parent="HexagonalModules2/Row1/Hex1/Hex2/Hex3/Hex4/Hex5/Hex6/Hex7"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex9" type="MeshInstance3D" parent="HexagonalModules2/Row1/Hex1/Hex2/Hex3/Hex4/Hex5/Hex6/Hex7/Hex8"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Hex1/Hex2/Hex3/Hex4/Hex5/Hex6/Hex7/Hex8/Hex9"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Row2" type="Node3D" parent="HexagonalModules2/Row1"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2.0000005, 0, -2.01)
+
+[node name="Hex1" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Hex1"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex2" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Hex1"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex3" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Hex1/Hex2"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Hex1/Hex2/Hex3"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex4" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Hex1/Hex2/Hex3"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex5" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Hex1/Hex2/Hex3/Hex4"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Hex1/Hex2/Hex3/Hex4/Hex5"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex6" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Hex1/Hex2/Hex3/Hex4/Hex5"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex7" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Hex1/Hex2/Hex3/Hex4/Hex5/Hex6"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Hex1/Hex2/Hex3/Hex4/Hex5/Hex6/Hex7"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex8" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Hex1/Hex2/Hex3/Hex4/Hex5/Hex6/Hex7"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Row3" type="Node3D" parent="HexagonalModules2/Row1/Row2"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2.0000005, 0, -2.01)
+
+[node name="Hex1" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Hex1"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex2" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Hex1"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex3" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Hex1/Hex2"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Hex1/Hex2/Hex3"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex4" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Hex1/Hex2/Hex3"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex5" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Hex1/Hex2/Hex3/Hex4"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Hex1/Hex2/Hex3/Hex4/Hex5"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex6" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Hex1/Hex2/Hex3/Hex4/Hex5"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex7" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Hex1/Hex2/Hex3/Hex4/Hex5/Hex6"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Hex1/Hex2/Hex3/Hex4/Hex5/Hex6/Hex7"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Row4" type="Node3D" parent="HexagonalModules2/Row1/Row2/Row3"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2.0000005, 0, -2.01)
+
+[node name="Hex1" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Hex1"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex2" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Hex1"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex3" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Hex1/Hex2"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Hex1/Hex2/Hex3"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex4" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Hex1/Hex2/Hex3"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex5" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Hex1/Hex2/Hex3/Hex4"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Hex1/Hex2/Hex3/Hex4/Hex5"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex6" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Hex1/Hex2/Hex3/Hex4/Hex5"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Row5" type="Node3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2.0000005, 0, -2.01)
+
+[node name="Hex1" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Hex1"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex2" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Hex1"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex3" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Hex1/Hex2"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Hex1/Hex2/Hex3"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex4" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Hex1/Hex2/Hex3"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex5" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Hex1/Hex2/Hex3/Hex4"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Hex1/Hex2/Hex3/Hex4/Hex5"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Row6" type="Node3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2.0000005, 0, -2.01)
+
+[node name="Hex1" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Row6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Row6/Hex1"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex2" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Row6/Hex1"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex3" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Row6/Hex1/Hex2"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Row6/Hex1/Hex2/Hex3"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex4" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Row6/Hex1/Hex2/Hex3"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Row7" type="Node3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Row6"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2.0000005, 0, -2.01)
+
+[node name="Hex1" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Row6/Row7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Row6/Row7/Hex1"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex2" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Row6/Row7/Hex1"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Hex3" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Row6/Row7/Hex1/Hex2"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Row6/Row7/Hex1/Hex2/Hex3"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Row8" type="Node3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Row6/Row7"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2.0000005, 0, -2.01)
+
+[node name="Hex1" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Row6/Row7/Row8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Row6/Row7/Row8/Hex1"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Hex2" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Row6/Row7/Row8/Hex1"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Row9" type="Node3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Row6/Row7/Row8"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.351872e-23, 0, -8.351872e-23, 1, 2.0000005, 0, -2.01)
+
+[node name="Hex1" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Row6/Row7/Row8/Row9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 0)
+mesh = SubResource("CylinderMesh_hexagon")
+surface_material_override/0 = SubResource("Material_hexagon")
+
+[node name="Center" type="MeshInstance3D" parent="HexagonalModules2/Row1/Row2/Row3/Row4/Row5/Row6/Row7/Row8/Row9/Hex1"]
+mesh = SubResource("CylinderMesh_hexagon_small")
+surface_material_override/0 = SubResource("Material_hexagon_glow")
+
+[node name="Collision" type="StaticBody3D" parent="HexagonalModules2"]
+
+[node name="CollisionShape" type="CollisionShape3D" parent="HexagonalModules2/Collision"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 4.5, -4.5)
+
+[node name="Lights" type="Node3D" parent="."]
+
+[node name="MainLightLeft" type="SpotLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, -5.2, 5, -4.5)
+light_color = Color(0, 1, 1, 1)
+light_energy = 1.5
+spot_range = 12.0
+spot_angle = 35.0
+
+[node name="MainLightRight" type="SpotLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 5.2, 5, -4.5)
+light_color = Color(0, 1, 1, 1)
+light_energy = 1.5
+spot_range = 12.0
+spot_angle = 35.0
+
+[node name="NeonGlowLeft" type="OmniLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.2, 5, -4.5)
+light_color = Color(0, 1, 1, 1)
+light_energy = 2.0
+omni_range = 8.0
+
+[node name="NeonGlowRight" type="OmniLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2, 5, -4.5)
+light_color = Color(0, 1, 1, 1)
+light_energy = 2.0
+omni_range = 8.0
+
+[node name="StepLight1" type="OmniLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.5)
+light_color = Color(0, 0.9, 1, 1)
+light_energy = 0.8
+omni_range = 3.0
+
+[node name="StepLight3" type="OmniLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -1.5)
+light_color = Color(0, 0.9, 1, 1)
+light_energy = 0.8
+omni_range = 3.0
+
+[node name="StepLight5" type="OmniLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, -3.5)
+light_color = Color(0, 0.9, 1, 1)
+light_energy = 0.8
+omni_range = 3.0
+
+[node name="StepLight7" type="OmniLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, -5.5)
+light_color = Color(0, 0.9, 1, 1)
+light_energy = 0.8
+omni_range = 3.0
+
+[node name="StepLight9" type="OmniLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.5, -7.5)
+light_color = Color(0, 0.9, 1, 1)
+light_energy = 0.8
+omni_range = 3.0
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 2
+collision_mask = 436
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 4.5, -5)
+mesh = SubResource("PrismMesh_bq74u")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 5, -4.5)
+shape = SubResource("ConcavePolygonShape3D_s7ff5")
