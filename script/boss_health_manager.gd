@@ -23,7 +23,7 @@ func register_boss(boss: Node, max_health: int) -> void:
 	
 	# Label avec le nom du boss
 	var label = Label.new()
-	label.text = "Esprit Tutélaire"
+	label.text = "Sentinelle"
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	container.add_child(label)
 	

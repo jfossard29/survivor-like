@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=3 uid="uid://cng5kopko58jj"]
+
+[ext_resource type="Script" uid="uid://da1vlbh2d5ql0" path="res://script/zone_aura.gd" id="1_kh7ck"]
+[ext_resource type="Shader" uid="uid://t5oaarf2f71d" path="res://test_zone_arme.gdshader" id="1_tj1l1"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_kh7ck"]
+cap_top = false
+cap_bottom = false
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uwpsy"]
+render_priority = 0
+shader = ExtResource("1_tj1l1")
+shader_parameter/pixel_color = Color(0.3, 0.8, 1, 1)
+shader_parameter/pixel_size = 0.01
+shader_parameter/edge_width = 0.2
+shader_parameter/edge_height = 0.6000000285
+shader_parameter/glow_intensity = 2.0
+shader_parameter/animation_speed = 1.5
+shader_parameter/fall_speed = 0.1
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_tj1l1"]
+
+[node name="AuraWeapon" type="Area3D"]
+collision_layer = 8
+collision_mask = 272
+script = ExtResource("1_kh7ck")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CylinderMesh_kh7ck")
+surface_material_override/0 = SubResource("ShaderMaterial_uwpsy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CylinderShape3D_tj1l1")

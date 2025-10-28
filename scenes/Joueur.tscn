@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://b6g6rerfmvwhp" path="res://script/HarvestZone.gd" id="1_22ypy"]
 [ext_resource type="Script" uid="uid://bpafwtxkb2gqg" path="res://script/player.gd" id="1_n43po"]
-[ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://scenes/projectile.tscn" id="2_3p1t5"]
+[ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://scenes/ProjectileBase.tscn" id="2_3p1t5"]
 [ext_resource type="PackedScene" uid="uid://brbib2i6ft83b" path="res://scenes/Amelioration.tscn" id="4_fdjei"]
 [ext_resource type="Script" uid="uid://bug10plnrdh5t" path="res://script/GestionnaireAmelioration.gd" id="5_8cenu"]
 

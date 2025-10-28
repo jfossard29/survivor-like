@@ -23,6 +23,7 @@ buses/default_bus_layout="res://sounds/default_bus_layout.tres"
 
 GameManager="*res://script/GameManager.gd"
 MusicManager="*res://script/MusicManager.gd"
+WeaponManager="*res://script/WeaponManager.gd"
 
 [editor_plugins]
 
