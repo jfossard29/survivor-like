@@ -13,6 +13,7 @@ var collision_shape: CollisionShape3D
 var visual_indicator: MeshInstance3D
 var mesh_instance: MeshInstance3D
 var shader_material: ShaderMaterial
+var light_beam: Node3D = null  # Référence au LightBeam
 
 # État de charge
 var charge_progress: float = 0.0
@@ -38,12 +39,14 @@ func _ready() -> void:
 	_setup_area3d()
 	_setup_visual_indicator()
 	_find_mesh_instance()
+	_find_light_beam()
 	_update_shader_color()
 	
 	if debug_mode:
 		print("  - Area3D créée avec rayon: ", detection_radius)
 		print("  - MeshInstance trouvée: ", mesh_instance != null)
 		print("  - ShaderMaterial trouvé: ", shader_material != null)
+		print("  - LightBeam trouvé: ", light_beam != null)
 
 func _setup_area3d() -> void:
 	area_3d = Area3D.new()
@@ -125,6 +128,22 @@ func _find_mesh_recursive(node: Node) -> MeshInstance3D:
 			return result
 	return null
 
+func _find_light_beam() -> void:
+	# Chercher le node LightBeam dans les enfants
+	for child in get_children():
+		if child.name == "LightBeam" or child is Node3D and child.get_script():
+			var script = child.get_script()
+			if script and script.get_global_name() == "LightBeam":
+				light_beam = child
+				if debug_mode:
+					print("LightBeam trouvé et référencé")
+				return
+	
+	# Fallback: chercher par nom
+	light_beam = get_node_or_null("LightBeam")
+	if debug_mode and not light_beam:
+		print("Aucun LightBeam trouvé dans le pylône")
+
 func _on_body_entered(body: Node3D) -> void:
 	if debug_mode:
 		print("Pylône: Corps détecté - ", body.name)
@@ -157,6 +176,7 @@ func _process(delta: float) -> void:
 	
 	_update_shader_color()
 	_update_indicator_progress()
+	_update_light_beam_color()  # ← Nouvelle fonction
 	
 	if charge_progress >= 1.0 and not is_charged:
 		_on_fully_charged()
@@ -205,6 +225,31 @@ func _update_indicator_progress() -> void:
 		mat.emission = current_indicator_color
 		mat.emission_energy_multiplier = charge_progress * 5.0
 
+func _update_light_beam_color() -> void:
+	if not light_beam:
+		return
+	
+	# Calculer la couleur actuelle en HSV
+	var h1 = begin_color.h
+	var s1 = begin_color.s
+	var v1 = begin_color.v
+	
+	var h2 = end_color.h
+	var s2 = end_color.s
+	var v2 = end_color.v
+	
+	var current_h = lerp(h1, h2, charge_progress)
+	var current_s = lerp(s1, s2, charge_progress)
+	var current_v = lerp(v1, v2, charge_progress)
+	
+	var current_beam_color = Color.from_hsv(current_h, current_s, current_v)
+	
+	# Mettre à jour la couleur du LightBeam
+	if light_beam.has_method("set") and "beam_color" in light_beam:
+		light_beam.beam_color = current_beam_color
+	elif light_beam.get("beam_color") != null:
+		light_beam.set("beam_color", current_beam_color)
+
 func _on_fully_charged() -> void:
 	is_charged = true
 	
@@ -224,10 +269,44 @@ func _on_fully_charged() -> void:
 			var tween = create_tween()
 			tween.tween_property(mat, "albedo_color:a", 0.0, 0.5)
 	
+	# Supprimer le LightBeam avec animation
+	if light_beam:
+		_remove_light_beam_animated()
+	
 	# Retirer l'Area3D de détection
 	if area_3d:
 		area_3d.queue_free()
 		area_3d = null
+
+func _remove_light_beam_animated() -> void:
+	if not light_beam:
+		return
+	
+	# Animation de disparition progressive
+	var tween = create_tween()
+	tween.set_parallel(true)
+	
+	# Réduire l'intensité de la lumière
+	if light_beam.has_method("get") and light_beam.get("light"):
+		var beam_light = light_beam.get("light")
+		if beam_light:
+			tween.tween_property(beam_light, "light_energy", 0.0, 0.5)
+	
+	# Réduire l'intensité du beam
+	if "beam_intensity" in light_beam:
+		tween.tween_property(light_beam, "beam_intensity", 0.0, 0.5)
+	
+	# Réduire la taille
+	tween.tween_property(light_beam, "scale", Vector3.ZERO, 0.5)
+	
+	# Supprimer après l'animation
+	tween.finished.connect(func(): 
+		if light_beam:
+			light_beam.queue_free()
+			light_beam = null
+		if debug_mode:
+			print("LightBeam supprimé")
+	)
 
 func _exit_tree() -> void:
 	# Sécurité : désenregistre si pas encore fait

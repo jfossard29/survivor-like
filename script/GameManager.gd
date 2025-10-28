@@ -3,7 +3,7 @@ extends Node
 @export var difficulty_ramp_per_minute: float = 0.1
 @export var enemy_update_rate: float = 0.1
 @export var game_duration: float = 600.0  # 10 minutes
-@export var boss_spawn_interval: float = 10.0  # Temps entre chaque boss
+@export var boss_spawn_interval: float = 60.0  # Temps entre chaque boss
 
 var elapsed_time: float = 0.0
 var difficulty_factor: float = 1.0

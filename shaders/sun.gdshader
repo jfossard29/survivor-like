@@ -6,7 +6,6 @@ uniform vec4 color_bottom : source_color = vec4(1.0, 0.0, 0.5, 1.0);  // Couleur
 uniform float line_speed : hint_range(0.0, 5.0) = 1.0;
 uniform float line_width : hint_range(0.01, 0.5) = 0.05;
 uniform float line_spacing : hint_range(0.1, 1.0) = 0.2;
-uniform float emission_strength : hint_range(0.0, 10.0) = 2.0;
 
 void fragment() {
 	// Dégradé de couleur du haut vers le bas
@@ -21,13 +20,13 @@ void fragment() {
 		float final_line = line * fade;
 		
 		// Appliquer le dégradé aux lignes
-		ALBEDO = gradient_color * emission_strength;
-		EMISSION = gradient_color * emission_strength * final_line;
+		ALBEDO = gradient_color;
+		EMISSION = gradient_color * final_line;
 		ALPHA = final_line;
 	} else {
 		// MOITIÉ HAUTE : Couleur unie avec dégradé
-		ALBEDO = gradient_color * emission_strength;
-		EMISSION = gradient_color * emission_strength;
+		ALBEDO = gradient_color;
+		EMISSION = gradient_color;
 		ALPHA = 1.0;
 	}
 }

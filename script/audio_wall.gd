@@ -2,10 +2,10 @@ extends Node3D
 
 # Paramètres visuels
 @export var map_size: float = 100.0
-@export var bar_count: int = 128  # Nombre de barres par côté
+var bar_count: int = 64 # Nombre de barres par côté
 @export var bar_width: float = 1.5
 @export var bar_depth: float = 0.5
-@export var max_bar_height: float = 25.0
+@export var max_bar_height: float = 30.0
 @export var min_bar_height: float = 1.0
 @export var border_offset: float = 5.0  # Distance depuis le bord de la map
 
@@ -35,6 +35,10 @@ var spectrum: AudioEffectSpectrumAnalyzerInstance
 var smoothed_magnitudes: Array = []
 
 func _ready() -> void:
+	if map_size <= 150 :
+		bar_count = 64
+	else:
+		bar_count = 128
 	_setup_spectrum_analyzer()
 	_create_collision_walls()
 	_generate_border()
