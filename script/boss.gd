@@ -31,10 +31,12 @@ var is_attacking: bool = false
 var player_ref: Node3D = null
 var last_contact_time: float = 0.0
 var contact_cooldown: float = 2.0
+var is_dead: bool = false  # Nouveau flag pour empêcher les actions après la mort
+var active_effects: Array = []  # Stocker toutes les zones actives
 
 func _ready():
 	add_to_group("enemy")
-	add_to_group("boss")
+	#add_to_group("boss")
 	GameManager.register_enemy(self)
 	current_health = max_health
 
@@ -67,6 +69,9 @@ func _exit_tree():
 		boss_health_ui.unregister_boss(self)
 
 func _on_hitbox_body_entered(body: Node3D) -> void:
+	if is_dead:
+		return
+		
 	if body.is_in_group("player_projectile") or body.name.begins_with("Projectile"):
 		var damage_amount = 10
 		
@@ -119,7 +124,7 @@ func _predict_player_position() -> Vector3:
 	return current_pos + predicted_offset
 
 func _physics_process(delta: float) -> void:
-	if get_tree().paused:
+	if get_tree().paused or is_dead:
 		return
 	
 	if not is_on_floor():
@@ -153,7 +158,7 @@ func _physics_process(delta: float) -> void:
 	_check_player_collision()
 
 func _push_player_if_colliding() -> void:
-	if not player_ref or not is_instance_valid(player_ref):
+	if is_dead or not player_ref or not is_instance_valid(player_ref):
 		return
 	
 	# Le joueur est directement le CharacterBody3D
@@ -181,17 +186,20 @@ func _push_player_if_colliding() -> void:
 			return
 
 func _start_attack_cycle() -> void:
-	while is_instance_valid(self):
+	while is_instance_valid(self) and not is_dead:
 		var elapsed = 0.0
-		while elapsed < attack_interval:
+		while elapsed < attack_interval and not is_dead:
 			await get_tree().process_frame
 			if not get_tree().paused:
 				elapsed += get_process_delta_time()
 		
-		if is_instance_valid(self) and player_ref and is_instance_valid(player_ref):
+		if is_instance_valid(self) and not is_dead and player_ref and is_instance_valid(player_ref):
 			await _perform_attack_salvo()
 
 func _check_player_collision() -> void:
+	if is_dead:
+		return
+		
 	var now = Time.get_ticks_msec() / 1000.0
 	if now - last_contact_time < contact_cooldown:
 		return
@@ -211,10 +219,13 @@ func _check_player_collision() -> void:
 				return
 
 func _perform_attack_salvo() -> void:
+	if is_dead:
+		return
+		
 	is_attacking = true
 	
 	for i in range(attacks_per_salvo):
-		if not is_instance_valid(self) or not player_ref or not is_instance_valid(player_ref):
+		if not is_instance_valid(self) or is_dead or not player_ref or not is_instance_valid(player_ref):
 			break
 		
 		var predicted_pos = _predict_player_position()
@@ -236,7 +247,7 @@ func _perform_attack_salvo() -> void:
 		_create_warning_zone(pos)
 		
 		var elapsed = 0.0
-		while elapsed < attack_delay:
+		while elapsed < attack_delay and not is_dead:
 			await get_tree().process_frame
 			if not get_tree().paused:
 				elapsed += get_process_delta_time()
@@ -244,10 +255,16 @@ func _perform_attack_salvo() -> void:
 	is_attacking = false
 
 func _create_warning_zone(position: Vector3) -> void:
+	if is_dead:
+		return
+		
 	var warning = Node3D.new()
 	get_tree().current_scene.add_child(warning)
 	warning.global_position = position
 	warning.process_mode = Node.PROCESS_MODE_PAUSABLE
+	
+	# Ajouter à la liste des effets actifs
+	active_effects.append(warning)
 	
 	var mesh = MeshInstance3D.new()
 	var cyl = CylinderMesh.new()
@@ -268,23 +285,30 @@ func _create_warning_zone(position: Vector3) -> void:
 	_animate_warning(mesh, warning_duration)
 	
 	var elapsed = 0.0
-	while elapsed < warning_duration:
+	while elapsed < warning_duration and not is_dead:
 		await get_tree().process_frame
 		if not get_tree().paused:
 			elapsed += get_process_delta_time()
 	
 	if is_instance_valid(warning):
-		_create_attack_zone(position)
+		# Retirer de la liste des effets actifs
+		active_effects.erase(warning)
+		
+		if not is_dead:
+			_create_attack_zone(position)
 		warning.queue_free()
 
 func _animate_warning(mesh: MeshInstance3D, duration: float) -> void:
+	if is_dead:
+		return
+		
 	var tween = create_tween()
 	tween.set_loops()
 	tween.tween_property(mesh, "scale", Vector3(1.2, 1, 1.2), 0.3)
 	tween.tween_property(mesh, "scale", Vector3(1.0, 1, 1.0), 0.3)
 	
 	var elapsed = 0.0
-	while elapsed < duration:
+	while elapsed < duration and not is_dead:
 		await get_tree().process_frame
 		if not get_tree().paused:
 			elapsed += get_process_delta_time()
@@ -293,10 +317,16 @@ func _animate_warning(mesh: MeshInstance3D, duration: float) -> void:
 		tween.kill()
 
 func _create_attack_zone(position: Vector3) -> void:
+	if is_dead:
+		return
+		
 	var attack = Area3D.new()
 	get_tree().current_scene.add_child(attack)
 	attack.global_position = position
 	attack.process_mode = Node.PROCESS_MODE_PAUSABLE
+	
+	# Ajouter à la liste des effets actifs
+	active_effects.append(attack)
 	
 	attack.collision_layer = 0
 	attack.collision_mask = 4
@@ -317,16 +347,18 @@ func _create_attack_zone(position: Vector3) -> void:
 	_animate_rayons(position)
 	
 	var elapsed = 0.0
-	while elapsed < 0.5:
+	while elapsed < 0.5 and not is_dead:
 		await get_tree().process_frame
 		if not get_tree().paused:
 			elapsed += get_process_delta_time()
 	
 	if is_instance_valid(attack):
+		# Retirer de la liste des effets actifs
+		active_effects.erase(attack)
 		attack.queue_free()
 
 func _animate_rayons(position: Vector3) -> void:
-	if not rayon_template:
+	if is_dead or not rayon_template:
 		return
 	
 	var rayon_haut = rayon_template.duplicate()
@@ -335,11 +367,17 @@ func _animate_rayons(position: Vector3) -> void:
 	rayon_haut.visible = true
 	rayon_haut.scale = Vector3(1, 0, 1)
 	
+	# Ajouter à la liste des effets actifs
+	active_effects.append(rayon_haut)
+	
 	var rayon_bas = rayon_template.duplicate()
 	get_tree().current_scene.add_child(rayon_bas)
 	rayon_bas.global_position = position
 	rayon_bas.visible = true
 	rayon_bas.scale = Vector3(1, 0, 1)
+	
+	# Ajouter à la liste des effets actifs
+	active_effects.append(rayon_bas)
 	
 	var tween = create_tween()
 	tween.set_parallel(true)
@@ -351,10 +389,19 @@ func _animate_rayons(position: Vector3) -> void:
 	tween.tween_property(rayon_bas, "position:y", position.y + cylinder_height / 2, rayon_animation_duration * 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	
 	var elapsed = 0.0
-	while elapsed < rayon_animation_duration * 0.5:
+	while elapsed < rayon_animation_duration * 0.5 and not is_dead:
 		await get_tree().process_frame
 		if not get_tree().paused:
 			elapsed += get_process_delta_time()
+	
+	if is_dead:
+		if is_instance_valid(rayon_haut):
+			active_effects.erase(rayon_haut)
+			rayon_haut.queue_free()
+		if is_instance_valid(rayon_bas):
+			active_effects.erase(rayon_bas)
+			rayon_bas.queue_free()
+		return
 	
 	var fade_tween = create_tween()
 	fade_tween.set_parallel(true)
@@ -362,17 +409,22 @@ func _animate_rayons(position: Vector3) -> void:
 	fade_tween.tween_property(rayon_bas, "scale", Vector3(0, 0, 0), rayon_animation_duration * 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	
 	elapsed = 0.0
-	while elapsed < rayon_animation_duration * 0.5:
+	while elapsed < rayon_animation_duration * 0.5 and not is_dead:
 		await get_tree().process_frame
 		if not get_tree().paused:
 			elapsed += get_process_delta_time()
 	
 	if is_instance_valid(rayon_haut):
+		active_effects.erase(rayon_haut)
 		rayon_haut.queue_free()
 	if is_instance_valid(rayon_bas):
+		active_effects.erase(rayon_bas)
 		rayon_bas.queue_free()
 
 func _on_attack_hit(body: Node, attack_area: Area3D) -> void:
+	if is_dead:
+		return
+		
 	if debug:
 		print("🎯 Quelque chose est entré dans la zone d'attaque: ", body.name, " (Type: ", body.get_class(), ")")
 		print("   Est dans groupe 'player': ", body.is_in_group("player"))
@@ -396,6 +448,9 @@ func _on_attack_hit(body: Node, attack_area: Area3D) -> void:
 		print("⚠️ Ce n'est pas le joueur")
 
 func take_damage(amount: int) -> void:
+	if is_dead:
+		return
+		
 	current_health -= amount
 	current_health = max(0, current_health)
 	update_health_display()
@@ -406,8 +461,22 @@ func take_damage(amount: int) -> void:
 	if current_health <= 0:
 		die()
 
+func _cleanup_active_effects() -> void:
+	"""Nettoyer tous les effets visuels actifs"""
+	for effect in active_effects:
+		if is_instance_valid(effect):
+			effect.queue_free()
+	active_effects.clear()
+
 func die() -> void:
+	if is_dead:
+		return
+		
+	is_dead = true
 	print("💀 Boss vaincu!")
+	
+	# Nettoyer tous les effets actifs
+	_cleanup_active_effects()
 	
 	if experience_scene:
 		for i in range(10):

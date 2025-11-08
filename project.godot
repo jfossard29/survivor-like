@@ -23,7 +23,14 @@ buses/default_bus_layout="res://sounds/default_bus_layout.tres"
 
 GameManager="*res://script/GameManager.gd"
 MusicManager="*res://script/MusicManager.gd"
-WeaponManager="*res://script/WeaponManager.gd"
+WeaponManager="*res://script/arme/WeaponManager.gd"
+BassManager="*res://script/BassManager.gd"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/mode=2
 
 [editor_plugins]
 

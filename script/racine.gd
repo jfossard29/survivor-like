@@ -29,8 +29,8 @@ func _ready():
 	
 	# Assigner les musiques principales uniquement
 	MusicManager.main_tracks = [
-		preload("res://sounds/Endless Spiral of Chaos.ogg"),
-		preload("res://sounds/Endless Spiral of Fight.ogg")
+		preload("res://sounds/Endless_Spiral_of_Chaos.ogg"),
+		preload("res://sounds/Endless_Spiral_of_Fight.ogg")
 	]
 	# ❌ SUPPRIMÉ : MusicManager.pause_music = ...
 	MusicManager.set_volume(-12.0)
@@ -144,104 +144,100 @@ func spawn_pnj():
 	if not player or not spawn_zone:
 		return
 	
-	# Vérification de sécurité
 	if not spawn_zone.is_inside_tree():
 		push_warning("⚠️ spawn_zone n'est pas dans l'arbre")
 		return
 	
 	var space_state = get_world_3d().direct_space_state
 	
-	for attempt in range(5):
+	for attempt in range(10):  # Augmenté à 10 tentatives
 		var angle = randf() * TAU
 		var distance = randf_range(min_spawn_distance, spawn_radius)
 		var local_pos = Vector3(cos(angle) * distance, 0, sin(angle) * distance)
 		var world_pos = spawn_zone.to_global(local_pos)
 		
-		var ray_start = world_pos + Vector3.UP * 5.0
-		var ray_end = world_pos + Vector3.DOWN * 10.0
+		# Ray depuis plus haut pour détecter les plateformes au-dessus
+		var ray_start = world_pos + Vector3.UP * 20.0
+		var ray_end = world_pos + Vector3.DOWN * 30.0
 		
 		var params = PhysicsRayQueryParameters3D.create(ray_start, ray_end)
 		params.exclude = [player]
 		params.collide_with_areas = false
 		params.collide_with_bodies = true
-		params.collision_mask = 1
+		params.collision_mask = 2  # ✅ Layer 2 = sol uniquement
 		
 		var result = space_state.intersect_ray(params)
 		if result and result.collider:
-			var collider = result.collider
-			if collider.is_in_group("terrain") and not collider.is_in_group("InvisibleWalls"):
-				_instantiate_pnj(result.position)
+			var hit_pos = result.position
+			
+			# Vérifier qu'il n'y a rien au-dessus (pas dans le sol)
+			var clearance_check = PhysicsRayQueryParameters3D.create(
+				hit_pos + Vector3.UP * 0.5,
+				hit_pos + Vector3.UP * 3.0
+			)
+			clearance_check.exclude = [player]
+			clearance_check.collide_with_areas = false
+			clearance_check.collide_with_bodies = true
+			clearance_check.collision_mask = 2
+			
+			var blocked = space_state.intersect_ray(clearance_check)
+			if not blocked:  # Espace libre au-dessus
+				_instantiate_pnj(hit_pos)
 				return
 	
-	var fallback_angle = randf() * TAU
-	var fallback_distance = randf_range(min_spawn_distance, spawn_radius)
-	var fallback_offset = Vector3(cos(fallback_angle) * fallback_distance, 0, sin(fallback_angle) * fallback_distance)
-	var fallback_pos = player.global_position + fallback_offset
-	_instantiate_pnj(fallback_pos)
+	# Fallback si aucune position valide trouvée
+	push_warning("⚠️ Aucune position valide trouvée pour spawn PNJ")
 
 func spawn_boss() -> void:
 	print("🔥 spawn_boss() appelée")
 	
-	if not boss_scene:
-		push_error("❌ boss_scene est null!")
+	if not boss_scene or not player or not spawn_zone:
+		push_error("❌ Références manquantes pour spawn boss")
 		return
 	
-	if not player:
-		push_error("❌ player est null!")
-		return
-	
-	if not spawn_zone:
-		push_error("❌ spawn_zone est null!")
-		return
-	
-	# Vérification de sécurité
 	if not spawn_zone.is_inside_tree():
 		push_error("❌ spawn_zone n'est pas dans l'arbre")
 		return
 	
-	print("✅ Toutes les références sont valides")
-	print("✅ Position du joueur: ", player.global_position)
-	
 	var space_state = get_world_3d().direct_space_state
-	var boss_spawned = false
 	
-	# Essayer plusieurs positions
-	for attempt in range(10):
+	for attempt in range(15):  # Plus de tentatives pour le boss
 		var angle = randf() * TAU
 		var distance = boss_spawn_distance
 		var local_pos = Vector3(cos(angle) * distance, 0, sin(angle) * distance)
 		var world_pos = spawn_zone.to_global(local_pos)
 		
-		print("🎯 Tentative ", attempt + 1, " à position: ", world_pos)
-		
-		var ray_start = world_pos + Vector3.UP * 5.0
-		var ray_end = world_pos + Vector3.DOWN * 10.0
+		# Ray depuis plus haut
+		var ray_start = world_pos + Vector3.UP * 20.0
+		var ray_end = world_pos + Vector3.DOWN * 30.0
 		
 		var params = PhysicsRayQueryParameters3D.create(ray_start, ray_end)
 		params.exclude = [player]
 		params.collide_with_areas = false
 		params.collide_with_bodies = true
-		params.collision_mask = 1
+		params.collision_mask = 2  # ✅ Layer 2 = sol uniquement
 		
 		var result = space_state.intersect_ray(params)
 		if result and result.collider:
-			print("  ✅ Sol trouvé à: ", result.position)
-			var collider = result.collider
-			if collider.is_in_group("terrain") and not collider.is_in_group("InvisibleWalls"):
-				_instantiate_boss(result.position)
-				boss_spawned = true
+			var hit_pos = result.position
+			
+			# Vérifier l'espace libre (boss plus grand, 5m de hauteur)
+			var clearance_check = PhysicsRayQueryParameters3D.create(
+				hit_pos + Vector3.UP * 0.5,
+				hit_pos + Vector3.UP * 5.0
+			)
+			clearance_check.exclude = [player]
+			clearance_check.collide_with_areas = false
+			clearance_check.collide_with_bodies = true
+			clearance_check.collision_mask = 2
+			
+			var blocked = space_state.intersect_ray(clearance_check)
+			if not blocked:
+				_instantiate_boss(hit_pos)
+				print("🎉 Boss spawné à: ", hit_pos)
 				return
-			else:
-				print("  ⚠️ Collider n'est pas terrain ou est InvisibleWall")
-		else:
-			print("  ❌ Aucun sol trouvé")
 	
-	if not boss_spawned:
-		print("⚠️ Spawn de secours du boss")
-		var fallback_pos = player.global_position + Vector3.FORWARD * boss_spawn_distance
-		fallback_pos.y = player.global_position.y
-		_instantiate_boss(fallback_pos)
-
+	push_error("❌ Impossible de trouver une position valide pour le boss")
 func _instantiate_pnj(ground_pos: Vector3):
 	var pnj = pnj_scene.instantiate()
 	get_tree().current_scene.add_child(pnj)

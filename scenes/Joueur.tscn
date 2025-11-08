@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://b6g6rerfmvwhp" path="res://script/HarvestZone.gd" id="1_22ypy"]
 [ext_resource type="Script" uid="uid://bpafwtxkb2gqg" path="res://script/player.gd" id="1_n43po"]
-[ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://scenes/ProjectileBase.tscn" id="2_3p1t5"]
+[ext_resource type="Script" uid="uid://bfpeg2n8qsxat" path="res://script/test_beat.gd" id="2_fdjei"]
 [ext_resource type="PackedScene" uid="uid://brbib2i6ft83b" path="res://scenes/Amelioration.tscn" id="4_fdjei"]
 [ext_resource type="Script" uid="uid://bug10plnrdh5t" path="res://script/GestionnaireAmelioration.gd" id="5_8cenu"]
 
@@ -219,10 +219,9 @@ _data = {
 [sub_resource type="BoxMesh" id="BoxMesh_3p1t5"]
 size = Vector3(0.1, 0.5, 0.1)
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_7kq1s"]
-top_radius = 0.15
-bottom_radius = 0.15
-height = 0.05
+[sub_resource type="SphereMesh" id="SphereMesh_8cenu"]
+radius = 0.12
+height = 0.24
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_fdjei"]
 radius = 2.0
@@ -237,12 +236,10 @@ bg_color = Color(0.5563933, 0, 0, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8cenu"]
 bg_color = Color(0.07846785, 0.805388, 0.97360384, 1)
 
-[node name="Corps" type="CharacterBody3D" node_paths=PackedStringArray("camera")]
+[node name="Corps" type="CharacterBody3D"]
 collision_layer = 4
 collision_mask = 275
 script = ExtResource("1_n43po")
-projectile_scene = ExtResource("2_3p1t5")
-camera = NodePath("CameraPivot/Camera3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_xqeeq")
@@ -271,8 +268,11 @@ mesh = SubResource("BoxMesh_3p1t5")
 skeleton = NodePath("../MeshInstance3D")
 
 [node name="MeshInstance3D4" type="MeshInstance3D" parent="MeshInstance3D"]
+process_mode = 3
 transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, 0, 0.48622727, 0)
-mesh = SubResource("CylinderMesh_7kq1s")
+mesh = SubResource("SphereMesh_8cenu")
+script = ExtResource("2_fdjei")
+beats_file_path = "res://sounds/musiques_beat.json"
 
 [node name="MeshInstance3D5" type="MeshInstance3D" parent="MeshInstance3D"]
 transform = Transform3D(0.46988487, -0.41744724, -0.7777825, 0.664161, 0.74758923, 0, 0.581462, -0.5165728, 0.62853324, 0.18856002, -0.032000065, 0.23333502)

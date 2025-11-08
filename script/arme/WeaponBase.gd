@@ -15,7 +15,7 @@ var damage_flat_bonus: float = 0.0  # Bonus plat de dégâts
 var damage_multiplier: float = 1.0  # Multiplicateur de dégâts (%)
 var fire_rate_multiplier: float = 1.0  # Multiplicateur de cadence
 var range_multiplier: float = 1.0  # Multiplicateur de portée
-
+var bounce_count: int = 1
 # Stats finales calculées
 var final_damage: float
 var final_fire_interval: float
@@ -76,3 +76,6 @@ func add_fire_rate(percent: float) -> void:
 func add_range(percent: float) -> void:
 	range_multiplier += percent / 100.0
 	update_stats()
+	
+func add_bounce_count(number: int) -> void:
+	bounce_count += number

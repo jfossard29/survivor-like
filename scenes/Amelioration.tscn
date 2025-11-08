@@ -7,26 +7,42 @@ process_mode = 3
 script = ExtResource("1_dt8am")
 
 [node name="Panel" type="Panel" parent="."]
-offset_left = 327.0
-offset_top = 128.0
-offset_right = 895.0
-offset_bottom = 453.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(200, 150)
 
 [node name="Label" type="Label" parent="Panel"]
-layout_mode = 0
-offset_left = 170.0
-offset_top = 32.0
-offset_right = 287.0
-offset_bottom = 55.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.15200001
+anchor_right = 0.5
+anchor_bottom = 0.15200001
+offset_left = -58.0
+offset_top = -11.600002
+offset_right = 59.0
+offset_bottom = 11.399998
+grow_horizontal = 2
 
 [node name="ChoixContainer" type="VBoxContainer" parent="Panel"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.25500003
-anchor_top = 0.26200002
-anchor_right = 0.25500003
-anchor_bottom = 0.26200002
-offset_left = 0.1599884
-offset_top = -0.15000916
-offset_right = 256.88098
-offset_bottom = 177.45003
+anchor_left = 0.5
+anchor_top = 0.596
+anchor_right = 0.50100005
+anchor_bottom = 0.596
+offset_left = -128.00003
+offset_top = -88.799995
+offset_right = 128.32095
+offset_bottom = 88.80003
+grow_horizontal = 2
+grow_vertical = 2

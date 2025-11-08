@@ -7,6 +7,9 @@ extends Node3D
 @export var end_color: Color = Color("#00ffff") # Couleur finale (cyan)
 @export var debug_mode: bool = false
 
+@onready var amelioration_manager = GameManager.player_reference.get_node("AmeliorationManager")
+@onready var popup_multi = GameManager.player_reference.get_node("Amelioration")
+
 # Références internes
 var area_3d: Area3D
 var collision_shape: CollisionShape3D
@@ -277,6 +280,9 @@ func _on_fully_charged() -> void:
 	if area_3d:
 		area_3d.queue_free()
 		area_3d = null
+	
+	var choix = amelioration_manager.get_ameliorations_random(GameManager.player_reference)
+	popup_multi.afficher(choix)
 
 func _remove_light_beam_animated() -> void:
 	if not light_beam:

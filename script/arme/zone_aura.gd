@@ -38,12 +38,10 @@ func _physics_process(delta: float) -> void:
 func _on_body_entered(body: Node) -> void:
 	if body.is_in_group("enemy") and not enemies_in_range.has(body):
 		enemies_in_range.append(body)
-		print("👹 Ennemi entré dans l'aura: ", body.name)
 
 func _on_body_exited(body: Node) -> void:
 	if body.is_in_group("enemy") and enemies_in_range.has(body):
 		enemies_in_range.erase(body)
-		print("👋 Ennemi sorti de l'aura: ", body.name)
 
 func apply_damage_to_enemies() -> void:
 	# Nettoyer les ennemis invalides
@@ -56,8 +54,6 @@ func apply_damage_to_enemies() -> void:
 	for enemy in enemies_in_range:
 		if enemy.has_method("take_damage"):
 			enemy.take_damage(damage)
-	
-	print("💥 Aura tick - ", enemies_in_range.size(), " ennemis touchés - Dégâts: ", damage)
 
 func update_collision_and_mesh() -> void:
 	if not collision_shape or not mesh_instance:
@@ -77,5 +73,3 @@ func update_collision_and_mesh() -> void:
 		cylinder_mesh.top_radius = radius
 		cylinder_mesh.bottom_radius = radius
 		cylinder_mesh.height = 2.0  # Même hauteur que la collision
-	
-	print("🔄 Aura mesh/collision updated - Rayon: ", radius)

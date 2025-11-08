@@ -1,9 +1,12 @@
-[gd_scene load_steps=10 format=3 uid="uid://61c8mu2pkxgh"]
+[gd_scene load_steps=14 format=3 uid="uid://61c8mu2pkxgh"]
 
+[ext_resource type="Script" uid="uid://ckxxrbtclaw7c" path="res://script/zone_de_test.gd" id="1_f12hp"]
 [ext_resource type="PackedScene" uid="uid://bcl5krgds1wpe" path="res://scenes/Joueur.tscn" id="3_ciifq"]
 [ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://scenes/ProjectileBase.tscn" id="3_l6now"]
 [ext_resource type="PackedScene" uid="uid://cng5kopko58jj" path="res://scenes/aura_weapon.tscn" id="4_f12hp"]
 [ext_resource type="Shader" uid="uid://p6i28ung6ymp" path="res://shaders/sky.gdshader" id="4_gk8k0"]
+[ext_resource type="Script" uid="uid://cn0qcgprhfpsp" path="res://script/test_audio.gd" id="5_l6now"]
+[ext_resource type="Script" uid="uid://bfpeg2n8qsxat" path="res://script/test_beat.gd" id="7_44fu3"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yg2ly"]
 size = Vector2(100, 100)
@@ -35,7 +38,10 @@ background_mode = 2
 sky = SubResource("Sky_gi8kb")
 glow_enabled = true
 
+[sub_resource type="BoxMesh" id="BoxMesh_f12hp"]
+
 [node name="ZoneTest" type="Node3D"]
+script = ExtResource("1_f12hp")
 
 [node name="sol" type="StaticBody3D" parent="."]
 collision_layer = 2
@@ -75,3 +81,13 @@ rings = 64
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 19.738197, 27.355022)
 base_projectile_scene = ExtResource("3_l6now")
 aura_scene = ExtResource("4_f12hp")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+script = ExtResource("5_l6now")
+beats_json_path = "res://sounds/musiques_beat.json"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.245351, 0)
+mesh = SubResource("BoxMesh_f12hp")
+script = ExtResource("7_44fu3")
+beats_file_path = "res://sounds/test.json"

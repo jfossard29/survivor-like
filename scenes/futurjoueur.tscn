@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ntpp5c6nwdpk"]
+
+[ext_resource type="Script" uid="uid://b407cgmrtl2su" path="res://script/futurjoueur.gd" id="1_nk452"]
+
+[node name="Futurjoueur" type="Node3D"]
+script = ExtResource("1_nk452")

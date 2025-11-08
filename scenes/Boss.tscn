@@ -212,7 +212,7 @@ collision_layer = 256
 collision_mask = 7
 script = ExtResource("1_gw42l")
 experience_scene = ExtResource("2_edv8j")
-hitbox = NodePath("Area3D")
+hitbox = NodePath("Detection")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -223,11 +223,11 @@ autoplay = "tourner"
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_edv8j")
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="Detection" type="Area3D" parent="."]
 collision_layer = 256
 collision_mask = 12
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Detection"]
 shape = SubResource("SphereShape3D_paxtu")
 
 [node name="Corps" type="MeshInstance3D" parent="."]

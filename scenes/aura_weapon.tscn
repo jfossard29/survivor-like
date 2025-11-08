@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://cng5kopko58jj"]
 
-[ext_resource type="Script" uid="uid://da1vlbh2d5ql0" path="res://script/zone_aura.gd" id="1_kh7ck"]
-[ext_resource type="Shader" uid="uid://t5oaarf2f71d" path="res://test_zone_arme.gdshader" id="1_tj1l1"]
+[ext_resource type="Script" uid="uid://da1vlbh2d5ql0" path="res://script/arme/zone_aura.gd" id="1_kh7ck"]
+[ext_resource type="Shader" uid="uid://t5oaarf2f71d" path="res://shaders/zone_aura.gdshader" id="1_tj1l1"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_kh7ck"]
 cap_top = false
@@ -13,7 +13,7 @@ shader = ExtResource("1_tj1l1")
 shader_parameter/pixel_color = Color(0.3, 0.8, 1, 1)
 shader_parameter/pixel_size = 0.01
 shader_parameter/edge_width = 0.2
-shader_parameter/edge_height = 0.6000000285
+shader_parameter/edge_height = 0.70000003325
 shader_parameter/glow_intensity = 2.0
 shader_parameter/animation_speed = 1.5
 shader_parameter/fall_speed = 0.1
