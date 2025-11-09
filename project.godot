@@ -21,10 +21,11 @@ buses/default_bus_layout="res://sounds/default_bus_layout.tres"
 
 [autoload]
 
-GameManager="*res://script/GameManager.gd"
-MusicManager="*res://script/MusicManager.gd"
-WeaponManager="*res://script/arme/WeaponManager.gd"
-BassManager="*res://script/BassManager.gd"
+GameManager="*res://script/managers/GameManager.gd"
+MusicManager="*res://script/managers/MusicManager.gd"
+WeaponManager="*res://script/managers/WeaponManager.gd"
+BassManager="*res://script/managers/BassManager.gd"
+RarityManager="*res://script/managers/RarityManager.gd"
 
 [display]
 
