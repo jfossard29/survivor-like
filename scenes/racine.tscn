@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://gvu6insiwbib" path="res://scenes/projectile_rebond.tscn" id="7_n7u81"]
 [ext_resource type="Script" uid="uid://bbkiswqwrl6a6" path="res://script/map/pylone_charge.gd" id="10_6wm8b"]
 [ext_resource type="Shader" uid="uid://g3uovj5kqbhb" path="res://shaders/pylone.gdshader" id="11_ibfkh"]
-[ext_resource type="ArrayMesh" uid="uid://bl76k8qf7c418" path="res://assets/pylone.vox" id="12_65hki"]
+[ext_resource type="ArrayMesh" uid="uid://dmth1gs2f07md" path="res://assets/pylone.vox" id="12_65hki"]
 [ext_resource type="Script" uid="uid://bj34ar46op5rx" path="res://script/map/Quadrilatere.gd" id="12_ds77h"]
 [ext_resource type="Shader" uid="uid://dta3l04x00wf6" path="res://shaders/sun.gdshader" id="13_mgd15"]
 [ext_resource type="Script" uid="uid://0mf78caqltxw" path="res://script/map/test_fesceau.gd" id="13_sl8nf"]
@@ -246,7 +246,7 @@ light_color = Color(0.5757481, 0.5672782, 1, 1)
 [node name="Map" parent="." instance=ExtResource("5_kyype")]
 map_size = 150
 bloc_path = "uid://7eq667phpr05"
-pylone_path = "uid://bl76k8qf7c418"
+pylone_path = "uid://dmth1gs2f07md"
 pylone_shader_path = "uid://g3uovj5kqbhb"
 pylone_script_path = "uid://bbkiswqwrl6a6"
 audio_wall_script_path = "uid://cne885366udw3"

@@ -1,6 +1,7 @@
 [gd_scene load_steps=15 format=3 uid="uid://brbib2i6ft83b"]
 
-[sub_resource type="Theme" id="Theme_bqqo3"]
+[ext_resource type="Script" uid="uid://bk2jp463mce6y" path="res://script/UI/PopupAmelioration.gd" id="1_bqqo3"]
+[ext_resource type="Script" uid="uid://bcvctchu5u2la" path="res://script/option_script.gd" id="2_d2043"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d2043"]
 bg_color = Color(0.06, 0.06, 0.12, 0.95)
@@ -29,99 +30,44 @@ corner_radius_top_right = 15
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 15
 
-[sub_resource type="GDScript" id="GDScript_i5yoh"]
-script/source = "extends PanelContainer
-
-@onready var child_panel: PanelContainer = $PanelImage
-@onready var anim_player: AnimationPlayer = $AnimationPlayer  # Ajouter cette référence
-
-# Paramètres de rareté
-@export_group(\"Rarity\")
-@export_enum(\"common\", \"uncommon\", \"rare\", \"legendary\", \"unique\") var rarity: String = \"common\"
-@export var shadow_pulse_intensity: float = 0.3
-@export var shadow_pulse_speed: float = 2.0
-
-var is_hovered: bool = false
-var pulse_time: float = 0.0
-
-func _ready():
-	mouse_filter = Control.MOUSE_FILTER_PASS
-	mouse_entered.connect(_on_hover_start)
-	mouse_exited.connect(_on_hover_end)
-	
-	if child_panel:
-		call_deferred(\"_setup_child_pivot\")
-	
-	call_deferred(\"_apply_rarity_style\")
-
-func _setup_child_pivot():
-	if child_panel:
-		child_panel.pivot_offset = child_panel.size / 2
-
-func _process(delta):
-	pulse_time += delta * shadow_pulse_speed
-	_update_shadow_pulse()
-
-func _apply_rarity_style():
-	var color = _get_rarity_color(rarity)
-	
-	var parent_stylebox = get_theme_stylebox(\"panel\").duplicate()
-	if parent_stylebox is StyleBoxFlat:
-		parent_stylebox.border_color = color
-		parent_stylebox.shadow_size = 8
-		parent_stylebox.shadow_color = Color(color.r, color.g, color.b, 0.5)
-	add_theme_stylebox_override(\"panel\", parent_stylebox)
-	
-	if child_panel:
-		var child_stylebox = child_panel.get_theme_stylebox(\"panel\").duplicate()
-		if child_stylebox is StyleBoxFlat:
-			child_stylebox.border_color = color
-			child_stylebox.shadow_size = 6
-			child_stylebox.shadow_color = Color(color.r, color.g, color.b, 0.5)
-		child_panel.add_theme_stylebox_override(\"panel\", child_stylebox)
-
-func _update_shadow_pulse():
-	var pulse_factor = (sin(pulse_time) * 0.5 + 0.5) * shadow_pulse_intensity
-	var color = _get_rarity_color(rarity)
-	
-	var parent_stylebox = get_theme_stylebox(\"panel\")
-	if parent_stylebox is StyleBoxFlat:
-		var shadow_color = Color(color.r, color.g, color.b, 0.3 + pulse_factor)
-		parent_stylebox.shadow_color = shadow_color
-	
-	if child_panel:
-		var child_stylebox = child_panel.get_theme_stylebox(\"panel\")
-		if child_stylebox is StyleBoxFlat:
-			var shadow_color = Color(color.r, color.g, color.b, 0.3 + pulse_factor)
-			child_stylebox.shadow_color = shadow_color
-
-func _get_rarity_color(rarity_type: String) -> Color:
-	match rarity_type:
-		\"common\": return Color(0.8, 0.8, 0.8, 1)
-		\"uncommon\": return Color(0.2, 0.6, 1, 1)
-		\"rare\": return Color(1, 0.8, 0, 1)
-		\"legendary\": return Color(1, 0.4, 0, 1)
-		\"unique\": return Color(0.8, 0, 0, 1)
-		_: return Color.WHITE
-
-func _on_hover_start():
-	if is_hovered or not anim_player:
-		return
-	
-	is_hovered = true
-	anim_player.play(\"hover_enter\")
-
-func _on_hover_end():
-	if not is_hovered or not anim_player:
-		return
-	
-	is_hovered = false
-	anim_player.play(\"hover_exit\")
-
-func _notification(what: int):
-	if what == NOTIFICATION_RESIZED and child_panel:
-		child_panel.pivot_offset = child_panel.size / 2
-"
+[sub_resource type="Animation" id="Animation_bqqo3"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node2D/PanelImage:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node2D/PanelImage:size")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(70, 70)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("..:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_i5yoh"]
 resource_name = "hover_enter"
@@ -129,29 +75,38 @@ length = 0.5
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
+tracks/0/path = NodePath("Node2D/PanelImage:size")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(270, 378), Vector2(280, 378)]
+"values": [Vector2(70, 70), Vector2(75, 75)]
 }
-
-[sub_resource type="Animation" id="Animation_bqqo3"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node2D/PanelImage:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(270, 378)]
+"values": [0.0, 0.34906584]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("..:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(10, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_d2043"]
@@ -160,14 +115,38 @@ length = 0.5
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
+tracks/0/path = NodePath("Node2D/PanelImage:rotation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(280, 378), Vector2(270, 378)]
+"values": [0.34906584, 0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node2D/PanelImage:size")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(75, 75), Vector2(70, 70)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("..:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(10, 0), Vector2(0, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_v3s55"]
@@ -176,6 +155,17 @@ _data = {
 &"hover_enter": SubResource("Animation_i5yoh"),
 &"hover_exit": SubResource("Animation_d2043")
 }
+
+[sub_resource type="Shader" id="Shader_d2043"]
+code = "shader_type canvas_item;
+
+void fragment() {
+	float gradient = smoothstep(0.0, 0.5, UV.x) * smoothstep(1.0, 0.5, UV.x);
+	COLOR = vec4(0.0, 0.83, 1.0, gradient * 0.15);
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_v3s55"]
+shader = SubResource("Shader_d2043")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v3s55"]
 bg_color = Color(0.1, 0.1, 0.24, 1)
@@ -194,123 +184,118 @@ shadow_size = 10
 [sub_resource type="LabelSettings" id="LabelSettings_i5yoh"]
 outline_size = 3
 
-[sub_resource type="Shader" id="Shader_d2043"]
-code = "shader_type canvas_item;
-
-void fragment() {
-	float gradient = smoothstep(0.0, 0.5, UV.x) * smoothstep(1.0, 0.5, UV.x);
-	COLOR = vec4(0.0, 0.83, 1.0, gradient * 0.15);
-}"
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_v3s55"]
-shader = SubResource("Shader_d2043")
-
 [node name="Amelioration" type="CanvasLayer"]
 process_mode = 3
 layer = 10
+script = ExtResource("1_bqqo3")
+panel_script_path = "res://script/option_script.gd"
 
 [node name="Conteneur" type="Panel" parent="."]
 anchors_preset = -1
-anchor_left = 0.39600003
-anchor_top = 0.36100003
-anchor_right = 0.39600003
-anchor_bottom = 0.36100003
-offset_left = -0.32006836
-offset_top = 0.1199646
-offset_right = 599.67993
-offset_bottom = 600.12
+anchor_left = 0.34800002
+anchor_top = 0.19100001
+anchor_right = 0.34800002
+anchor_bottom = 0.19100001
+offset_left = 0.8399658
+offset_top = -0.28001404
+offset_right = 600.83997
+offset_bottom = 599.72
 grow_horizontal = 2
 grow_vertical = 2
-pivot_offset = Vector2(200, 150)
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme = SubResource("Theme_bqqo3")
 theme_override_styles/panel = SubResource("StyleBoxFlat_d2043")
 
-[node name="MarginContainer" type="MarginContainer" parent="Conteneur"]
-layout_mode = 0
-offset_right = 640.0
-offset_bottom = 290.0
-theme_override_constants/margin_left = 100
-theme_override_constants/margin_top = 100
-theme_override_constants/margin_right = 100
-theme_override_constants/margin_bottom = 100
+[node name="Header" type="VBoxContainer" parent="Conteneur"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_right = 300.0
+offset_bottom = 100.0
+theme_override_constants/separation = 15
+alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Conteneur/MarginContainer"]
+[node name="Titre" type="Label" parent="Conteneur/Header"]
 layout_mode = 2
-theme_override_constants/separation = 30
-
-[node name="Titre" type="Label" parent="Conteneur/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 60)
-layout_mode = 2
+size_flags_vertical = 6
 text = "CHOISISSEZ UNE AMÉLIORATION"
 label_settings = SubResource("LabelSettings_bqqo3")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ChoixConteneur" type="VBoxContainer" parent="Conteneur/MarginContainer/VBoxContainer"]
-layout_mode = 2
+[node name="ChoixConteneur" type="VBoxContainer" parent="Conteneur"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 100.0
+offset_right = 520.0
+offset_bottom = 323.0
+size_flags_horizontal = 4
 theme_override_constants/separation = 15
+alignment = 1
 
-[node name="Common" type="MarginContainer" parent="."]
-anchors_preset = -1
-anchor_left = 0.141
-anchor_top = 0.35000002
-anchor_right = 0.141
-anchor_bottom = 0.35000002
-offset_left = -0.7200012
-offset_top = -3.0517578e-05
-offset_right = 469.27963
-offset_bottom = 103.99997
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_right = 20
+[node name="Common_To_Rare" type="CenterContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="PanelContainer" type="PanelContainer" parent="Common"]
-clip_contents = true
+[node name="PanelContainer" type="PanelContainer" parent="Common_To_Rare"]
+process_mode = 3
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_bqqo3")
-script = SubResource("GDScript_i5yoh")
-rarity = "rare"
+script = ExtResource("2_d2043")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Common/PanelContainer"]
-root_node = NodePath("../..")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Common_To_Rare/PanelContainer"]
+process_mode = 3
+root_node = NodePath("../MarginContainer")
 libraries = {
 &"": SubResource("AnimationLibrary_v3s55")
 }
+autoplay = "RESET"
 
-[node name="PanelImage" type="PanelContainer" parent="Common/PanelContainer"]
-custom_minimum_size = Vector2(70, 70)
+[node name="MarginContainer" type="MarginContainer" parent="Common_To_Rare/PanelContainer"]
 layout_mode = 2
-size_flags_horizontal = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_right = 20
+
+[node name="Scan" type="ColorRect" parent="Common_To_Rare/PanelContainer/MarginContainer"]
+material = SubResource("ShaderMaterial_v3s55")
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+
+[node name="Node2D" type="Node2D" parent="Common_To_Rare/PanelContainer/MarginContainer"]
+position = Vector2(35, 50)
+
+[node name="PanelImage" type="PanelContainer" parent="Common_To_Rare/PanelContainer/MarginContainer/Node2D"]
+offset_left = -35.0
+offset_top = -35.0
+offset_right = 35.0
+offset_bottom = 35.0
+pivot_offset = Vector2(35, 35)
+size_flags_horizontal = 6
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_v3s55")
 
-[node name="Label" type="Label" parent="Common/PanelContainer/PanelImage"]
+[node name="Label" type="Label" parent="Common_To_Rare/PanelContainer/MarginContainer/Node2D/PanelImage"]
 layout_mode = 2
 text = "★"
 label_settings = SubResource("LabelSettings_nlnha")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="Common/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Common_To_Rare/PanelContainer/MarginContainer"]
 custom_minimum_size = Vector2(350, 70)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_constants/margin_left = 70
 
-[node name="Label" type="Label" parent="Common/PanelContainer/MarginContainer"]
+[node name="Titre" type="Label" parent="Common_To_Rare/PanelContainer/MarginContainer/MarginContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 text = "Lipsun vitae trilli molusc"
 label_settings = SubResource("LabelSettings_i5yoh")
 
-[node name="Label2" type="Label" parent="Common/PanelContainer/MarginContainer"]
+[node name="Description" type="Label" parent="Common_To_Rare/PanelContainer/MarginContainer/MarginContainer"]
 layout_mode = 2
-text = "li"
-
-[node name="Scan" type="ColorRect" parent="Common/PanelContainer"]
-z_index = 1
-material = SubResource("ShaderMaterial_v3s55")
-custom_minimum_size = Vector2(200, 100)
-layout_mode = 2
+text = "lilipossum livae erectum cendre"

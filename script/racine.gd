@@ -81,7 +81,7 @@ func _connect_pause_menu() -> void:
 func _on_game_paused(paused: bool) -> void:
 	is_paused = paused
 	MusicManager.set_game_paused(paused)
-	
+
 func _on_boss_spawn_requested() -> void:
 	print("🔥 Signal boss_spawn_requested reçu!")
 	spawn_boss()
@@ -238,6 +238,7 @@ func spawn_boss() -> void:
 				return
 	
 	push_error("❌ Impossible de trouver une position valide pour le boss")
+
 func _instantiate_pnj(ground_pos: Vector3):
 	var pnj = pnj_scene.instantiate()
 	get_tree().current_scene.add_child(pnj)
