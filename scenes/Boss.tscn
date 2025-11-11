@@ -92,8 +92,8 @@ _data = {
 &"tourner": SubResource("Animation_4jvlg")
 }
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_edv8j"]
-size = Vector3(10, 10, 10)
+[sub_resource type="SphereShape3D" id="SphereShape3D_o02xv"]
+radius = 6.0
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_paxtu"]
 radius = 6.0
@@ -221,7 +221,7 @@ libraries = {
 autoplay = "tourner"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("BoxShape3D_edv8j")
+shape = SubResource("SphereShape3D_o02xv")
 
 [node name="Detection" type="Area3D" parent="."]
 collision_layer = 256

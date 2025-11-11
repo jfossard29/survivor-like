@@ -1,7 +1,6 @@
-[gd_scene load_steps=15 format=3 uid="uid://brbib2i6ft83b"]
+[gd_scene load_steps=17 format=3 uid="uid://brbib2i6ft83b"]
 
 [ext_resource type="Script" uid="uid://bk2jp463mce6y" path="res://script/UI/PopupAmelioration.gd" id="1_bqqo3"]
-[ext_resource type="Script" uid="uid://bcvctchu5u2la" path="res://script/option_script.gd" id="2_d2043"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d2043"]
 bg_color = Color(0.06, 0.06, 0.12, 0.95)
@@ -35,38 +34,38 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Node2D/PanelImage:rotation")
+tracks/0/path = NodePath("Node2D/PanelImage:size")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [0.0]
+"values": [Vector2(70, 70)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Node2D/PanelImage:size")
+tracks/1/path = NodePath("Node2D/PanelImage:rotation")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(70, 70)]
+"values": [0.0]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("..:position")
+tracks/2/path = NodePath("Node2D/PanelImage:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(0, 0)]
+"values": [Vector2(-35, -35)]
 }
 
 [sub_resource type="Animation" id="Animation_i5yoh"]
@@ -82,7 +81,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(70, 70), Vector2(75, 75)]
+"values": [Vector2(70, 70), Vector2(80, 80)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -99,14 +98,14 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("..:position")
+tracks/2/path = NodePath("Node2D/PanelImage:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(10, 0)]
+"values": [Vector2(-35, -35), Vector2(-35, -45)]
 }
 
 [sub_resource type="Animation" id="Animation_d2043"]
@@ -115,38 +114,38 @@ length = 0.5
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Node2D/PanelImage:rotation")
+tracks/0/path = NodePath("Node2D/PanelImage:size")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [0.34906584, 0.0]
+"values": [Vector2(80, 80), Vector2(70, 70)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Node2D/PanelImage:size")
+tracks/1/path = NodePath("Node2D/PanelImage:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(75, 75), Vector2(70, 70)]
+"values": [Vector2(-35, -45), Vector2(-35, -35)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("..:position")
+tracks/2/path = NodePath("Node2D/PanelImage:rotation")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(10, 0), Vector2(0, 0)]
+"values": [0.34906584, 0.0]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_v3s55"]
@@ -156,16 +155,56 @@ _data = {
 &"hover_exit": SubResource("Animation_d2043")
 }
 
-[sub_resource type="Shader" id="Shader_d2043"]
+[sub_resource type="Animation" id="Animation_v3s55"]
+resource_name = "scan_loop"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node2D2/ScanBar:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(-20, 0), Vector2(250, 0), Vector2(435, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_nlnha"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node2D2/ScanBar:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-20, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_7hyft"]
+_data = {
+&"RESET": SubResource("Animation_nlnha"),
+&"scan_loop": SubResource("Animation_v3s55")
+}
+
+[sub_resource type="Shader" id="Shader_nlnha"]
 code = "shader_type canvas_item;
 
+uniform vec4 scan_color : source_color = vec4(1.0, 1.0, 1.0, 0.4);
+
 void fragment() {
-	float gradient = smoothstep(0.0, 0.5, UV.x) * smoothstep(1.0, 0.5, UV.x);
-	COLOR = vec4(0.0, 0.83, 1.0, gradient * 0.15);
+    // Dégradé horizontal
+    float gradient = smoothstep(0.0, 0.3, UV.x) * smoothstep(1.0, 0.7, UV.x);
+    COLOR = scan_color * gradient;
 }"
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_v3s55"]
-shader = SubResource("Shader_d2043")
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7hyft"]
+shader = SubResource("Shader_nlnha")
+shader_parameter/scan_color = Color(1, 1, 1, 0.4)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v3s55"]
 bg_color = Color(0.1, 0.1, 0.24, 1)
@@ -236,66 +275,80 @@ theme_override_constants/separation = 15
 alignment = 1
 
 [node name="Common_To_Rare" type="CenterContainer" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
+visible = false
+offset_right = 450.0
+offset_bottom = 100.0
 
 [node name="PanelContainer" type="PanelContainer" parent="Common_To_Rare"]
 process_mode = 3
+custom_minimum_size = Vector2(450, 100)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_bqqo3")
-script = ExtResource("2_d2043")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Common_To_Rare/PanelContainer"]
 process_mode = 3
-root_node = NodePath("../MarginContainer")
 libraries = {
 &"": SubResource("AnimationLibrary_v3s55")
 }
 autoplay = "RESET"
 
-[node name="MarginContainer" type="MarginContainer" parent="Common_To_Rare/PanelContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_right = 20
+[node name="ScanAnimationPlayer" type="AnimationPlayer" parent="Common_To_Rare/PanelContainer"]
+libraries = {
+&"": SubResource("AnimationLibrary_7hyft")
+}
 
-[node name="Scan" type="ColorRect" parent="Common_To_Rare/PanelContainer/MarginContainer"]
-material = SubResource("ShaderMaterial_v3s55")
-custom_minimum_size = Vector2(200, 100)
-layout_mode = 2
+[node name="Node2D2" type="Node2D" parent="Common_To_Rare/PanelContainer"]
+position = Vector2(15, 0)
 
-[node name="Node2D" type="Node2D" parent="Common_To_Rare/PanelContainer/MarginContainer"]
-position = Vector2(35, 50)
+[node name="ScanBar" type="Panel" parent="Common_To_Rare/PanelContainer/Node2D2"]
+material = SubResource("ShaderMaterial_7hyft")
+offset_left = -20.0
+offset_right = -17.0
+offset_bottom = 100.0
 
-[node name="PanelImage" type="PanelContainer" parent="Common_To_Rare/PanelContainer/MarginContainer/Node2D"]
+[node name="Node2D" type="Node2D" parent="Common_To_Rare/PanelContainer"]
+position = Vector2(55, 52)
+
+[node name="PanelImage" type="PanelContainer" parent="Common_To_Rare/PanelContainer/Node2D"]
+z_index = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
 offset_left = -35.0
 offset_top = -35.0
 offset_right = 35.0
 offset_bottom = 35.0
+grow_horizontal = 2
+grow_vertical = 2
 pivot_offset = Vector2(35, 35)
 size_flags_horizontal = 6
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_v3s55")
 
-[node name="Label" type="Label" parent="Common_To_Rare/PanelContainer/MarginContainer/Node2D/PanelImage"]
+[node name="Label" type="Label" parent="Common_To_Rare/PanelContainer/Node2D/PanelImage"]
 layout_mode = 2
 text = "★"
 label_settings = SubResource("LabelSettings_nlnha")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="Common_To_Rare/PanelContainer/MarginContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Common_To_Rare/PanelContainer"]
 custom_minimum_size = Vector2(350, 70)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_constants/margin_left = 70
 
-[node name="Titre" type="Label" parent="Common_To_Rare/PanelContainer/MarginContainer/MarginContainer"]
+[node name="Titre" type="Label" parent="Common_To_Rare/PanelContainer/MarginContainer"]
+z_index = 1
 layout_mode = 2
 size_flags_vertical = 0
 text = "Lipsun vitae trilli molusc"
 label_settings = SubResource("LabelSettings_i5yoh")
 
-[node name="Description" type="Label" parent="Common_To_Rare/PanelContainer/MarginContainer/MarginContainer"]
+[node name="Description" type="Label" parent="Common_To_Rare/PanelContainer/MarginContainer"]
+z_index = 1
 layout_mode = 2
 text = "lilipossum livae erectum cendre"
