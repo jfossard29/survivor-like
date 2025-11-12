@@ -30,7 +30,7 @@ background_mode = 2
 sky = SubResource("Sky_n7u81")
 glow_enabled = true
 
-[sub_resource type="Shader" id="Shader_rtw2f"]
+[sub_resource type="Shader" id="Shader_8ln24"]
 code = "
 shader_type spatial;
 render_mode blend_add, depth_draw_opaque, cull_back, unshaded;
@@ -66,7 +66,7 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_oa1go"]
 render_priority = 0
-shader = SubResource("Shader_rtw2f")
+shader = SubResource("Shader_8ln24")
 shader_parameter/line_color = Color(0.78941506, 0, 0.33577523, 0.42745098)
 shader_parameter/line_speed = 0.05
 shader_parameter/line_width = 0.5
@@ -99,18 +99,22 @@ radius = 512.0
 height = 1008.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_bqqt6"]
+font = ExtResource("4_8ln24")
 font_size = 40
 font_color = Color(1, 0, 1, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_wu84c"]
+font = ExtResource("4_8ln24")
 font_size = 18
 font_color = Color(1, 0.83, 1, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_8ln24"]
+font = ExtResource("4_8ln24")
 font_size = 18
 font_color = Color(1, 0, 1, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_rtw2f"]
+font = ExtResource("4_8ln24")
 font_size = 18
 font_color = Color(1, 0.83, 1, 1)
 
@@ -197,7 +201,7 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.6348572, -245.34164, 3857.
 mesh = SubResource("SphereMesh_lgwnu")
 
 [node name="OptionsMenu" type="PanelContainer" parent="."]
-visible = false
+z_index = 1
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -210,6 +214,7 @@ offset_right = 145.5
 offset_bottom = 338.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("4_wu84c")
 
 [node name="MarginContainer" type="MarginContainer" parent="OptionsMenu"]
 layout_mode = 2
@@ -228,62 +233,74 @@ text = "OPTIONS"
 label_settings = SubResource("LabelSettings_bqqt6")
 horizontal_alignment = 1
 
-[node name="MasterVolume" type="HBoxContainer" parent="OptionsMenu/MarginContainer/VBoxContainer"]
+[node name="MasterVolume" type="VBoxContainer" parent="OptionsMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="OptionsMenu/MarginContainer/VBoxContainer/MasterVolume"]
+[node name="VBoxContainer" type="HBoxContainer" parent="OptionsMenu/MarginContainer/VBoxContainer/MasterVolume"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="OptionsMenu/MarginContainer/VBoxContainer/MasterVolume/VBoxContainer"]
 layout_mode = 2
 text = "VOLUME PRINCIPAL"
 label_settings = SubResource("LabelSettings_wu84c")
 
-[node name="HSlider" type="HSlider" parent="OptionsMenu/MarginContainer/VBoxContainer/MasterVolume"]
-layout_mode = 2
-
-[node name="Value" type="Label" parent="OptionsMenu/MarginContainer/VBoxContainer/MasterVolume"]
+[node name="Value" type="Label" parent="OptionsMenu/MarginContainer/VBoxContainer/MasterVolume/VBoxContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
-text = "100%"
+text = "50%"
 label_settings = SubResource("LabelSettings_8ln24")
 horizontal_alignment = 1
 
-[node name="MusicVolume" type="HBoxContainer" parent="OptionsMenu/MarginContainer/VBoxContainer"]
+[node name="HSlider" type="HSlider" parent="OptionsMenu/MarginContainer/VBoxContainer/MasterVolume"]
+layout_mode = 2
+value = 50.0
+
+[node name="MusicVolume" type="VBoxContainer" parent="OptionsMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="OptionsMenu/MarginContainer/VBoxContainer/MusicVolume"]
+[node name="HBoxContainer" type="HBoxContainer" parent="OptionsMenu/MarginContainer/VBoxContainer/MusicVolume"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="OptionsMenu/MarginContainer/VBoxContainer/MusicVolume/HBoxContainer"]
 layout_mode = 2
 text = "VOLUME MUSIQUE"
 label_settings = SubResource("LabelSettings_wu84c")
 
-[node name="HSlider" type="HSlider" parent="OptionsMenu/MarginContainer/VBoxContainer/MusicVolume"]
-layout_mode = 2
-
-[node name="Value" type="Label" parent="OptionsMenu/MarginContainer/VBoxContainer/MusicVolume"]
+[node name="Value" type="Label" parent="OptionsMenu/MarginContainer/VBoxContainer/MusicVolume/HBoxContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
-text = "100%"
+text = "50%"
 label_settings = SubResource("LabelSettings_8ln24")
 horizontal_alignment = 1
 
-[node name="SFXVolume" type="HBoxContainer" parent="OptionsMenu/MarginContainer/VBoxContainer"]
+[node name="HSlider" type="HSlider" parent="OptionsMenu/MarginContainer/VBoxContainer/MusicVolume"]
+layout_mode = 2
+value = 50.0
+
+[node name="SFXVolume" type="VBoxContainer" parent="OptionsMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="OptionsMenu/MarginContainer/VBoxContainer/SFXVolume"]
+[node name="HBoxContainer" type="HBoxContainer" parent="OptionsMenu/MarginContainer/VBoxContainer/SFXVolume"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="OptionsMenu/MarginContainer/VBoxContainer/SFXVolume/HBoxContainer"]
 layout_mode = 2
 text = "VOLUME SFX"
 label_settings = SubResource("LabelSettings_wu84c")
 
-[node name="HSlider" type="HSlider" parent="OptionsMenu/MarginContainer/VBoxContainer/SFXVolume"]
-layout_mode = 2
-
-[node name="Value" type="Label" parent="OptionsMenu/MarginContainer/VBoxContainer/SFXVolume"]
+[node name="Value" type="Label" parent="OptionsMenu/MarginContainer/VBoxContainer/SFXVolume/HBoxContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
-text = "100%"
+text = "50%"
 label_settings = SubResource("LabelSettings_8ln24")
 horizontal_alignment = 1
+
+[node name="HSlider" type="HSlider" parent="OptionsMenu/MarginContainer/VBoxContainer/SFXVolume"]
+layout_mode = 2
+value = 50.0
 
 [node name="Resolution" type="VBoxContainer" parent="OptionsMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -309,41 +326,39 @@ label_settings = SubResource("LabelSettings_rtw2f")
 [node name="OptionButton" type="OptionButton" parent="OptionsMenu/MarginContainer/VBoxContainer/Quality"]
 layout_mode = 2
 
-[node name="VSync" type="VBoxContainer" parent="OptionsMenu/MarginContainer/VBoxContainer"]
+[node name="VSync_Particles" type="HBoxContainer" parent="OptionsMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="CheckBox" type="CheckBox" parent="OptionsMenu/MarginContainer/VBoxContainer/VSync"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="OptionsMenu/MarginContainer/VBoxContainer/VSync"]
+[node name="Label" type="Label" parent="OptionsMenu/MarginContainer/VBoxContainer/VSync_Particles"]
 layout_mode = 2
 text = "V-SYNC"
 label_settings = SubResource("LabelSettings_rtw2f")
 
-[node name="Particles" type="VBoxContainer" parent="OptionsMenu/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 20
-
-[node name="CheckBox" type="CheckBox" parent="OptionsMenu/MarginContainer/VBoxContainer/Particles"]
+[node name="CheckButtonV" type="CheckButton" parent="OptionsMenu/MarginContainer/VBoxContainer/VSync_Particles"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="OptionsMenu/MarginContainer/VBoxContainer/Particles"]
+[node name="Label2" type="Label" parent="OptionsMenu/MarginContainer/VBoxContainer/VSync_Particles"]
 layout_mode = 2
-text = "EFFETS DE PARTICULES"
+text = "PARTICULES"
 label_settings = SubResource("LabelSettings_rtw2f")
 
-[node name="Bloom" type="VBoxContainer" parent="OptionsMenu/MarginContainer/VBoxContainer"]
+[node name="CheckButtonP" type="CheckButton" parent="OptionsMenu/MarginContainer/VBoxContainer/VSync_Particles"]
+layout_mode = 2
+button_pressed = true
+
+[node name="Bloom" type="HBoxContainer" parent="OptionsMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
-
-[node name="CheckBox" type="CheckBox" parent="OptionsMenu/MarginContainer/VBoxContainer/Bloom"]
-layout_mode = 2
 
 [node name="Label" type="Label" parent="OptionsMenu/MarginContainer/VBoxContainer/Bloom"]
 layout_mode = 2
 text = "BLOOM / GLOW"
 label_settings = SubResource("LabelSettings_rtw2f")
+
+[node name="CheckButton" type="CheckButton" parent="OptionsMenu/MarginContainer/VBoxContainer/Bloom"]
+layout_mode = 2
+button_pressed = true
 
 [node name="BackButton" type="PanelContainer" parent="OptionsMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -382,6 +397,7 @@ label_settings = SubResource("LabelSettings_oa1go")
 horizontal_alignment = 1
 
 [node name="ButtonContainer" type="HBoxContainer" parent="MarginContainer"]
+z_index = -1
 custom_minimum_size = Vector2(500, 70)
 layout_mode = 2
 size_flags_horizontal = 4
