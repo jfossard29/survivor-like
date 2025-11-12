@@ -1,6 +1,7 @@
-[gd_scene load_steps=17 format=3 uid="uid://brbib2i6ft83b"]
+[gd_scene load_steps=19 format=3 uid="uid://brbib2i6ft83b"]
 
 [ext_resource type="Script" uid="uid://bk2jp463mce6y" path="res://script/UI/PopupAmelioration.gd" id="1_bqqo3"]
+[ext_resource type="FontFile" uid="uid://c3ruxaj7pj5hk" path="res://themes/bold_pixel/BoldPixels.ttf" id="2_d2043"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d2043"]
 bg_color = Color(0.06, 0.06, 0.12, 0.95)
@@ -13,6 +14,7 @@ shadow_color = Color(0, 0.83, 1, 0.3)
 shadow_size = 20
 
 [sub_resource type="LabelSettings" id="LabelSettings_bqqo3"]
+font = ExtResource("2_d2043")
 font_size = 28
 font_color = Color(0, 0.83, 1, 1)
 
@@ -221,7 +223,13 @@ shadow_size = 10
 [sub_resource type="LabelSettings" id="LabelSettings_nlnha"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_i5yoh"]
+font = ExtResource("2_d2043")
+font_size = 24
 outline_size = 3
+
+[sub_resource type="LabelSettings" id="LabelSettings_v3s55"]
+font = ExtResource("2_d2043")
+font_size = 24
 
 [node name="Amelioration" type="CanvasLayer"]
 process_mode = 3
@@ -352,3 +360,4 @@ label_settings = SubResource("LabelSettings_i5yoh")
 z_index = 1
 layout_mode = 2
 text = "lilipossum livae erectum cendre"
+label_settings = SubResource("LabelSettings_v3s55")

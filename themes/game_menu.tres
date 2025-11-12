@@ -1,0 +1,36 @@
+[gd_resource type="Theme" load_steps=5 format=3 uid="uid://cf4lqevpkrvlf"]
+
+[ext_resource type="FontFile" uid="uid://c3ruxaj7pj5hk" path="res://themes/bold_pixel/BoldPixels.ttf" id="1_qgd2m"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8i0nt"]
+bg_color = Color(1, 0.8980392, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8, 0, 0.8, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qgd2m"]
+bg_color = Color(0.05882353, 0.05882353, 0.12156863, 0.9490196)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.83137256, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kwk0f"]
+bg_color = Color(0.07058824, 0.23529412, 0.29803923, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0.83137256, 1, 1)
+
+[resource]
+Button/colors/font_color = Color(0, 0.83137256, 1, 1)
+Button/colors/font_hover_color = Color(0.0701452, 0.30794674, 1, 1)
+Button/font_sizes/font_size = 24
+Button/fonts/font = ExtResource("1_qgd2m")
+Button/styles/hover = SubResource("StyleBoxFlat_8i0nt")
+Button/styles/normal = SubResource("StyleBoxFlat_qgd2m")
+HSlider/styles/grabber_area = SubResource("StyleBoxFlat_kwk0f")
