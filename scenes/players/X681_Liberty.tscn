@@ -1,0 +1,184 @@
+[gd_scene load_steps=8 format=3 uid="uid://ca3jmxk1gpx4"]
+
+[ext_resource type="Script" uid="uid://bfpeg2n8qsxat" path="res://script/test_beat.gd" id="2_fdjei"]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_n43po"]
+
+[sub_resource type="Animation" id="Animation_jb281"]
+resource_name = "respiration"
+length = 4.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Torse:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.5, 4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(1.0000002, 1.0000002, 1), Vector3(1.08, 1.05, 1.08), Vector3(1.0000002, 1.0000002, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Torse:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1.5, 4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0.02, 0), Vector3(0, 0.05, 0), Vector3(0, 0.02, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("BrasG:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1.5, 4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0.3, 0, 0), Vector3(0.3, 0.03, 0), Vector3(0.3, 0, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("BrasD:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1.5, 4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-0.3, 0, 0), Vector3(-0.3, 0.03, 0), Vector3(-0.3, 0, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Tete:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 1.5, 4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0.45, 0), Vector3(0, 0.47, 0), Vector3(0, 0.45, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_jqekj"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Torse:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(1.0000002, 1.0000002, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Torse:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.02, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("BrasG:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.3, 0, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("BrasD:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.3, 0, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Tete:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.45, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_jqekj"]
+_data = {
+&"RESET": SubResource("Animation_jqekj"),
+&"respiration": SubResource("Animation_jb281")
+}
+
+[sub_resource type="BoxMesh" id="BoxMesh_3p1t5"]
+size = Vector3(0.1, 0.5, 0.1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_8cenu"]
+radius = 0.12
+height = 0.24
+
+[node name="MeshInstance3D" type="MeshInstance3D"]
+mesh = SubResource("ArrayMesh_n43po")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_jqekj")
+}
+autoplay = "respiration"
+
+[node name="JambeG" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.91775453, -0.39714795, 0, 0.39714783, 0.91775477, 0, 0, 0, 0.9999999, 0.2, -0.57, -0.012)
+mesh = SubResource("BoxMesh_3p1t5")
+
+[node name="JambeD" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.91775477, 0.39714798, 0, -0.39714795, 0.9177549, 0, 0, 0, 0.9999999, -0.2, -0.57, 0)
+mesh = SubResource("BoxMesh_3p1t5")
+skeleton = NodePath("../JambeG")
+
+[node name="Torse" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.0000002, 0, 0, 0, 1.0000002, 0, 0, 0, 1, 0, 0.02, 0)
+mesh = SubResource("BoxMesh_3p1t5")
+skeleton = NodePath("../JambeG")
+
+[node name="Tete" type="MeshInstance3D" parent="."]
+process_mode = 3
+transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, 0, 0.45, 0)
+mesh = SubResource("SphereMesh_8cenu")
+script = ExtResource("2_fdjei")
+beats_file_path = "res://sounds/musiques_beat.json"
+
+[node name="BrasG" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.747798, -0.66392606, 0, 0.6639262, 0.74779785, 0, 0, 0, 0.9999998, 0.3, 0, 0)
+mesh = SubResource("BoxMesh_3p1t5")
+
+[node name="BrasD" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.7325428, 0.6807208, 0, -0.6807208, 0.7325428, 0, 0, 0, 1, -0.3, 0, 0)
+mesh = SubResource("BoxMesh_3p1t5")

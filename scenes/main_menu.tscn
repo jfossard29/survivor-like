@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=4 uid="uid://ctpkfksra6nxf"]
+[gd_scene load_steps=45 format=4 uid="uid://ctpkfksra6nxf"]
 
 [ext_resource type="Shader" uid="uid://p6i28ung6ymp" path="res://shaders/sky.gdshader" id="1_bqqt6"]
 [ext_resource type="Script" uid="uid://bj34ar46op5rx" path="res://script/map/Quadrilatere.gd" id="2_wu84c"]
@@ -153,7 +153,7 @@ background_mode = 2
 sky = SubResource("Sky_n7u81")
 glow_enabled = true
 
-[sub_resource type="Shader" id="Shader_oa1go"]
+[sub_resource type="Shader" id="Shader_8ln24"]
 code = "
 shader_type spatial;
 render_mode blend_add, depth_draw_opaque, cull_back, unshaded;
@@ -187,16 +187,16 @@ void fragment() {
 }
 "
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_tbmy8"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oa1go"]
 render_priority = 0
-shader = SubResource("Shader_oa1go")
+shader = SubResource("Shader_8ln24")
 shader_parameter/line_color = Color(0.78941506, 0, 0.33577523, 0.42745098)
 shader_parameter/line_speed = 0.05
 shader_parameter/line_width = 0.5
 shader_parameter/line_spacing = 0.1
 shader_parameter/emission_strength = 1.5
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_jk1qb"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_tbmy8"]
 _surfaces = [{
 "aabb": AABB(-40, 0, -20, 80, 1e-05, 40),
 "attribute_data": PackedByteArray("AAAAAAAAAAAAAIA/AAAAAAAAgD8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAIA/"),
@@ -378,41 +378,287 @@ func _on_quit_pressed():
 	get_tree().quit()
 "
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ln24"]
-bg_color = Color(0, 0.6, 0.6, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tbmy8"]
+bg_color = Color(0.02, 0.02, 0.06, 0.95)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.07058824, 1, 0.8392157, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
+border_color = Color(0, 0.83137256, 1, 0.39215687)
+shadow_color = Color(0, 0.83, 1, 0.4)
+shadow_size = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ln24"]
+bg_color = Color(0.02745098, 0.043137256, 0.08627451, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.8, 0, 1)
+shadow_color = Color(1, 0.8, 0, 0.2)
+shadow_size = 10
+
+[sub_resource type="GDScript" id="GDScript_1ajci"]
+script/source = "extends Button
+
+# Chemin vers le fichier de ressource PlayerData
+@export_file(\"*.tres\") var player_data_path: String = \"\"
+
+# Référence au profil d'opérateur (à assigner dans l'éditeur ou via code)
+@export var operator_profile: Control
+
+# Mesh parent où afficher le modèle 3D
+@export var mesh_parent: Node3D
+
+# Scène du modèle 3D à instancier
+@export_file(\"*.tscn\", \"*.scn\") var model_scene_path: String = \"\"
+
+# Nom unique du node créé (pour éviter les doublons)
+var model_node_name: String = \"X681_Liberty\"
+
+func _ready():
+	pressed.connect(_on_button_pressed)
+
+func _on_button_pressed():
+	if player_data_path.is_empty():
+		push_error(\"Aucun chemin de ressource défini pour ce bouton!\")
+		return
+	
+	# Vérifier si la référence existe
+	if not operator_profile:
+		push_error(\"Operator_profile n'est pas assigné!\")
+		return
+	
+	# Vérifier si la méthode existe
+	if not operator_profile.has_method(\"load_player_data\"):
+		push_error(\"Le node operator_profile n'a pas la méthode load_player_data! Type du node: \" + str(operator_profile.get_class()))
+		return
+	
+	# Charger les données du profil
+	operator_profile.load_player_data(player_data_path)
+	print(\"Données chargées depuis: \" + player_data_path)
+	
+	# Gérer le modèle 3D si configuré
+	if mesh_parent and not model_scene_path.is_empty():
+		_handle_3d_model()
+
+func _handle_3d_model():
+	# Chercher si un node avec ce nom existe déjà
+	var existing_node = mesh_parent.get_node_or_null(model_node_name)
+	
+	if existing_node:
+		# Le node existe déjà, cacher tous les autres enfants
+		for child in mesh_parent.get_children():
+			if child != existing_node:
+				child.visible = false
+			else:
+				child.visible = true
+		print(\"Modèle existant affiché: \" + model_node_name)
+	else:
+		# Le node n'existe pas, le créer
+		var model_scene = load(model_scene_path)
+		if not model_scene:
+			push_error(\"Impossible de charger la scène du modèle: \" + model_scene_path)
+			return
+		
+		var model_instance = model_scene.instantiate()
+		model_instance.name = model_node_name
+		
+		# Positionner à y+1 par rapport au parent
+		if model_instance is Node3D:
+			model_instance.position.y += 1.0
+		
+		# Ajouter au mesh parent
+		mesh_parent.add_child(model_instance)
+		
+		# Cacher tous les autres enfants
+		for child in mesh_parent.get_children():
+			if child != model_instance:
+				child.visible = false
+		
+		print(\"Nouveau modèle créé et affiché: \" + model_node_name)
+"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rtw2f"]
-bg_color = Color(1, 0.6, 0, 1)
+bg_color = Color(0.02745098, 0.043137256, 0.08627451, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(1, 1, 0, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
+shadow_color = Color(0.8, 0.8, 0.8, 0.2)
+shadow_size = 10
+
+[sub_resource type="GDScript" id="GDScript_rcqid"]
+script/source = "extends Button
+
+# Chemin vers le fichier de ressource PlayerData
+@export_file(\"*.tres\") var player_data_path: String = \"\"
+
+# Référence au profil d'opérateur (à assigner dans l'éditeur ou via code)
+@export var operator_profile: Control
+
+# Mesh parent où afficher le modèle 3D
+@export var mesh_parent: Node3D
+
+# Scène du modèle 3D à instancier
+@export_file(\"*.tscn\", \"*.scn\") var model_scene_path: String = \"\"
+
+# Nom unique du node créé (pour éviter les doublons)
+var model_node_name: String = \"Gabriel\"
+
+func _ready():
+	pressed.connect(_on_button_pressed)
+
+func _on_button_pressed():
+	if player_data_path.is_empty():
+		push_error(\"Aucun chemin de ressource défini pour ce bouton!\")
+		return
+	
+	# Vérifier si la référence existe
+	if not operator_profile:
+		push_error(\"Operator_profile n'est pas assigné!\")
+		return
+	
+	# Vérifier si la méthode existe
+	if not operator_profile.has_method(\"load_player_data\"):
+		push_error(\"Le node operator_profile n'a pas la méthode load_player_data! Type du node: \" + str(operator_profile.get_class()))
+		return
+	
+	# Charger les données du profil
+	operator_profile.load_player_data(player_data_path)
+	print(\"Données chargées depuis: \" + player_data_path)
+	
+	# Gérer le modèle 3D si configuré
+	if mesh_parent and not model_scene_path.is_empty():
+		_handle_3d_model()
+
+func _handle_3d_model():
+	# Chercher si un node avec ce nom existe déjà
+	var existing_node = mesh_parent.get_node_or_null(model_node_name)
+	
+	if existing_node:
+		# Le node existe déjà, cacher tous les autres enfants
+		for child in mesh_parent.get_children():
+			if child != existing_node:
+				child.visible = false
+			else:
+				child.visible = true
+		print(\"Modèle existant affiché: \" + model_node_name)
+	else:
+		# Le node n'existe pas, le créer
+		var model_scene = load(model_scene_path)
+		if not model_scene:
+			push_error(\"Impossible de charger la scène du modèle: \" + model_scene_path)
+			return
+		
+		var model_instance = model_scene.instantiate()
+		model_instance.name = model_node_name
+		
+		# Positionner à y+1 par rapport au parent
+		if model_instance is Node3D:
+			model_instance.position.y += 1.0
+		
+		# Ajouter au mesh parent
+		mesh_parent.add_child(model_instance)
+		
+		# Cacher tous les autres enfants
+		for child in mesh_parent.get_children():
+			if child != model_instance:
+				child.visible = false
+		
+		print(\"Nouveau modèle créé et affiché: \" + model_node_name)
+"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oa1go"]
-bg_color = Color(1, 1, 1, 1)
+bg_color = Color(0.02745098, 0.043137256, 0.08627451, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
+border_color = Color(0.2, 0.6, 1, 1)
+shadow_color = Color(0.2, 0.6, 1, 0.2)
+shadow_size = 10
+
+[sub_resource type="GDScript" id="GDScript_flqon"]
+script/source = "extends Button
+
+# Chemin vers le fichier de ressource PlayerData
+@export_file(\"*.tres\") var player_data_path: String = \"\"
+
+# Référence au profil d'opérateur (à assigner dans l'éditeur ou via code)
+@export var operator_profile: Control
+
+# Mesh parent où afficher le modèle 3D
+@export var mesh_parent: Node3D
+
+# Scène du modèle 3D à instancier
+@export_file(\"*.tscn\", \"*.scn\") var model_scene_path: String = \"\"
+
+# Nom unique du node créé (pour éviter les doublons)
+var model_node_name: String = \"Lucy\"
+
+func _ready():
+	pressed.connect(_on_button_pressed)
+
+func _on_button_pressed():
+	if player_data_path.is_empty():
+		push_error(\"Aucun chemin de ressource défini pour ce bouton!\")
+		return
+	
+	# Vérifier si la référence existe
+	if not operator_profile:
+		push_error(\"Operator_profile n'est pas assigné!\")
+		return
+	
+	# Vérifier si la méthode existe
+	if not operator_profile.has_method(\"load_player_data\"):
+		push_error(\"Le node operator_profile n'a pas la méthode load_player_data! Type du node: \" + str(operator_profile.get_class()))
+		return
+	
+	# Charger les données du profil
+	operator_profile.load_player_data(player_data_path)
+	print(\"Données chargées depuis: \" + player_data_path)
+	
+	# Gérer le modèle 3D si configuré
+	if mesh_parent and not model_scene_path.is_empty():
+		_handle_3d_model()
+
+func _handle_3d_model():
+	# Chercher si un node avec ce nom existe déjà
+	var existing_node = mesh_parent.get_node_or_null(model_node_name)
+	
+	if existing_node:
+		# Le node existe déjà, cacher tous les autres enfants
+		for child in mesh_parent.get_children():
+			if child != existing_node:
+				child.visible = false
+			else:
+				child.visible = true
+		print(\"Modèle existant affiché: \" + model_node_name)
+	else:
+		# Le node n'existe pas, le créer
+		var model_scene = load(model_scene_path)
+		if not model_scene:
+			push_error(\"Impossible de charger la scène du modèle: \" + model_scene_path)
+			return
+		
+		var model_instance = model_scene.instantiate()
+		model_instance.name = model_node_name
+		
+		# Positionner à y+1 par rapport au parent
+		if model_instance is Node3D:
+			model_instance.position.y += 1.0
+		
+		# Ajouter au mesh parent
+		mesh_parent.add_child(model_instance)
+		
+		# Cacher tous les autres enfants
+		for child in mesh_parent.get_children():
+			if child != model_instance:
+				child.visible = false
+		
+		print(\"Nouveau modèle créé et affiché: \" + model_node_name)
+"
 
 [sub_resource type="Theme" id="Theme_8ln24"]
 Label/fonts/font = ExtResource("4_8ln24")
@@ -430,6 +676,18 @@ script/source = "extends Control
 @export var harvest_multiplier: float = 1.2
 @export var harvest_range: float = 12.5
 @export_enum(\"Insignificant\", \"Surveillance\", \"Classified\") var threat_level: int = 2
+
+# Descriptions pour les tooltips
+@export_group(\"Descriptions\")
+@export_multiline var weapon_description: String = \"Arme de poing à plasma haute fréquence. Dégâts énergétiques modérés avec cadence de tir élevée.\"
+@export_multiline var hp_description: String = \"Points de vie maximaux de l'opérateur. Détermine la résistance aux dégâts.\"
+@export_multiline var xp_description: String = \"Bonus d'expérience appliqué à toutes les actions. Accélère la progression.\"
+@export_multiline var dmg_description: String = \"Multiplicateur de dégâts offensifs. Augmente l'efficacité au combat.\"
+@export_multiline var harvest_description: String = \"Multiplicateur de récolte. Augmente la quantité de ressources obtenues.\"
+
+@export_group(\"Tooltip Position\")
+@export var tooltip_offset_x: float = 20.0
+@export var tooltip_offset_y: float = 20.0
 
 # Couleurs cyberpunk
 const COLOR_CYAN := Color(0.0, 0.83, 1.0)
@@ -471,9 +729,148 @@ var time := 0.0
 var glow_intensity := 0.0
 var scan_position := 0.0
 
+# Hover system
+var hover_items := {}
+var tooltip_panel: PanelContainer
+var tooltip_label: Label
+var current_hover_item: Control = null
+var tooltip_fixed_position: Vector2 = Vector2.ZERO
+
+# Flag pour savoir si tout est initialisé
+var is_ready := false
+
 func _ready():
+	# Attendre que tous les nodes @onready soient chargés
+	await get_tree().process_frame
+	
+	# Initialiser dans le bon ordre
 	update_values()
 	apply_threat_style()
+	setup_hover_system()
+	
+	is_ready = true
+
+# Fonction pour charger des données depuis une ressource
+func load_player_data(resource_path: String) -> void:
+	# Attendre que le script soit complètement prêt
+	if not is_ready:
+		await get_tree().process_frame
+	
+	var player_data = load(resource_path)
+	if not player_data:
+		push_error(\"Impossible de charger la ressource: \" + resource_path)
+		return
+	
+	# Charger les données avec vérification
+	if \"name\" in player_data:
+		operator_name = player_data.name
+	if \"bio\" in player_data:
+		operator_bio = player_data.bio
+	if \"base_weapon\" in player_data:
+		base_weapon = player_data.base_weapon
+	if \"hp\" in player_data:
+		max_hp = player_data.hp
+	if \"xp\" in player_data:
+		xp_multiplier = player_data.xp
+	if \"dmg\" in player_data:
+		damage_multiplier = player_data.dmg
+	if \"harvest\" in player_data:
+		harvest_multiplier = player_data.harvest
+	if \"threat_level\" in player_data:
+		threat_level = player_data.threat_level
+	
+	# Mettre à jour l'affichage
+	update_values()
+	apply_threat_style()
+
+func setup_hover_system():
+	# Création du tooltip à la racine
+	tooltip_panel = PanelContainer.new()
+	tooltip_panel.visible = false
+	tooltip_panel.z_index = 200
+	tooltip_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tooltip_panel.top_level = true
+	
+	var tooltip_style := StyleBoxFlat.new()
+	tooltip_style.bg_color = Color(0.05, 0.05, 0.15, 0.98)
+	tooltip_style.border_color = COLOR_CYAN
+	tooltip_style.border_width_left = 2
+	tooltip_style.border_width_right = 2
+	tooltip_style.border_width_top = 2
+	tooltip_style.border_width_bottom = 2
+	tooltip_style.shadow_color = Color(COLOR_CYAN.r, COLOR_CYAN.g, COLOR_CYAN.b, 0.6)
+	tooltip_style.shadow_size = 15
+	tooltip_panel.add_theme_stylebox_override(\"panel\", tooltip_style)
+	
+	var tooltip_margin := MarginContainer.new()
+	tooltip_margin.add_theme_constant_override(\"margin_left\", 15)
+	tooltip_margin.add_theme_constant_override(\"margin_right\", 15)
+	tooltip_margin.add_theme_constant_override(\"margin_top\", 10)
+	tooltip_margin.add_theme_constant_override(\"margin_bottom\", 10)
+	tooltip_panel.add_child(tooltip_margin)
+	
+	tooltip_label = Label.new()
+	tooltip_label.add_theme_color_override(\"font_color\", COLOR_CYAN)
+	tooltip_label.add_theme_font_size_override(\"font_size\", 14)
+	tooltip_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	tooltip_label.custom_minimum_size = Vector2(300, 0)
+	tooltip_margin.add_child(tooltip_label)
+	
+	# Ajouter le tooltip à la racine de la scène avec call_deferred
+	get_tree().root.add_child.call_deferred(tooltip_panel)
+	
+	# Enregistrer les items avec hover
+	register_hover_item(weapon_value, weapon_description)
+	register_hover_item(hp_badge, hp_description)
+	register_hover_item(xp_badge, xp_description)
+	register_hover_item(dmg_badge, dmg_description)
+	register_hover_item(harvest_badge, harvest_description)
+
+func register_hover_item(item: Control, description: String):
+	hover_items[item] = description
+	item.mouse_filter = Control.MOUSE_FILTER_PASS
+	item.mouse_entered.connect(func(): _on_item_hover_entered(item))
+	item.mouse_exited.connect(func(): _on_item_hover_exited(item))
+
+func _on_item_hover_entered(item: Control):
+	current_hover_item = item
+	
+	# Animation de scale avec effet bounce
+	var tween := create_tween()
+	tween.set_ease(Tween.EASE_OUT)
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.tween_property(item, \"scale\", Vector2(1.1, 1.1), 0.3)
+	
+	# Effet de glow en changeant la modulation
+	var glow_tween := create_tween()
+	glow_tween.tween_property(item, \"modulate\", Color(1.2, 1.2, 1.2, 1.0), 0.2)
+	
+	# Afficher le tooltip
+	if hover_items.has(item):
+		tooltip_label.text = hover_items[item]
+		
+		# Capturer la position de la souris au moment du hover
+		tooltip_fixed_position = get_viewport().get_mouse_position() + Vector2(tooltip_offset_x, tooltip_offset_y)
+		
+		tooltip_panel.visible = true
+		tooltip_panel.position = tooltip_fixed_position
+
+func _on_item_hover_exited(item: Control):
+	if current_hover_item == item:
+		current_hover_item = null
+	
+	# Animation de retour
+	var tween := create_tween()
+	tween.set_ease(Tween.EASE_OUT)
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.tween_property(item, \"scale\", Vector2(1.0, 1.0), 0.3)
+	
+	# Retour à la couleur normale
+	var glow_tween := create_tween()
+	glow_tween.tween_property(item, \"modulate\", Color(1.0, 1.0, 1.0, 1.0), 0.2)
+	
+	# Cacher le tooltip
+	tooltip_panel.visible = false
 
 func apply_threat_style():
 	var threat_style := StyleBoxFlat.new()
@@ -527,16 +924,6 @@ func _process(delta: float):
 		var pulse_color = COLOR_RED.lerp(Color.WHITE, glow_intensity * 0.3)
 		threat_label.add_theme_color_override(\"font_color\", pulse_color)
 "
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tbmy8"]
-bg_color = Color(0.02, 0.02, 0.06, 0.95)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0, 0.83, 1, 0.6)
-shadow_color = Color(0, 0.83, 1, 0.4)
-shadow_size = 20
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jk1qb"]
 bg_color = Color(0, 0.83, 1, 0.1)
@@ -595,9 +982,9 @@ environment = SubResource("Environment_oa1go")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5829325, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Sunset"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.146254, 13.730085)
-material_override = SubResource("ShaderMaterial_tbmy8")
-mesh = SubResource("ArrayMesh_jk1qb")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.028688908, -5.146255, 13.758673)
+material_override = SubResource("ShaderMaterial_oa1go")
+mesh = SubResource("ArrayMesh_tbmy8")
 script = ExtResource("2_wu84c")
 base_width = 80.0
 top_ratio = 0.25
@@ -849,7 +1236,7 @@ modulate = Color(1, 1, 1, 0.7058824)
 custom_minimum_size = Vector2(0, 125)
 layout_mode = 2
 size_flags_vertical = 0
-theme = ExtResource("4_wu84c")
+theme_override_styles/panel = SubResource("StyleBoxFlat_tbmy8")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SelectionCharacter/VBoxContainer/Choice"]
 layout_mode = 2
@@ -857,26 +1244,50 @@ size_flags_vertical = 4
 theme_override_constants/separation = 25
 alignment = 1
 
-[node name="Bleu" type="Panel" parent="SelectionCharacter/VBoxContainer/Choice/HBoxContainer"]
+[node name="X681_Liberty" type="Button" parent="SelectionCharacter/VBoxContainer/Choice/HBoxContainer" node_paths=PackedStringArray("operator_profile", "mesh_parent")]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_8ln24")
+theme_override_styles/normal = SubResource("StyleBoxFlat_8ln24")
+text = "X681"
+script = SubResource("GDScript_1ajci")
+player_data_path = "uid://bu5b5onxnuon6"
+operator_profile = NodePath("../../../Stats")
+mesh_parent = NodePath("../../../../../Piedestal")
+model_scene_path = "uid://ca3jmxk1gpx4"
 
-[node name="Jaune" type="Panel" parent="SelectionCharacter/VBoxContainer/Choice/HBoxContainer"]
+[node name="Gabriel" type="Button" parent="SelectionCharacter/VBoxContainer/Choice/HBoxContainer" node_paths=PackedStringArray("operator_profile", "mesh_parent")]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_rtw2f")
+theme_override_styles/normal = SubResource("StyleBoxFlat_rtw2f")
+text = "Gabriel"
+script = SubResource("GDScript_rcqid")
+player_data_path = "uid://c50rpsjfprqkb"
+operator_profile = NodePath("../../../Stats")
+mesh_parent = NodePath("../../../../../Piedestal")
+model_scene_path = "uid://bdqv57y05iuoo"
 
-[node name="Blanc" type="Panel" parent="SelectionCharacter/VBoxContainer/Choice/HBoxContainer"]
+[node name="Lucy" type="Button" parent="SelectionCharacter/VBoxContainer/Choice/HBoxContainer" node_paths=PackedStringArray("operator_profile", "mesh_parent")]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_oa1go")
+theme_override_styles/normal = SubResource("StyleBoxFlat_oa1go")
+text = "Lucy"
+script = SubResource("GDScript_flqon")
+player_data_path = "uid://bum34of1ukmai"
+operator_profile = NodePath("../../../Stats")
+mesh_parent = NodePath("../../../../../Piedestal")
+model_scene_path = "uid://bn63mneu1tu43"
 
 [node name="Stats" type="Control" parent="SelectionCharacter/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme = SubResource("Theme_8ln24")
 script = SubResource("GDScript_lgwnu")
+hp_description = "Points de vie de base de l'opérateur."
+xp_description = "Détermine l'intensité de l'XP et les bonus en % d'XP."
+dmg_description = "Multiplicateur de dégâts globaux."
+harvest_description = "Augmente la portée de récolte de l'expérience."
+tooltip_offset_x = -100.0
+tooltip_offset_y = -100.0
 
 [node name="ScanLine" type="ColorRect" parent="SelectionCharacter/VBoxContainer/Stats"]
 z_index = 100

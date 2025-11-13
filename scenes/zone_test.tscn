@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=3 uid="uid://61c8mu2pkxgh"]
 
 [ext_resource type="Script" uid="uid://ckxxrbtclaw7c" path="res://script/zone_de_test.gd" id="1_f12hp"]
-[ext_resource type="PackedScene" uid="uid://bcl5krgds1wpe" path="res://scenes/Joueur.tscn" id="3_ciifq"]
+[ext_resource type="PackedScene" uid="uid://bcl5krgds1wpe" path="res://scenes/players/Player.tscn" id="3_ciifq"]
 [ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://scenes/ProjectileBase.tscn" id="3_l6now"]
 [ext_resource type="PackedScene" uid="uid://cng5kopko58jj" path="res://scenes/aura_weapon.tscn" id="4_f12hp"]
 [ext_resource type="Shader" uid="uid://p6i28ung6ymp" path="res://shaders/sky.gdshader" id="4_gk8k0"]
