@@ -37,7 +37,9 @@ var is_paused: bool = false
 
 # Gestion des boss
 var next_boss_time: float = 0.0
-var game_active: bool = true
+var game_active: bool = false
+func set_game_active(state: bool) -> void:
+	game_active = state
 
 func _ready() -> void:
 	# Initialiser le temps du premier boss

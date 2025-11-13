@@ -32,8 +32,6 @@ func _ready():
 		preload("res://sounds/Endless_Spiral_of_Chaos.ogg"),
 		preload("res://sounds/Endless_Spiral_of_Fight.ogg")
 	]
-	# ❌ SUPPRIMÉ : MusicManager.pause_music = ...
-	MusicManager.set_volume(-12.0)
 	MusicManager.start_music()
 	
 	# Vérifier que la scène de boss existe
@@ -54,6 +52,7 @@ func _ready():
 	
 	# Attendre que le joueur soit complètement dans l'arbre avant de cacher spawn_zone
 	call_deferred("_initialize_spawn_system")
+	GameManager.set_game_active(true)
 
 func _initialize_spawn_system():
 	# Attendre plusieurs frames pour que tout soit bien dans l'arbre
