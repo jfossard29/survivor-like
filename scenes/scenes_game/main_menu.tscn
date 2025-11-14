@@ -1,10 +1,10 @@
 [gd_scene load_steps=46 format=4 uid="uid://ctpkfksra6nxf"]
 
-[ext_resource type="Shader" uid="uid://p6i28ung6ymp" path="res://shaders/sky.gdshader" id="1_bqqt6"]
-[ext_resource type="Script" uid="uid://bj34ar46op5rx" path="res://script/map/Quadrilatere.gd" id="2_wu84c"]
-[ext_resource type="Shader" uid="uid://dta3l04x00wf6" path="res://shaders/sun.gdshader" id="3_8ln24"]
-[ext_resource type="FontFile" uid="uid://c3ruxaj7pj5hk" path="res://themes/bold_pixel/BoldPixels.ttf" id="4_8ln24"]
-[ext_resource type="Theme" uid="uid://cf4lqevpkrvlf" path="res://themes/game_menu.tres" id="4_wu84c"]
+[ext_resource type="Shader" uid="uid://p6i28ung6ymp" path="res://shaders/sky.gdshader" id="1_gbwfd"]
+[ext_resource type="Script" uid="uid://bj34ar46op5rx" path="res://script/map/Quadrilatere.gd" id="2_yis5q"]
+[ext_resource type="Shader" uid="uid://dta3l04x00wf6" path="res://shaders/sun.gdshader" id="3_eehs4"]
+[ext_resource type="Theme" uid="uid://cf4lqevpkrvlf" path="res://themes/game_menu.tres" id="4_m4fx4"]
+[ext_resource type="FontFile" uid="uid://c3ruxaj7pj5hk" path="res://themes/bold_pixel/BoldPixels.ttf" id="5_veaib"]
 
 [sub_resource type="GDScript" id="GDScript_5dd4i"]
 script/source = "extends Control
@@ -130,7 +130,7 @@ _data = {
 }
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rtw2f"]
-shader = ExtResource("1_bqqt6")
+shader = ExtResource("1_gbwfd")
 shader_parameter/sky_color = Color(0.1, 0, 0.2, 1)
 shader_parameter/grid_color = Color(0.827451, 0.34117648, 1, 1)
 shader_parameter/horizon_color = Color(0.1, 0.1, 0.15, 1)
@@ -209,7 +209,7 @@ _surfaces = [{
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cxcjd"]
 render_priority = 0
-shader = ExtResource("3_8ln24")
+shader = ExtResource("3_eehs4")
 shader_parameter/color_top = Color(1, 0.5, 0, 1)
 shader_parameter/color_bottom = Color(1, 0, 0.5, 1)
 shader_parameter/line_speed = 0.0310000014725
@@ -222,17 +222,17 @@ radius = 8.0
 height = 16.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_bqqt6"]
-font = ExtResource("4_8ln24")
+font = ExtResource("5_veaib")
 font_size = 40
 font_color = Color(1, 0, 1, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_wu84c"]
-font = ExtResource("4_8ln24")
+font = ExtResource("5_veaib")
 font_size = 18
 font_color = Color(1, 0.83, 1, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_8ln24"]
-font = ExtResource("4_8ln24")
+font = ExtResource("5_veaib")
 font_size = 18
 font_color = Color(1, 0, 1, 1)
 
@@ -274,7 +274,7 @@ func _update_label(value: float) -> void:
 "
 
 [sub_resource type="LabelSettings" id="LabelSettings_rtw2f"]
-font = ExtResource("4_8ln24")
+font = ExtResource("5_veaib")
 font_size = 18
 font_color = Color(1, 0.83, 1, 1)
 
@@ -667,7 +667,7 @@ func _handle_3d_model():
 "
 
 [sub_resource type="Theme" id="Theme_8ln24"]
-Label/fonts/font = ExtResource("4_8ln24")
+Label/fonts/font = ExtResource("5_veaib")
 
 [sub_resource type="GDScript" id="GDScript_lgwnu"]
 script/source = "extends Control
@@ -974,7 +974,8 @@ func _on_button_pressed():
 		return
 	
 	# Changer de scène
-	get_tree().change_scene_to_file(target_scene_path)
+	if(PlayerManager.player_skin and PlayerManager.player_data_path):
+		get_tree().change_scene_to_file(target_scene_path)
 "
 
 [node name="MainMenu" type="Control"]
@@ -1014,7 +1015,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5829325, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.028688908, -5.146255, 13.758673)
 material_override = SubResource("ShaderMaterial_oa1go")
 mesh = SubResource("ArrayMesh_tbmy8")
-script = ExtResource("2_wu84c")
+script = ExtResource("2_yis5q")
 base_width = 80.0
 top_ratio = 0.25
 depth = 40.0
@@ -1043,7 +1044,7 @@ offset_right = 195.5
 offset_bottom = 263.5
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("4_wu84c")
+theme = ExtResource("4_m4fx4")
 
 [node name="MarginContainer" type="MarginContainer" parent="OptionsMenu"]
 layout_mode = 2
@@ -1204,7 +1205,7 @@ layout_mode = 1
 offset_top = 4.0
 offset_right = 1920.0
 offset_bottom = 114.0
-theme_override_fonts/font = ExtResource("4_8ln24")
+theme_override_fonts/font = ExtResource("5_veaib")
 theme_override_font_sizes/font_size = 80
 text = "MEGAPUNK"
 label_settings = SubResource("LabelSettings_oa1go")
@@ -1223,7 +1224,7 @@ alignment = 1
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 0
-theme = ExtResource("4_wu84c")
+theme = ExtResource("4_m4fx4")
 text = "JOUER"
 script = SubResource("GDScript_tbmy8")
 animation = NodePath("../../../AnimationPlayer")
@@ -1232,7 +1233,7 @@ animation = NodePath("../../../AnimationPlayer")
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 4
-theme = ExtResource("4_wu84c")
+theme = ExtResource("4_m4fx4")
 text = "OPTIONS"
 script = SubResource("GDScript_rtw2f")
 option = NodePath("../../../OptionsMenu")
@@ -1242,7 +1243,7 @@ menu = NodePath("../..")
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 8
-theme = ExtResource("4_wu84c")
+theme = ExtResource("4_m4fx4")
 text = "QUITTER"
 script = SubResource("GDScript_oa1go")
 
@@ -1628,7 +1629,7 @@ layout_mode = 0
 offset_left = -200.0
 offset_bottom = 100.0
 size_flags_horizontal = 0
-theme = ExtResource("4_wu84c")
+theme = ExtResource("4_m4fx4")
 text = "COMBATTRE"
 script = SubResource("GDScript_7b55j")
 target_scene_path = "uid://1hoxtt5rrj3g"

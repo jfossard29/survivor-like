@@ -4,7 +4,7 @@ extends MeshInstance3D
 ## Compatible avec ShaderMaterial et StandardMaterial3D
 ## Se synchronise automatiquement avec MusicManager
 
-@export_file("*.json") var beats_file_path: String = "res://beats.json"
+@export_file("*.json") var beats_file_path: String = "res://sounds/musiques_beat.json"
 @export var pulse_scale: float = 1.5  # Taille max lors du pulse
 @export var pulse_speed: float = 8.0  # Vitesse du pulse
 @export var emission_strength: float = 3.0  # Intensité de la lueur (pour StandardMaterial3D)

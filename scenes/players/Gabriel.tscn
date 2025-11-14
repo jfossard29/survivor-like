@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://bdqv57y05iuoo"]
 
-[ext_resource type="Script" uid="uid://bfpeg2n8qsxat" path="res://script/test_beat.gd" id="1_egb4t"]
+[ext_resource type="Script" uid="uid://bfpeg2n8qsxat" path="res://script/audio/pulse_beat.gd" id="1_egb4t"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_n43po"]
 
@@ -41,7 +41,6 @@ process_mode = 3
 transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, 0, 0.48622727, 0)
 mesh = SubResource("SphereMesh_8cenu")
 script = ExtResource("1_egb4t")
-beats_file_path = "res://sounds/musiques_beat.json"
 
 [node name="MeshInstance3D5" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.46988487, -0.4174473, -0.7777825, 0.6641611, 0.74758923, 0, 0.581462, -0.51657283, 0.62853324, 0.18856002, -0.032000065, 0.23333502)

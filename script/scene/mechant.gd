@@ -20,13 +20,13 @@ var last_position: Vector3
 
 func _ready():
 	add_to_group("enemy")
-	GameManager.register_enemy(self)
+	GameManager.enemy_manager.register_enemy(self)
 	current_health = max_health
 	attack_timer = attack_interval
 	last_position = global_position
 
 func _exit_tree():
-	GameManager.unregister_enemy(self)
+	GameManager.enemy_manager.unregister_enemy(self)
 
 func _physics_process(delta: float) -> void:
 	

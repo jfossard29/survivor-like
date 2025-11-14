@@ -2,7 +2,7 @@ extends CanvasLayer
 
 signal amelioration_choisie(name: String)
 
-@export var panel_script_path: String
+@export var panel_script_path: String = "res://script/UI/option_levelup.gd"
 @onready var container: VBoxContainer = $Conteneur/ChoixConteneur
 @onready var modele_carte: CenterContainer = $Common_To_Rare
 

@@ -5,7 +5,7 @@ extends CanvasLayer
 func _ready() -> void:
 	# Se connecter au signal du GameManager
 	if GameManager:
-		GameManager.timer_updated.connect(_on_timer_updated)
+		GameManager.timer_manager.timer_updated.connect(_on_timer_updated)
 	else:
 		push_error("GameManager n'est pas accessible!")
 

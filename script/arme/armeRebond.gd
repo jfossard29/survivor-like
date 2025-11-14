@@ -22,8 +22,8 @@ func find_closest_enemy() -> Node3D:
 	var closest_enemy: Node3D = null
 	var closest_dist: float = final_range + 1.0
 	
-	if GameManager and GameManager.registered_enemies:
-		for enemy in GameManager.registered_enemies:
+	if GameManager and GameManager.enemy_manager.registered_enemies:
+		for enemy in GameManager.enemy_manager.registered_enemies:
 			if not is_instance_valid(enemy):
 				continue
 			

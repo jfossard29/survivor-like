@@ -43,8 +43,8 @@ func get_ameliorations_random(player: CharacterBody3D) -> Array[Amelioration]:
 		"XP +%d%%" % int(10 * multiplier), 
 		"Taux d'expérience", 
 		func():
-			GameManager.xp_multiplier *= (1.0 + 0.10 * multiplier)
-			GameManager.emit_signal("multipliers_changed"),
+			GameManager.difficulty_manager.xp_multiplier *= (1.0 + 0.10 * multiplier)
+			GameManager.difficulty_manager.emit_signal("multipliers_changed"),
 		rarity
 	))
 	
@@ -54,10 +54,10 @@ func get_ameliorations_random(player: CharacterBody3D) -> Array[Amelioration]:
 		"Récolte +%d%%" % int(15 * multiplier), 
 		"Portée de collecte", 
 		func():
-			GameManager.pickup_scale_multiplier *= (1.0 + 0.15 * multiplier)
-			GameManager.emit_signal("multipliers_changed")
+			GameManager.difficulty_manager.pickup_scale_multiplier *= (1.0 + 0.15 * multiplier)
+			GameManager.difficulty_manager.emit_signal("multipliers_changed")
 			if player.has_node("Recolte"):
-				player.get_node("Recolte").set_pickup_radius_multiplier(GameManager.pickup_scale_multiplier),
+				player.get_node("Recolte").set_pickup_radius_multiplier(GameManager.difficulty_manager.pickup_scale_multiplier),
 		rarity
 	))
 	
@@ -74,12 +74,11 @@ func get_ameliorations_random(player: CharacterBody3D) -> Array[Amelioration]:
 	
 	# === ARME DE BASE (basic_gun) ===
 	if not WeaponManager.has_weapon("basic_gun"):
-		rarity = _roll_rarity()
 		available.append(Amelioration.new(
-			"Pistolet de Base",
-			"Débloquer l'arme de base",
+			"Flingue à énergie",
+			"Débloque l'arme",
 			func(): player._create_basic_weapon(),
-			rarity
+			"common"
 		))
 	else:
 		var basic = WeaponManager.get_weapon("basic_gun")
@@ -87,7 +86,7 @@ func get_ameliorations_random(player: CharacterBody3D) -> Array[Amelioration]:
 		rarity = _roll_rarity()
 		multiplier = _get_rarity_multiplier(rarity)
 		available.append(Amelioration.new(
-			"Pistolet: +%d Dégâts" % int(1 * multiplier),
+			"Flingue: +%d Dégâts" % int(1 * multiplier),
 			"Augmente les dégâts",
 			func(): basic.add_flat_damage(1.0 * multiplier),
 			rarity
@@ -96,7 +95,7 @@ func get_ameliorations_random(player: CharacterBody3D) -> Array[Amelioration]:
 		rarity = _roll_rarity()
 		multiplier = _get_rarity_multiplier(rarity)
 		available.append(Amelioration.new(
-			"Pistolet: +%d%% Dégâts" % int(10 * multiplier),
+			"Flingue: +%d%% Dégâts" % int(10 * multiplier),
 			"Augmente le % de dégât",
 			func(): basic.add_damage_multiplier(10.0 * multiplier),
 			rarity
@@ -105,7 +104,7 @@ func get_ameliorations_random(player: CharacterBody3D) -> Array[Amelioration]:
 		rarity = _roll_rarity()
 		multiplier = _get_rarity_multiplier(rarity)
 		available.append(Amelioration.new(
-			"Pistolet: +%d%% Cadence" % int(5 * multiplier),
+			"Flingue: +%d%% Cadence" % int(5 * multiplier),
 			"Tire plus rapidement",
 			func(): basic.add_fire_rate(5.0 * multiplier),
 			rarity
@@ -114,7 +113,7 @@ func get_ameliorations_random(player: CharacterBody3D) -> Array[Amelioration]:
 		rarity = _roll_rarity()
 		multiplier = _get_rarity_multiplier(rarity)
 		available.append(Amelioration.new(
-			"Pistolet: +%d%% Portée" % int(10 * multiplier),
+			"Flingue: +%d%% Portée" % int(10 * multiplier),
 			"Portée d'attaque",
 			func(): basic.add_range(10.0 * multiplier),
 			rarity
@@ -122,12 +121,11 @@ func get_ameliorations_random(player: CharacterBody3D) -> Array[Amelioration]:
 	
 	# === AURA ===
 	if not WeaponManager.has_weapon("aura"):
-		rarity = _roll_rarity()
 		available.append(Amelioration.new(
-			"Aura de Dégâts",
-			"Aura qui blesse les ennemis proches",
+			"Firewall",
+			"Débloque l'arme",
 			func(): player._create_aura_weapon(),
-			rarity
+			"common"
 		))
 	else:
 		var aura = WeaponManager.get_weapon("aura")
@@ -135,7 +133,7 @@ func get_ameliorations_random(player: CharacterBody3D) -> Array[Amelioration]:
 		rarity = _roll_rarity()
 		multiplier = _get_rarity_multiplier(rarity)
 		available.append(Amelioration.new(
-			"Aura: +%d Dégâts" % int(1 * multiplier),
+			"Firewall: +%d Dégâts" % int(1 * multiplier),
 			"Augmente les dégâts",
 			func(): aura.add_flat_damage(1.0 * multiplier),
 			rarity
@@ -144,7 +142,7 @@ func get_ameliorations_random(player: CharacterBody3D) -> Array[Amelioration]:
 		rarity = _roll_rarity()
 		multiplier = _get_rarity_multiplier(rarity)
 		available.append(Amelioration.new(
-			"Aura: +%d%% Dégâts" % int(10 * multiplier),
+			"Firewall: +%d%% Dégâts" % int(10 * multiplier),
 			"Augmente le % dégâts",
 			func(): aura.add_damage_multiplier(10.0 * multiplier),
 			rarity
@@ -153,20 +151,19 @@ func get_ameliorations_random(player: CharacterBody3D) -> Array[Amelioration]:
 		rarity = _roll_rarity()
 		multiplier = _get_rarity_multiplier(rarity)
 		available.append(Amelioration.new(
-			"Aura: +%d%% Portée" % int(10 * multiplier),
-			"Rayon de l'aura",
+			"Firewall: +%d%% Portée" % int(10 * multiplier),
+			"Rayon de l'arme",
 			func(): aura.add_range(10.0 * multiplier),
 			rarity
 		))
 	
 	# === RICOCHET ===
 	if not WeaponManager.has_weapon("ricochet"):
-		rarity = _roll_rarity()
 		available.append(Amelioration.new(
-			"Fusil à Ricochet",
-			"Rebondit d'ennemi en ennemi",
+			"Ver",
+			"Débloque l'arme",
 			func(): player._create_ricochet_weapon(),
-			rarity
+			"common"
 		))
 	else:
 		var ricochet = WeaponManager.get_weapon("ricochet")
@@ -174,7 +171,7 @@ func get_ameliorations_random(player: CharacterBody3D) -> Array[Amelioration]:
 		rarity = _roll_rarity()
 		multiplier = _get_rarity_multiplier(rarity)
 		available.append(Amelioration.new(
-			"Ricochet: +%d Dégâts" % int(1 * multiplier),
+			"Ver: +%d Dégâts" % int(1 * multiplier),
 			"Augmente les dégâts",
 			func(): ricochet.add_flat_damage(1.0 * multiplier),
 			rarity
@@ -183,7 +180,7 @@ func get_ameliorations_random(player: CharacterBody3D) -> Array[Amelioration]:
 		rarity = _roll_rarity()
 		multiplier = _get_rarity_multiplier(rarity)
 		available.append(Amelioration.new(
-			"Ricochet: +%d%% Dégâts" % int(10 * multiplier),
+			"Ver: +%d%% Dégâts" % int(10 * multiplier),
 			"Augmente le % dégâts",
 			func(): ricochet.add_damage_multiplier(10.0 * multiplier),
 			rarity
@@ -192,7 +189,7 @@ func get_ameliorations_random(player: CharacterBody3D) -> Array[Amelioration]:
 		rarity = _roll_rarity()
 		multiplier = _get_rarity_multiplier(rarity)
 		available.append(Amelioration.new(
-			"Ricochet: +%d%% Cadence" % int(5 * multiplier),
+			"Ver: +%d%% Cadence" % int(5 * multiplier),
 			"Tire plus rapidement",
 			func(): ricochet.add_fire_rate(5.0 * multiplier),
 			rarity
@@ -201,7 +198,7 @@ func get_ameliorations_random(player: CharacterBody3D) -> Array[Amelioration]:
 		rarity = _roll_rarity()
 		multiplier = _get_rarity_multiplier(rarity)
 		available.append(Amelioration.new(
-			"Ricochet: +%d%% Portée" % int(10 * multiplier),
+			"Ver: +%d%% Portée" % int(10 * multiplier),
 			"Portée et la distance de rebond",
 			func(): ricochet.add_range(10.0 * multiplier),
 			rarity
@@ -210,7 +207,7 @@ func get_ameliorations_random(player: CharacterBody3D) -> Array[Amelioration]:
 		rarity = _roll_rarity()
 		multiplier = _get_rarity_multiplier(rarity)
 		available.append(Amelioration.new(
-			"Ricochet: +%d Rebond" % int(1 * multiplier),
+			"Ver: +%d Rebond" % int(1 * multiplier),
 			"Ricochet supplémentaire",
 			func(): ricochet.add_bounce_count(int(1 * multiplier)),
 			rarity

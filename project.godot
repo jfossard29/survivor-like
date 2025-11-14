@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="MonPremierJeu"
-run/main_scene="res://scenes/racine.tscn"
+run/main_scene="uid://ctpkfksra6nxf"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://assets/icon.svg"
 

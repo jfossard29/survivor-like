@@ -13,17 +13,17 @@ extends Node3D
 @export var stacked_platform_chance: float = 0.5
 @export var auto_generate_on_play: bool = true
 @export var generate_ground: bool = true
-@export_file var bloc_path: String = "res://scenes/cyberpunk_block.tscn"
+@export_file var bloc_path: String = "res://scenes/mapcyberpunk_block.tscn"
 
 # Paramètres pylônes
 @export_group("Pylône")
 @export var pilone_count: int = 10
 @export_file("*.vox") var pylone_path: String = "res://assets/pylone.vox"
 @export_file("*.gdshader") var pylone_shader_path: String = "res://shaders/pylone.gdshader"
-@export_file("*.gd") var pylone_script_path: String = "res://script/pylone_charge.gd"
+@export_file("*.gd") var pylone_script_path: String = "res://script/map/pylone_charge.gd"
 
 @export_group("Audio Wall")
-@export_file("*.gd") var audio_wall_script_path: String = "res://script/audio_wall.gd"
+@export_file("*.gd") var audio_wall_script_path: String = "res://script/map/audio_wall.gd"
 
 @export_group("Generate")
 @export var Generate: bool:

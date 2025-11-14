@@ -1,6 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://7eq667phpr05"]
-
-[ext_resource type="Shader" uid="uid://p6i28ung6ymp" path="res://shaders/sky.gdshader" id="1_my0tv"]
+[gd_scene load_steps=13 format=3 uid="uid://7eq667phpr05"]
 
 [sub_resource type="PrismMesh" id="PrismMesh_r7ejb"]
 size = Vector3(5, 5, 0.1)
@@ -41,30 +39,6 @@ roughness = 0.25
 [sub_resource type="PrismMesh" id="PrismMesh_8cmkh"]
 left_to_right = 0.0
 size = Vector3(4.5, 4.5, 0.1)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_uin85"]
-shader = ExtResource("1_my0tv")
-shader_parameter/sky_color = Color(0.1, 0, 0.2, 1)
-shader_parameter/grid_color = Color(0.827451, 0.34117648, 1, 1)
-shader_parameter/horizon_color = Color(0.1, 0.1, 0.15, 1)
-shader_parameter/mountain_color = Color(0.15, 0.15, 0.25, 1)
-shader_parameter/mountain_outline = Color(1, 0.2, 0.8, 1)
-shader_parameter/grid_size = 2.0
-shader_parameter/line_width = 0.02
-shader_parameter/intersection_glow = 0.5
-shader_parameter/horizon_height = -0.10899995767750004
-shader_parameter/grid_fade_distance = 20.0
-shader_parameter/mountain_height = 0.15
-shader_parameter/mountain_scale = 2.0
-shader_parameter/outline_width = 0.05000000074506
-
-[sub_resource type="Sky" id="Sky_6mm8b"]
-sky_material = SubResource("ShaderMaterial_uin85")
-
-[sub_resource type="Environment" id="Environment_l3c2x"]
-background_mode = 2
-sky = SubResource("Sky_6mm8b")
-glow_enabled = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_my0tv"]
 size = Vector3(9.5, 9.5, 9.5)
@@ -670,9 +644,6 @@ surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
 transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, -1, 4.3711392e-08, -4.3711385e-08, 4.371139e-08, 4.3711385e-08, -1, 0.20000005, 0.20000005, 0)
 mesh = SubResource("PrismMesh_8cmkh")
 surface_material_override/0 = SubResource("StandardMaterial3D_my0tv")
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="plafond/C_B_G_1/C_B_G_2"]
-environment = SubResource("Environment_l3c2x")
 
 [node name="C_H_D_1" type="MeshInstance3D" parent="plafond"]
 transform = Transform3D(-4.371139e-08, 1, -4.371139e-08, 0, -4.371139e-08, -1, -1, -4.371139e-08, 1.9106855e-15, -2.7, 10, -2.5)

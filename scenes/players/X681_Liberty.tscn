@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://ca3jmxk1gpx4"]
 
-[ext_resource type="Script" uid="uid://bfpeg2n8qsxat" path="res://script/test_beat.gd" id="2_fdjei"]
+[ext_resource type="Script" uid="uid://bfpeg2n8qsxat" path="res://script/audio/pulse_beat.gd" id="2_fdjei"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_n43po"]
 

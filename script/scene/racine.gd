@@ -46,7 +46,7 @@ func _ready():
 	# Connecter au signal de boss
 	if GameManager:
 		print("✅ Connexion au signal boss_spawn_requested")
-		GameManager.boss_spawn_requested.connect(_on_boss_spawn_requested)
+		GameManager.timer_manager.boss_spawn_requested.connect(_on_boss_spawn_requested)
 	else:
 		push_error("❌ GameManager n'existe pas!")
 	

@@ -37,7 +37,7 @@ var active_effects: Array = []  # Stocker toutes les zones actives
 func _ready():
 	add_to_group("enemy")
 	#add_to_group("boss")
-	GameManager.register_enemy(self)
+	GameManager.enemy_manager.register_enemy(self)
 	current_health = max_health
 
 	# Attendre un frame pour que le joueur soit enregistré
@@ -62,7 +62,7 @@ func _register_with_ui() -> void:
 	boss_health_ui.register_boss(self, max_health)
 
 func _exit_tree():
-	GameManager.unregister_enemy(self)
+	GameManager.enemy_manager.unregister_enemy(self)
 	
 	# Se désenregistrer de l'UI
 	if boss_health_ui and boss_health_ui.has_method("unregister_boss"):

@@ -1,8 +1,8 @@
 [gd_scene load_steps=25 format=4 uid="uid://b1stvgy2g2801"]
 
-[ext_resource type="Texture2D" uid="uid://d0557kr5bkffc" path="res://assets/HologramLines.png" id="1_6ig5k"]
-[ext_resource type="Script" uid="uid://dodjdf2by6t77" path="res://script/boss.gd" id="1_gw42l"]
-[ext_resource type="PackedScene" uid="uid://1w0ttl831ipd" path="res://scenes/experience.tscn" id="2_edv8j"]
+[ext_resource type="Texture2D" uid="uid://dtwnaf3imfq4v" path="res://assets/HologramLines.png" id="1_6ig5k"]
+[ext_resource type="Script" uid="uid://dodjdf2by6t77" path="res://script/NPC/boss.gd" id="1_gw42l"]
+[ext_resource type="PackedScene" uid="uid://1w0ttl831ipd" path="res://scenes/map/experience.tscn" id="2_edv8j"]
 [ext_resource type="Shader" uid="uid://d8qy4jn630ck" path="res://shaders/Hologram.tres" id="2_gw42l"]
 [ext_resource type="Shader" uid="uid://b0wfvfir3pe60" path="res://shaders/rayon.gdshader" id="5_o02xv"]
 

@@ -23,14 +23,9 @@ var charge_progress: float = 0.0
 var is_player_inside: bool = false
 var is_charged: bool = false
 
-# Référence au GameManager
-var game_manager: Node = null
-
 func _ready() -> void:
-	# Récupère le GameManager
-	game_manager = get_node_or_null("/root/GameManager")
-	if game_manager and game_manager.has_method("register_pylon"):
-		game_manager.register_pylon(self)
+	if GameManager:
+		GameManager.pylon_manager.register_pylon(self)
 		if debug_mode:
 			print("Pylône enregistré auprès du GameManager")
 	else:
@@ -257,8 +252,8 @@ func _on_fully_charged() -> void:
 	is_charged = true
 	
 	# Notifie le GameManager
-	if game_manager and game_manager.has_method("notify_pylon_charged"):
-		game_manager.notify_pylon_charged(self)
+	if GameManager:
+		GameManager.pylon_manager.notify_pylon_charged(self)
 		if debug_mode:
 			print("GameManager notifié du chargement du pylône")
 	
@@ -316,5 +311,5 @@ func _remove_light_beam_animated() -> void:
 
 func _exit_tree() -> void:
 	# Sécurité : désenregistre si pas encore fait
-	if is_charged and game_manager and game_manager.has_method("unregister_pylon"):
-		game_manager.unregister_pylon(self)
+	if is_charged:
+		GameManager.pylon_manager.unregister_pylon(self)

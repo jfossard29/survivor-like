@@ -4,7 +4,7 @@ extends CanvasLayer
 ## Place ce script sur un CanvasLayer dans ta scène
 
 @export var music_folder_path: String = "res://sounds/"
-@export_file("*.json") var beats_json_path: String = "res://beats.json"
+@export_file("*.json") var beats_json_path: String = "res://sounds/musique_beats.json"
 @export var show_on_start: bool = true
 
 # Nodes UI

@@ -1,12 +1,12 @@
 [gd_scene load_steps=14 format=3 uid="uid://61c8mu2pkxgh"]
 
-[ext_resource type="Script" uid="uid://ckxxrbtclaw7c" path="res://script/zone_de_test.gd" id="1_f12hp"]
-[ext_resource type="PackedScene" uid="uid://bcl5krgds1wpe" path="res://scenes/players/Player.tscn" id="3_ciifq"]
-[ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://scenes/ProjectileBase.tscn" id="3_l6now"]
-[ext_resource type="PackedScene" uid="uid://cng5kopko58jj" path="res://scenes/aura_weapon.tscn" id="4_f12hp"]
-[ext_resource type="Shader" uid="uid://p6i28ung6ymp" path="res://shaders/sky.gdshader" id="4_gk8k0"]
-[ext_resource type="Script" uid="uid://cn0qcgprhfpsp" path="res://script/test_audio.gd" id="5_l6now"]
-[ext_resource type="Script" uid="uid://bfpeg2n8qsxat" path="res://script/test_beat.gd" id="7_44fu3"]
+[ext_resource type="Script" uid="uid://ckxxrbtclaw7c" path="res://script/scene/zone_de_test.gd" id="1_1ddwx"]
+[ext_resource type="Shader" uid="uid://p6i28ung6ymp" path="res://shaders/sky.gdshader" id="2_fqdhk"]
+[ext_resource type="PackedScene" uid="uid://bcl5krgds1wpe" path="res://scenes/players/Player.tscn" id="3_vlrcl"]
+[ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://scenes/arme/ProjectileBase.tscn" id="4_2v6mb"]
+[ext_resource type="PackedScene" uid="uid://cng5kopko58jj" path="res://scenes/arme/aura_weapon.tscn" id="5_flsgt"]
+[ext_resource type="Script" uid="uid://cn0qcgprhfpsp" path="res://script/audio/audio_maker.gd" id="6_xxaal"]
+[ext_resource type="Script" uid="uid://bfpeg2n8qsxat" path="res://script/audio/pulse_beat.gd" id="7_v3pan"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yg2ly"]
 size = Vector2(100, 100)
@@ -15,7 +15,7 @@ size = Vector2(100, 100)
 size = Vector3(100, 1, 100)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_xfq1h"]
-shader = ExtResource("4_gk8k0")
+shader = ExtResource("2_fqdhk")
 shader_parameter/sky_color = Color(0.1, 0, 0.2, 1)
 shader_parameter/grid_color = Color(0.827451, 0.34117648, 1, 1)
 shader_parameter/horizon_color = Color(0.1, 0.1, 0.15, 1)
@@ -41,7 +41,7 @@ glow_enabled = true
 [sub_resource type="BoxMesh" id="BoxMesh_f12hp"]
 
 [node name="ZoneTest" type="Node3D"]
-script = ExtResource("1_f12hp")
+script = ExtResource("1_1ddwx")
 
 [node name="sol" type="StaticBody3D" parent="."]
 collision_layer = 2
@@ -77,17 +77,17 @@ radius = 1.95
 radial_segments = 64
 rings = 64
 
-[node name="Joueur" parent="." instance=ExtResource("3_ciifq")]
+[node name="Joueur" parent="." instance=ExtResource("3_vlrcl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 19.738197, 27.355022)
-base_projectile_scene = ExtResource("3_l6now")
-aura_scene = ExtResource("4_f12hp")
+base_projectile_scene = ExtResource("4_2v6mb")
+aura_scene = ExtResource("5_flsgt")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
-script = ExtResource("5_l6now")
+script = ExtResource("6_xxaal")
 beats_json_path = "res://sounds/musiques_beat.json"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.245351, 0)
 mesh = SubResource("BoxMesh_f12hp")
-script = ExtResource("7_44fu3")
+script = ExtResource("7_v3pan")
 beats_file_path = "res://sounds/test.json"

@@ -86,7 +86,7 @@ static func _add_ramp(
 	center: Vector3
 ) -> void:
 	# Charger la scène de rampe
-	var stairs_scene = load("res://scenes/Stairs.tscn")
+	var stairs_scene = load("res://scenes/map/Stairs.tscn")
 	if not stairs_scene:
 		push_error("Impossible de charger Stairs.tscn")
 		return

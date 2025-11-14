@@ -18,12 +18,12 @@ func _ready():
 	body_entered.connect(_on_body_entered)
 	
 	if GameManager:
-		GameManager.multipliers_changed.connect(_update_from_game_manager)
+		GameManager.difficulty_manager.multipliers_changed.connect(_update_from_game_manager)
 	
 	_update_from_game_manager()
 
 func _update_from_game_manager():
-	valeur = base_valeur * (GameManager.xp_multiplier if GameManager else 1.0)
+	valeur = base_valeur * (GameManager.difficulty_manager.get_xp_multiplier() if GameManager else 1.0)
 
 func start_following(player: Node3D):
 	target = player
