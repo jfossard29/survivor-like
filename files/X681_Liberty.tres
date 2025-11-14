@@ -1,15 +1,13 @@
-[gd_resource type="Resource" script_class="players_menu" load_steps=2 format=3 uid="uid://bu5b5onxnuon6"]
+[gd_resource type="Resource" script_class="PlayerData" load_steps=2 format=3 uid="uid://bu5b5onxnuon6"]
 
 [ext_resource type="Script" uid="uid://dl6n1imm77wgo" path="res://script/players_menu.gd" id="1_8tuny"]
 
 [resource]
 script = ExtResource("1_8tuny")
 name = "X681_Liberty"
-bio = "Intelligence Artificielle N°681. Plus performante que les précédents, plus robuste, je pense qu'il s'adapte plus vite."
-baseWeapon = "Basique"
-hp = "150"
-xp = "2.0"
-dmg = "1.5"
-harvest = "1.0"
-danger = "SURVEILLANCE"
+bio = "Intelligence Artificielle N°681. Plus performante que les précédentes, plus robuste, je pense qu'elle s'adapte plus vite."
+base_weapon = "Base"
+hp = 200
+harvest = 3.0
+threat = 1
 metadata/_custom_type_script = "uid://dl6n1imm77wgo"

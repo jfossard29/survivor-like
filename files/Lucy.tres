@@ -1,15 +1,13 @@
-[gd_resource type="Resource" script_class="players_menu" load_steps=2 format=3 uid="uid://dq30ciaqgdquo"]
+[gd_resource type="Resource" script_class="PlayerData" load_steps=2 format=3 uid="uid://dq30ciaqgdquo"]
 
 [ext_resource type="Script" uid="uid://dl6n1imm77wgo" path="res://script/players_menu.gd" id="1_ln2cn"]
 
 [resource]
 script = ExtResource("1_ln2cn")
 name = "Lucy"
-bio = "Elle a juré avoir perdu ses écouteurs dans ce coin. Sans se douter que je les ai."
-baseWeapon = "Bounce"
-hp = "200"
-xp = "1.0"
-dmg = "1.0"
-harvest = "5.0"
-danger = "Insignifiant"
+bio = "Elle cherche ses écouteurs dans la zone. Je les ai. Comme ça elle bosse."
+base_weapon = "Bounce"
+xp = 2.0
+dmg = 2.0
+harvest = 2.0
 metadata/_custom_type_script = "uid://dl6n1imm77wgo"

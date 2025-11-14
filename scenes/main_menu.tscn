@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=4 uid="uid://ctpkfksra6nxf"]
+[gd_scene load_steps=46 format=4 uid="uid://ctpkfksra6nxf"]
 
 [ext_resource type="Shader" uid="uid://p6i28ung6ymp" path="res://shaders/sky.gdshader" id="1_bqqt6"]
 [ext_resource type="Script" uid="uid://bj34ar46op5rx" path="res://script/map/Quadrilatere.gd" id="2_wu84c"]
@@ -441,6 +441,8 @@ func _on_button_pressed():
 	# Gérer le modèle 3D si configuré
 	if mesh_parent and not model_scene_path.is_empty():
 		_handle_3d_model()
+	
+	PlayerManager.set_player_selected(model_scene_path, player_data_path)
 
 func _handle_3d_model():
 	# Chercher si un node avec ce nom existe déjà
@@ -531,6 +533,8 @@ func _on_button_pressed():
 	# Gérer le modèle 3D si configuré
 	if mesh_parent and not model_scene_path.is_empty():
 		_handle_3d_model()
+		
+	PlayerManager.set_player_selected(model_scene_path, player_data_path)
 
 func _handle_3d_model():
 	# Chercher si un node avec ce nom existe déjà
@@ -622,6 +626,8 @@ func _on_button_pressed():
 	# Gérer le modèle 3D si configuré
 	if mesh_parent and not model_scene_path.is_empty():
 		_handle_3d_model()
+		
+	PlayerManager.set_player_selected(model_scene_path, player_data_path)
 
 func _handle_3d_model():
 	# Chercher si un node avec ce nom existe déjà
@@ -948,6 +954,29 @@ bg_color = Color(0, 0.83, 1, 0.05)
 border_width_top = 1
 border_color = Color(0, 0.83, 1, 0.3)
 
+[sub_resource type="GDScript" id="GDScript_7b55j"]
+script/source = "extends Button
+
+# Chemin vers la scène à charger
+@export_file(\"*.tscn\", \"*.scn\") var target_scene_path: String = \"\"
+
+func _ready():
+	pressed.connect(_on_button_pressed)
+
+func _on_button_pressed():
+	if target_scene_path.is_empty():
+		push_error(\"Aucune scène cible définie pour ce bouton!\")
+		return
+	
+	# Vérifier que la scène existe
+	if not ResourceLoader.exists(target_scene_path):
+		push_error(\"La scène n'existe pas: \" + target_scene_path)
+		return
+	
+	# Changer de scène
+	get_tree().change_scene_to_file(target_scene_path)
+"
+
 [node name="MainMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -1251,7 +1280,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_8ln24")
 text = "X681"
 script = SubResource("GDScript_1ajci")
 player_data_path = "uid://bu5b5onxnuon6"
-operator_profile = NodePath("../../../Stats")
+operator_profile = NodePath("../../../HBoxContainer/Stats")
 mesh_parent = NodePath("../../../../../Piedestal")
 model_scene_path = "uid://ca3jmxk1gpx4"
 
@@ -1262,7 +1291,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_rtw2f")
 text = "Gabriel"
 script = SubResource("GDScript_rcqid")
 player_data_path = "uid://c50rpsjfprqkb"
-operator_profile = NodePath("../../../Stats")
+operator_profile = NodePath("../../../HBoxContainer/Stats")
 mesh_parent = NodePath("../../../../../Piedestal")
 model_scene_path = "uid://bdqv57y05iuoo"
 
@@ -1272,12 +1301,16 @@ layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_oa1go")
 text = "Lucy"
 script = SubResource("GDScript_flqon")
-player_data_path = "uid://bum34of1ukmai"
-operator_profile = NodePath("../../../Stats")
+player_data_path = "uid://dq30ciaqgdquo"
+operator_profile = NodePath("../../../HBoxContainer/Stats")
 mesh_parent = NodePath("../../../../../Piedestal")
 model_scene_path = "uid://bn63mneu1tu43"
 
-[node name="Stats" type="Control" parent="SelectionCharacter/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SelectionCharacter/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Stats" type="Control" parent="SelectionCharacter/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme = SubResource("Theme_8ln24")
@@ -1289,7 +1322,7 @@ harvest_description = "Augmente la portée de récolte de l'expérience."
 tooltip_offset_x = -100.0
 tooltip_offset_y = -100.0
 
-[node name="ScanLine" type="ColorRect" parent="SelectionCharacter/VBoxContainer/Stats"]
+[node name="ScanLine" type="ColorRect" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats"]
 z_index = 100
 custom_minimum_size = Vector2(0, 2)
 layout_mode = 1
@@ -1300,7 +1333,7 @@ offset_bottom = 2.0
 grow_horizontal = 2
 color = Color(0, 0.831373, 1, 0.3)
 
-[node name="MainContainer" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/Stats"]
+[node name="MainContainer" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats"]
 layout_mode = 0
 offset_right = 680.0
 offset_bottom = 762.0
@@ -1308,277 +1341,294 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_tbmy8")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Header" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer"]
+[node name="Header" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_jk1qb")
 
-[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/Header"]
+[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/Header"]
 layout_mode = 2
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/Header/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/Header/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Classification" type="Label" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/Header/MarginContainer/VBoxContainer"]
+[node name="Classification" type="Label" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/Header/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 1, 1)
 theme_override_font_sizes/font_size = 16
 text = "◢ DOSSIER OPÉRATEUR ◣"
 
-[node name="OperatorName" type="Label" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/Header/MarginContainer/VBoxContainer"]
+[node name="OperatorName" type="Label" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/Header/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0.831373, 1, 1)
 theme_override_font_sizes/font_size = 48
 text = "GHOST RUNNER"
 
-[node name="Bio" type="Label" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/Header/MarginContainer/VBoxContainer"]
+[node name="Bio" type="Label" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/Header/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0.831373, 1, 0.8)
 theme_override_font_sizes/font_size = 18
 text = "Agent infiltré spécialisé dans les opérations furtives en zone hostile. Maîtrise des systèmes cybernétiques avancés et expertise en combat rapproché."
 autowrap_mode = 3
 
-[node name="StatsBody" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer"]
+[node name="StatsBody" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="WeaponRow" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer"]
+[node name="WeaponRow" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_lgwnu")
 
-[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/WeaponRow"]
+[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/WeaponRow"]
 layout_mode = 2
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/WeaponRow/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/WeaponRow/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/WeaponRow/MarginContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/WeaponRow/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 1, 0.8)
 theme_override_font_sizes/font_size = 16
 text = "⚡ ARME DE BASE"
 
-[node name="WeaponValue" type="Label" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/WeaponRow/MarginContainer/HBoxContainer"]
+[node name="WeaponValue" type="Label" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/WeaponRow/MarginContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0.831373, 1, 1)
 theme_override_font_sizes/font_size = 22
 text = "PLASMA PISTOL"
 
-[node name="HPRow" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer"]
+[node name="HPRow" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_lgwnu")
 
-[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HPRow"]
+[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HPRow"]
 layout_mode = 2
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HPRow/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HPRow/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HPRow/MarginContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HPRow/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 1, 0.8)
 theme_override_font_sizes/font_size = 16
 text = "❤ POINTS DE VIE"
 
-[node name="HPBadge" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HPRow/MarginContainer/HBoxContainer"]
+[node name="HPBadge" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HPRow/MarginContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_flqon")
 
-[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HPRow/MarginContainer/HBoxContainer/HPBadge"]
+[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HPRow/MarginContainer/HBoxContainer/HPBadge"]
 layout_mode = 2
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 5
 
-[node name="HPValue" type="Label" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HPRow/MarginContainer/HBoxContainer/HPBadge/MarginContainer"]
+[node name="HPValue" type="Label" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HPRow/MarginContainer/HBoxContainer/HPBadge/MarginContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 1, 1)
 theme_override_font_sizes/font_size = 18
 text = "200 HP"
 
-[node name="XPRow" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer"]
+[node name="XPRow" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_lgwnu")
 
-[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/XPRow"]
+[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/XPRow"]
 layout_mode = 2
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/XPRow/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/XPRow/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/XPRow/MarginContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/XPRow/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 1, 0.8)
 theme_override_font_sizes/font_size = 16
 text = "⬆ MULTI. XP"
 
-[node name="XPBadge" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/XPRow/MarginContainer/HBoxContainer"]
+[node name="XPBadge" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/XPRow/MarginContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_flqon")
 
-[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/XPRow/MarginContainer/HBoxContainer/XPBadge"]
+[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/XPRow/MarginContainer/HBoxContainer/XPBadge"]
 layout_mode = 2
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 5
 
-[node name="XPValue" type="Label" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/XPRow/MarginContainer/HBoxContainer/XPBadge/MarginContainer"]
+[node name="XPValue" type="Label" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/XPRow/MarginContainer/HBoxContainer/XPBadge/MarginContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 1, 1)
 theme_override_font_sizes/font_size = 18
 text = "× 1.5"
 
-[node name="DMGRow" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer"]
+[node name="DMGRow" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_lgwnu")
 
-[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/DMGRow"]
+[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/DMGRow"]
 layout_mode = 2
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/DMGRow/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/DMGRow/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/DMGRow/MarginContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/DMGRow/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 1, 0.8)
 theme_override_font_sizes/font_size = 16
 text = "💥 MULTI. DGT"
 
-[node name="DMGBadge" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/DMGRow/MarginContainer/HBoxContainer"]
+[node name="DMGBadge" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/DMGRow/MarginContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_flqon")
 
-[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/DMGRow/MarginContainer/HBoxContainer/DMGBadge"]
+[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/DMGRow/MarginContainer/HBoxContainer/DMGBadge"]
 layout_mode = 2
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 5
 
-[node name="DMGValue" type="Label" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/DMGRow/MarginContainer/HBoxContainer/DMGBadge/MarginContainer"]
+[node name="DMGValue" type="Label" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/DMGRow/MarginContainer/HBoxContainer/DMGBadge/MarginContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 1, 1)
 theme_override_font_sizes/font_size = 18
 text = "× 2.3"
 
-[node name="HarvestRow" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer"]
+[node name="HarvestRow" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_lgwnu")
 
-[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HarvestRow"]
+[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HarvestRow"]
 layout_mode = 2
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HarvestRow/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HarvestRow/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HarvestRow/MarginContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HarvestRow/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 1, 0.8)
 theme_override_font_sizes/font_size = 16
 text = "📡 MULT. PORTÉE RÉCOLTE"
 
-[node name="HarvestBadge" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HarvestRow/MarginContainer/HBoxContainer"]
+[node name="HarvestBadge" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HarvestRow/MarginContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_flqon")
 
-[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HarvestRow/MarginContainer/HBoxContainer/HarvestBadge"]
+[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HarvestRow/MarginContainer/HBoxContainer/HarvestBadge"]
 layout_mode = 2
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 5
 
-[node name="HarvestValue" type="Label" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HarvestRow/MarginContainer/HBoxContainer/HarvestBadge/MarginContainer"]
+[node name="HarvestValue" type="Label" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/HarvestRow/MarginContainer/HBoxContainer/HarvestBadge/MarginContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 1, 1)
 theme_override_font_sizes/font_size = 18
 text = "× 1.5"
 
-[node name="ThreatRow" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer"]
+[node name="ThreatRow" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_lgwnu")
 
-[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/ThreatRow"]
+[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/ThreatRow"]
 layout_mode = 2
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/ThreatRow/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/ThreatRow/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/ThreatRow/MarginContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/ThreatRow/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 1, 0.8)
 theme_override_font_sizes/font_size = 16
 text = "⚠ NIVEAU DE DANGER"
 
-[node name="ThreatBadge" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/ThreatRow/MarginContainer/HBoxContainer"]
+[node name="ThreatBadge" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/ThreatRow/MarginContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/ThreatRow/MarginContainer/HBoxContainer/ThreatBadge"]
+[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/ThreatRow/MarginContainer/HBoxContainer/ThreatBadge"]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 10
 
-[node name="ThreatLabel" type="Label" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/ThreatRow/MarginContainer/HBoxContainer/ThreatBadge/MarginContainer"]
+[node name="ThreatLabel" type="Label" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/StatsBody/VBoxContainer/ThreatRow/MarginContainer/HBoxContainer/ThreatBadge/MarginContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.937255, 0.258824, 0.258824, 1)
 theme_override_font_sizes/font_size = 18
 text = "🔒 CONFIDENTIEL"
 
-[node name="Footer" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer"]
+[node name="Footer" type="PanelContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_5dd4i")
 
-[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/Footer"]
+[node name="MarginContainer" type="MarginContainer" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/Footer"]
 layout_mode = 2
 theme_override_constants/margin_top = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="FooterLabel" type="Label" parent="SelectionCharacter/VBoxContainer/Stats/MainContainer/VBoxContainer/Footer/MarginContainer"]
+[node name="FooterLabel" type="Label" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Stats/MainContainer/VBoxContainer/Footer/MarginContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0.831373, 1, 0.6)
 theme_override_font_sizes/font_size = 14
 text = "◢ DONNÉES CLASSIFIÉES - NIVEAU 5 - NE PAS DIVULGUER ◣"
 horizontal_alignment = 1
+
+[node name="Start" type="Control" parent="SelectionCharacter/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 170)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 8
+
+[node name="Play" type="Button" parent="SelectionCharacter/VBoxContainer/HBoxContainer/Start"]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 0
+offset_left = -200.0
+offset_bottom = 100.0
+size_flags_horizontal = 0
+theme = ExtResource("4_wu84c")
+text = "COMBATTRE"
+script = SubResource("GDScript_7b55j")
+target_scene_path = "uid://1hoxtt5rrj3g"

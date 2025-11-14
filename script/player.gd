@@ -34,7 +34,7 @@ var xp_tween: Tween = null
 
 func _ready():
 	add_to_group("player")
-	
+	self.add_child(load(PlayerManager.player_skin).instantiate())
 	update_stats()
 	update_health_display()
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)

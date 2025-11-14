@@ -1,15 +1,14 @@
-[gd_resource type="Resource" script_class="players_menu" load_steps=2 format=3 uid="uid://c50rpsjfprqkb"]
+[gd_resource type="Resource" script_class="PlayerData" load_steps=2 format=3 uid="uid://c50rpsjfprqkb"]
 
 [ext_resource type="Script" uid="uid://dl6n1imm77wgo" path="res://script/players_menu.gd" id="1_5jslw"]
 
 [resource]
 script = ExtResource("1_5jslw")
 name = "Gabriel"
-bio = "Il n'abandonera jamais."
-baseWeapon = "Aura"
-hp = "100"
-xp = "1.5"
-dmg = "2.8"
-harvest = "1.2"
-danger = "CONFIDENTIAL"
+bio = "Je n'abandonnerais jamais."
+base_weapon = "Aura"
+hp = 150
+xp = 2.0
+dmg = 2.0
+threat = 2
 metadata/_custom_type_script = "uid://dl6n1imm77wgo"
