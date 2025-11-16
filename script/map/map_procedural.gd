@@ -13,7 +13,7 @@ extends Node3D
 @export var stacked_platform_chance: float = 0.5
 @export var auto_generate_on_play: bool = true
 @export var generate_ground: bool = true
-@export_file var bloc_path: String = "res://scenes/mapcyberpunk_block.tscn"
+@export_file var bloc_path: String = "res://scenes/cyberpunk_block.tscn"
 
 # Paramètres pylônes
 @export_group("Pylône")
@@ -150,7 +150,7 @@ func _place_visual_blocs(placed_platforms: Array, bloc_size: float, center: Vect
 				bloc.name = "Bloc_" + str(x) + "_" + str(z) + "_L" + str(plat.level)
 				
 				var x_pos = x * bloc_size + bloc_size * 0.5
-				var y_pos = (plat.level - 1) * bloc_size + bloc_size * 0.5
+				var y_pos = (plat.level - 1) * bloc_size + bloc_size
 				var z_pos = z * bloc_size + bloc_size * 0.5
 				
 				bloc.position = Vector3(x_pos, y_pos, z_pos) - center
