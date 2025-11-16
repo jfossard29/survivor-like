@@ -481,6 +481,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6348572, -245.34164, 3857.
 mesh = SubResource("SphereMesh_pfvfn")
 
 [node name="PauseMenu" parent="." instance=ExtResource("16_hvtan")]
+visible = false
 
 [node name="Timer" parent="." instance=ExtResource("17_dlngl")]
 script = ExtResource("18_ytbxp")

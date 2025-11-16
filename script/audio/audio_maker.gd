@@ -68,8 +68,6 @@ func _ready():
 	_build_ui()
 	_setup_audio()
 	_load_all_beats_from_json()
-	
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func _scan_music_folder():
 	var dir = DirAccess.open(music_folder_path)

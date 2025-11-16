@@ -72,3 +72,8 @@ func get_valid_enemies() -> Array:
 		if is_instance_valid(enemy):
 			valid.append(enemy)
 	return valid
+
+func reset() -> void:
+	registered_enemies.clear()
+	enemy_tick_timer = 0.0
+	cleanup_timer = 0.0

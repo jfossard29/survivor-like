@@ -34,7 +34,10 @@ var xp_tween: Tween = null
 
 func _ready():
 	add_to_group("player")
-	self.add_child(load(PlayerManager.player_skin).instantiate())
+	if PlayerManager.player_skin != "" :
+		self.add_child(load(PlayerManager.player_skin).instantiate())
+	else :
+		self.add_child(load("res://scenes/players/Gabriel.tscn").instantiate())
 	update_stats()
 	update_health_display()
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)

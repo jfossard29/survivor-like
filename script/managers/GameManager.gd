@@ -101,7 +101,6 @@ func _end_game(won: bool) -> void:
 		print("💀 Game Over!")
 		game_over.emit()
 
-# API pour accéder aux gestionnaires
 func get_difficulty_manager() -> Node:
 	return difficulty_manager
 
@@ -113,3 +112,12 @@ func get_pylon_manager() -> Node:
 
 func get_timer_manager() -> Node:
 	return timer_manager
+
+func reset() -> void:
+	difficulty_manager.reset()
+	enemy_manager.reset()
+	pylon_manager.reset()
+	timer_manager.reset()
+	WeaponManager.reset()
+	game_active = false
+	player_reference = null

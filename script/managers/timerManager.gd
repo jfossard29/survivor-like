@@ -70,3 +70,8 @@ func set_game_duration(duration: float) -> void:
 
 func set_boss_interval(interval: float) -> void:
 	boss_spawn_interval = interval
+
+func reset() -> void:
+	is_running = false
+	elapsed_time = 0.0
+	next_boss_time = 0.0
