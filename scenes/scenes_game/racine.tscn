@@ -40,7 +40,7 @@ sky_material = SubResource("ShaderMaterial_sgosv")
 background_mode = 2
 sky = SubResource("Sky_n7u81")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_6wm8b"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r4t71"]
 render_priority = 0
 shader = ExtResource("11_quacx")
 shader_parameter/brightness_threshold = 0.9
@@ -48,10 +48,10 @@ shader_parameter/neon_color = Color(1, 0, 0, 0)
 shader_parameter/emission_strength = 10.0
 shader_parameter/tint_with_original = true
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_ibfkh"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_8pssd"]
 size = Vector3(8, 26, 8)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_65hki"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i4ci5"]
 render_priority = 0
 shader = ExtResource("11_quacx")
 shader_parameter/brightness_threshold = 0.9
@@ -59,10 +59,10 @@ shader_parameter/neon_color = Color(1, 0, 0, 0)
 shader_parameter/emission_strength = 10.0
 shader_parameter/tint_with_original = true
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_sl8nf"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_sxnmr"]
 size = Vector3(8, 26, 8)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_idhvh"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lxtuq"]
 render_priority = 0
 shader = ExtResource("11_quacx")
 shader_parameter/brightness_threshold = 0.9
@@ -70,10 +70,10 @@ shader_parameter/neon_color = Color(1, 0, 0, 0)
 shader_parameter/emission_strength = 10.0
 shader_parameter/tint_with_original = true
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_ds77h"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_hnp5q"]
 size = Vector3(8, 26, 8)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_mgd15"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lrn7n"]
 render_priority = 0
 shader = ExtResource("11_quacx")
 shader_parameter/brightness_threshold = 0.9
@@ -81,10 +81,10 @@ shader_parameter/neon_color = Color(1, 0, 0, 0)
 shader_parameter/emission_strength = 10.0
 shader_parameter/tint_with_original = true
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_rujxr"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_cucvh"]
 size = Vector3(8, 26, 8)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_di5v4"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fisdi"]
 render_priority = 0
 shader = ExtResource("11_quacx")
 shader_parameter/brightness_threshold = 0.9
@@ -92,10 +92,10 @@ shader_parameter/neon_color = Color(1, 0, 0, 0)
 shader_parameter/emission_strength = 10.0
 shader_parameter/tint_with_original = true
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_arxee"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_0fdmp"]
 size = Vector3(8, 26, 8)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_t65ry"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3r1n2"]
 render_priority = 0
 shader = ExtResource("11_quacx")
 shader_parameter/brightness_threshold = 0.9
@@ -103,10 +103,10 @@ shader_parameter/neon_color = Color(1, 0, 0, 0)
 shader_parameter/emission_strength = 10.0
 shader_parameter/tint_with_original = true
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_wsll3"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_2atdg"]
 size = Vector3(8, 26, 8)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_a8smn"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xnkj4"]
 render_priority = 0
 shader = ExtResource("11_quacx")
 shader_parameter/brightness_threshold = 0.9
@@ -114,10 +114,10 @@ shader_parameter/neon_color = Color(1, 0, 0, 0)
 shader_parameter/emission_strength = 10.0
 shader_parameter/tint_with_original = true
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_qcn36"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_quacx"]
 size = Vector3(8, 26, 8)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ni871"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_77u14"]
 render_priority = 0
 shader = ExtResource("11_quacx")
 shader_parameter/brightness_threshold = 0.9
@@ -125,10 +125,10 @@ shader_parameter/neon_color = Color(1, 0, 0, 0)
 shader_parameter/emission_strength = 10.0
 shader_parameter/tint_with_original = true
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_8d6gy"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_ii27u"]
 size = Vector3(8, 26, 8)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_awg2i"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7k12e"]
 render_priority = 0
 shader = ExtResource("11_quacx")
 shader_parameter/brightness_threshold = 0.9
@@ -136,10 +136,10 @@ shader_parameter/neon_color = Color(1, 0, 0, 0)
 shader_parameter/emission_strength = 10.0
 shader_parameter/tint_with_original = true
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_fgyje"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_jlq2t"]
 size = Vector3(8, 26, 8)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_r87ru"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hvtan"]
 render_priority = 0
 shader = ExtResource("11_quacx")
 shader_parameter/brightness_threshold = 0.9
@@ -147,7 +147,7 @@ shader_parameter/neon_color = Color(1, 0, 0, 0)
 shader_parameter/emission_strength = 10.0
 shader_parameter/tint_with_original = true
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_bi63r"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_dlngl"]
 size = Vector3(8, 26, 8)
 
 [sub_resource type="Shader" id="Shader_r4t71"]
@@ -238,7 +238,9 @@ light_color = Color(0.5757481, 0.5672782, 1, 1)
 
 [node name="Map" parent="." instance=ExtResource("9_2atdg")]
 map_size = 150
-bloc_path = "uid://datac2h7nm34m"
+corner_bloc_path = "uid://c4tccyyu53fq2"
+side_bloc_path = "uid://cihw0cv7okt2l"
+floor_bloc_path = "uid://blpho32rc1a4w"
 pylone_path = "uid://bl76k8qf7c418"
 pylone_shader_path = "uid://g3uovj5kqbhb"
 pylone_script_path = "uid://bbkiswqwrl6a6"
@@ -251,7 +253,7 @@ transform = Transform3D(-0.49134153, 0, -0.09264719, 0, 0.5, 0, 0.09264719, 0, -
 script = ExtResource("10_xnkj4")
 
 [node name="PiloneMesh" type="MeshInstance3D" parent="Map/GeneratedStaticBody/Pilone_0"]
-material_override = SubResource("ShaderMaterial_6wm8b")
+material_override = SubResource("ShaderMaterial_r4t71")
 mesh = ExtResource("12_77u14")
 
 [node name="Pilone_0_Body" type="StaticBody3D" parent="Map/GeneratedStaticBody/Pilone_0"]
@@ -261,18 +263,18 @@ collision_mask = 4
 
 [node name="CollisionShape" type="CollisionShape3D" parent="Map/GeneratedStaticBody/Pilone_0/Pilone_0_Body"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_ibfkh")
+shape = SubResource("BoxShape3D_8pssd")
 
 [node name="LightBeam" type="Node3D" parent="Map/GeneratedStaticBody/Pilone_0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
 script = ExtResource("13_ii27u")
 
 [node name="Pilone_1" type="Node3D" parent="Map/GeneratedStaticBody"]
-transform = Transform3D(0.14437209, 0, -0.47870314, 0, 0.5, 0, 0.47870314, 0, 0.14437209, 40, 10, 70)
+transform = Transform3D(-0.26667392, 0, -0.422948, 0, 0.5, 0, 0.422948, 0, -0.26667392, 20, 20, 0)
 script = ExtResource("10_xnkj4")
 
 [node name="PiloneMesh" type="MeshInstance3D" parent="Map/GeneratedStaticBody/Pilone_1"]
-material_override = SubResource("ShaderMaterial_65hki")
+material_override = SubResource("ShaderMaterial_i4ci5")
 mesh = ExtResource("12_77u14")
 
 [node name="Pilone_1_Body" type="StaticBody3D" parent="Map/GeneratedStaticBody/Pilone_1"]
@@ -282,18 +284,18 @@ collision_mask = 4
 
 [node name="CollisionShape" type="CollisionShape3D" parent="Map/GeneratedStaticBody/Pilone_1/Pilone_1_Body"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_sl8nf")
+shape = SubResource("BoxShape3D_sxnmr")
 
 [node name="LightBeam" type="Node3D" parent="Map/GeneratedStaticBody/Pilone_1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
 script = ExtResource("13_ii27u")
 
 [node name="Pilone_2" type="Node3D" parent="Map/GeneratedStaticBody"]
-transform = Transform3D(-0.052503645, 0, -0.49723572, 0, 0.5, 0, 0.49723572, 0, -0.052503645, -10, 10, -60)
+transform = Transform3D(0.14437209, 0, -0.47870314, 0, 0.5, 0, 0.47870314, 0, 0.14437209, 40, 10, 70)
 script = ExtResource("10_xnkj4")
 
 [node name="PiloneMesh" type="MeshInstance3D" parent="Map/GeneratedStaticBody/Pilone_2"]
-material_override = SubResource("ShaderMaterial_idhvh")
+material_override = SubResource("ShaderMaterial_lxtuq")
 mesh = ExtResource("12_77u14")
 
 [node name="Pilone_2_Body" type="StaticBody3D" parent="Map/GeneratedStaticBody/Pilone_2"]
@@ -303,18 +305,18 @@ collision_mask = 4
 
 [node name="CollisionShape" type="CollisionShape3D" parent="Map/GeneratedStaticBody/Pilone_2/Pilone_2_Body"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_ds77h")
+shape = SubResource("BoxShape3D_hnp5q")
 
 [node name="LightBeam" type="Node3D" parent="Map/GeneratedStaticBody/Pilone_2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
 script = ExtResource("13_ii27u")
 
 [node name="Pilone_3" type="Node3D" parent="Map/GeneratedStaticBody"]
-transform = Transform3D(0.107405074, 0, -0.48832792, 0, 0.5, 0, 0.48832792, 0, 0.107405074, 40, 30, 10)
+transform = Transform3D(-0.052503645, 0, -0.49723572, 0, 0.5, 0, 0.49723572, 0, -0.052503645, -10, 10, -60)
 script = ExtResource("10_xnkj4")
 
 [node name="PiloneMesh" type="MeshInstance3D" parent="Map/GeneratedStaticBody/Pilone_3"]
-material_override = SubResource("ShaderMaterial_mgd15")
+material_override = SubResource("ShaderMaterial_lrn7n")
 mesh = ExtResource("12_77u14")
 
 [node name="Pilone_3_Body" type="StaticBody3D" parent="Map/GeneratedStaticBody/Pilone_3"]
@@ -324,18 +326,18 @@ collision_mask = 4
 
 [node name="CollisionShape" type="CollisionShape3D" parent="Map/GeneratedStaticBody/Pilone_3/Pilone_3_Body"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_rujxr")
+shape = SubResource("BoxShape3D_cucvh")
 
 [node name="LightBeam" type="Node3D" parent="Map/GeneratedStaticBody/Pilone_3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
 script = ExtResource("13_ii27u")
 
 [node name="Pilone_4" type="Node3D" parent="Map/GeneratedStaticBody"]
-transform = Transform3D(0.20260812, 0, -0.45711043, 0, 0.5, 0, 0.45711043, 0, 0.20260812, 30, 10, -60)
+transform = Transform3D(0.107405074, 0, -0.48832792, 0, 0.5, 0, 0.48832792, 0, 0.107405074, 40, 30, 10)
 script = ExtResource("10_xnkj4")
 
 [node name="PiloneMesh" type="MeshInstance3D" parent="Map/GeneratedStaticBody/Pilone_4"]
-material_override = SubResource("ShaderMaterial_di5v4")
+material_override = SubResource("ShaderMaterial_fisdi")
 mesh = ExtResource("12_77u14")
 
 [node name="Pilone_4_Body" type="StaticBody3D" parent="Map/GeneratedStaticBody/Pilone_4"]
@@ -345,18 +347,18 @@ collision_mask = 4
 
 [node name="CollisionShape" type="CollisionShape3D" parent="Map/GeneratedStaticBody/Pilone_4/Pilone_4_Body"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_arxee")
+shape = SubResource("BoxShape3D_0fdmp")
 
 [node name="LightBeam" type="Node3D" parent="Map/GeneratedStaticBody/Pilone_4"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
 script = ExtResource("13_ii27u")
 
 [node name="Pilone_5" type="Node3D" parent="Map/GeneratedStaticBody"]
-transform = Transform3D(-0.16777988, 0, 0.47100946, 0, 0.5, 0, -0.47100946, 0, -0.16777988, 40, 10, 60)
+transform = Transform3D(0.20260812, 0, -0.45711043, 0, 0.5, 0, 0.45711043, 0, 0.20260812, 30, 10, -60)
 script = ExtResource("10_xnkj4")
 
 [node name="PiloneMesh" type="MeshInstance3D" parent="Map/GeneratedStaticBody/Pilone_5"]
-material_override = SubResource("ShaderMaterial_t65ry")
+material_override = SubResource("ShaderMaterial_3r1n2")
 mesh = ExtResource("12_77u14")
 
 [node name="Pilone_5_Body" type="StaticBody3D" parent="Map/GeneratedStaticBody/Pilone_5"]
@@ -366,18 +368,18 @@ collision_mask = 4
 
 [node name="CollisionShape" type="CollisionShape3D" parent="Map/GeneratedStaticBody/Pilone_5/Pilone_5_Body"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_wsll3")
+shape = SubResource("BoxShape3D_2atdg")
 
 [node name="LightBeam" type="Node3D" parent="Map/GeneratedStaticBody/Pilone_5"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
 script = ExtResource("13_ii27u")
 
 [node name="Pilone_6" type="Node3D" parent="Map/GeneratedStaticBody"]
-transform = Transform3D(-0.12786618, 0, 0.48337382, 0, 0.5, 0, -0.48337382, 0, -0.12786618, 70, 10, 70)
+transform = Transform3D(-0.43567583, 0, 0.24532951, 0, 0.5, 0, -0.24532951, 0, -0.43567583, 10, 10, 0)
 script = ExtResource("10_xnkj4")
 
 [node name="PiloneMesh" type="MeshInstance3D" parent="Map/GeneratedStaticBody/Pilone_6"]
-material_override = SubResource("ShaderMaterial_a8smn")
+material_override = SubResource("ShaderMaterial_xnkj4")
 mesh = ExtResource("12_77u14")
 
 [node name="Pilone_6_Body" type="StaticBody3D" parent="Map/GeneratedStaticBody/Pilone_6"]
@@ -387,18 +389,18 @@ collision_mask = 4
 
 [node name="CollisionShape" type="CollisionShape3D" parent="Map/GeneratedStaticBody/Pilone_6/Pilone_6_Body"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_qcn36")
+shape = SubResource("BoxShape3D_quacx")
 
 [node name="LightBeam" type="Node3D" parent="Map/GeneratedStaticBody/Pilone_6"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
 script = ExtResource("13_ii27u")
 
 [node name="Pilone_7" type="Node3D" parent="Map/GeneratedStaticBody"]
-transform = Transform3D(0.43780714, 0, 0.24150547, 0, 0.5, 0, -0.24150547, 0, 0.43780714, 40, 10, 30)
+transform = Transform3D(-0.12786618, 0, 0.48337382, 0, 0.5, 0, -0.48337382, 0, -0.12786618, 70, 10, 70)
 script = ExtResource("10_xnkj4")
 
 [node name="PiloneMesh" type="MeshInstance3D" parent="Map/GeneratedStaticBody/Pilone_7"]
-material_override = SubResource("ShaderMaterial_ni871")
+material_override = SubResource("ShaderMaterial_77u14")
 mesh = ExtResource("12_77u14")
 
 [node name="Pilone_7_Body" type="StaticBody3D" parent="Map/GeneratedStaticBody/Pilone_7"]
@@ -408,18 +410,18 @@ collision_mask = 4
 
 [node name="CollisionShape" type="CollisionShape3D" parent="Map/GeneratedStaticBody/Pilone_7/Pilone_7_Body"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_8d6gy")
+shape = SubResource("BoxShape3D_ii27u")
 
 [node name="LightBeam" type="Node3D" parent="Map/GeneratedStaticBody/Pilone_7"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
 script = ExtResource("13_ii27u")
 
 [node name="Pilone_8" type="Node3D" parent="Map/GeneratedStaticBody"]
-transform = Transform3D(0.2304748, 0, -0.44371316, 0, 0.5, 0, 0.44371316, 0, 0.2304748, 20, 10, -20)
+transform = Transform3D(0.43780714, 0, 0.24150547, 0, 0.5, 0, -0.24150547, 0, 0.43780714, 40, 10, 30)
 script = ExtResource("10_xnkj4")
 
 [node name="PiloneMesh" type="MeshInstance3D" parent="Map/GeneratedStaticBody/Pilone_8"]
-material_override = SubResource("ShaderMaterial_awg2i")
+material_override = SubResource("ShaderMaterial_7k12e")
 mesh = ExtResource("12_77u14")
 
 [node name="Pilone_8_Body" type="StaticBody3D" parent="Map/GeneratedStaticBody/Pilone_8"]
@@ -429,18 +431,18 @@ collision_mask = 4
 
 [node name="CollisionShape" type="CollisionShape3D" parent="Map/GeneratedStaticBody/Pilone_8/Pilone_8_Body"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_fgyje")
+shape = SubResource("BoxShape3D_jlq2t")
 
 [node name="LightBeam" type="Node3D" parent="Map/GeneratedStaticBody/Pilone_8"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
 script = ExtResource("13_ii27u")
 
 [node name="Pilone_9" type="Node3D" parent="Map/GeneratedStaticBody"]
-transform = Transform3D(-0.44872704, 0, -0.22055392, 0, 0.5, 0, 0.22055392, 0, -0.44872704, -60, 10, -20)
+transform = Transform3D(0.2304748, 0, -0.44371316, 0, 0.5, 0, 0.44371316, 0, 0.2304748, 20, 10, -20)
 script = ExtResource("10_xnkj4")
 
 [node name="PiloneMesh" type="MeshInstance3D" parent="Map/GeneratedStaticBody/Pilone_9"]
-material_override = SubResource("ShaderMaterial_r87ru")
+material_override = SubResource("ShaderMaterial_hvtan")
 mesh = ExtResource("12_77u14")
 
 [node name="Pilone_9_Body" type="StaticBody3D" parent="Map/GeneratedStaticBody/Pilone_9"]
@@ -450,7 +452,7 @@ collision_mask = 4
 
 [node name="CollisionShape" type="CollisionShape3D" parent="Map/GeneratedStaticBody/Pilone_9/Pilone_9_Body"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_bi63r")
+shape = SubResource("BoxShape3D_dlngl")
 
 [node name="LightBeam" type="Node3D" parent="Map/GeneratedStaticBody/Pilone_9"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)

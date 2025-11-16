@@ -13,7 +13,12 @@ extends Node3D
 @export var stacked_platform_chance: float = 0.5
 @export var auto_generate_on_play: bool = true
 @export var generate_ground: bool = true
-@export_file var bloc_path: String = "res://scenes/cyberpunk_block.tscn"
+
+# Nouveaux exports pour les différents types de blocs
+@export_group("Bloc Types")
+@export_file var corner_bloc_path: String = "res://scenes/map/corner_bloc.gld"
+@export_file var side_bloc_path: String = "res://scenes/map/side_bloc.gld"
+@export_file var floor_bloc_path: String = "res://scenes/map/floor_bloc.gld"
 
 # Paramètres pylônes
 @export_group("Pylône")
@@ -35,6 +40,21 @@ extends Node3D
 
 const NAME_BODY := "GeneratedStaticBody"
 
+# Enum pour les types de blocs
+enum BlocType {
+	FLOOR,
+	SIDE,
+	CORNER
+}
+
+# Enum pour les rotations (en degrés Y)
+enum BlocRotation {
+	NORTH = 90,      # 90°
+	EAST = 0,      # 0°
+	SOUTH = -90,    # -90°
+	WEST = 180      # 180°
+}
+
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		set_process(true)
@@ -46,8 +66,7 @@ func generate() -> void:
 	print("Génération de la map...")
 	_cleanup_previous()
 	
-	if not ResourceLoader.exists(bloc_path):
-		push_error("Le modèle bloc.glb n'existe pas: " + bloc_path)
+	if not _validate_bloc_paths():
 		return
 	
 	var N = max(1, int(floor(float(map_size) / bloc_size)))
@@ -58,16 +77,16 @@ func generate() -> void:
 	
 	var rng = _setup_rng()
 	var hm = _create_heightmap(N, M)
-
 	
 	var container = Node3D.new()
 	container.name = NAME_BODY
 	var center = Vector3(
 		N * bloc_size * 0.5, 
-		bloc_size * 0.5,  # ← Ajout de l'offset vertical
+		bloc_size * 0.5,
 		M * bloc_size * 0.5
 	)
-		# Utiliser le générateur de plateformes
+	
+	# Utiliser le générateur de plateformes
 	var placed_platforms = PlatformGenerator.generate_platforms(
 		N, M, hm, rng,
 		platform_coverage,
@@ -80,12 +99,13 @@ func generate() -> void:
 		center,
 		container
 	)
+	
 	# Générer le terrain
 	if generate_ground:
 		_generate_ground(N, M, bloc_size, center, container)
 	
-	# Placer les blocs visuels
-	_place_visual_blocs(placed_platforms, bloc_size, center, container)
+	# Placer les blocs visuels avec le nouveau système
+	_place_visual_blocs_optimized(placed_platforms, bloc_size, center, container)
 	
 	# Générer les rampes
 	var ramp_positions = RampGenerator.generate_ramps(
@@ -110,6 +130,18 @@ func generate() -> void:
 	_create_audio_wall(container)
 	
 	print("Génération terminée: ", N, "x", M, " - Plateformes:", placed_platforms.size())
+
+func _validate_bloc_paths() -> bool:
+	if not ResourceLoader.exists(corner_bloc_path):
+		push_error("Le modèle corner_bloc n'existe pas: " + corner_bloc_path)
+		return false
+	if not ResourceLoader.exists(side_bloc_path):
+		push_error("Le modèle side_bloc n'existe pas: " + side_bloc_path)
+		return false
+	if not ResourceLoader.exists(floor_bloc_path):
+		push_error("Le modèle floor_bloc n'existe pas: " + floor_bloc_path)
+		return false
+	return true
 
 func _validate_parameters(N: int, M: int) -> bool:
 	if min_platform_blocs > max_platform_blocs:
@@ -137,23 +169,79 @@ func _create_heightmap(N: int, M: int) -> Array:
 		hm.append(col)
 	return hm
 
-func _place_visual_blocs(placed_platforms: Array, bloc_size: float, center: Vector3, container: Node3D) -> void:
-	var bloc_scene = load(bloc_path)
+# Détermine le type de bloc et sa rotation pour une position donnée dans une plateforme
+func _get_bloc_type_and_rotation(local_x: int, local_z: int, plat_w: int, plat_h: int) -> Dictionary:
+	var is_left = (local_x == 0)
+	var is_right = (local_x == plat_w - 1)
+	var is_top = (local_z == 0)
+	var is_bottom = (local_z == plat_h - 1)
+	
+	# Coins (corner_bloc)
+	if is_left and is_top:
+		return {"type": BlocType.CORNER, "rotation": BlocRotation.NORTH}
+	elif is_right and is_top:
+		return {"type": BlocType.CORNER, "rotation": BlocRotation.EAST}
+	elif is_right and is_bottom:
+		return {"type": BlocType.CORNER, "rotation": BlocRotation.SOUTH}
+	elif is_left and is_bottom:
+		return {"type": BlocType.CORNER, "rotation": BlocRotation.WEST}
+	
+	# Côtés (side_bloc)
+	elif is_top:
+		return {"type": BlocType.SIDE, "rotation": BlocRotation.NORTH}
+	elif is_right:
+		return {"type": BlocType.SIDE, "rotation": BlocRotation.EAST}
+	elif is_bottom:
+		return {"type": BlocType.SIDE, "rotation": BlocRotation.SOUTH}
+	elif is_left:
+		return {"type": BlocType.SIDE, "rotation": BlocRotation.WEST}
+	
+	# Centre (floor_bloc) - pas de rotation spécifique
+	else:
+		return {"type": BlocType.FLOOR, "rotation": BlocRotation.NORTH}
+
+func _place_visual_blocs_optimized(placed_platforms: Array, bloc_size: float, center: Vector3, container: Node3D) -> void:
+	# Charger les scènes une seule fois
+	var corner_scene = load(corner_bloc_path)
+	var side_scene = load(side_bloc_path)
+	var floor_scene = load(floor_bloc_path)
+	
 	var visual_container = Node3D.new()
 	visual_container.name = "BlocsVisuels"
 	
-	# Parcourir TOUTES les plateformes, pas juste la heightmap
+	# Parcourir toutes les plateformes
 	for plat in placed_platforms:
 		for x in range(plat.x, plat.x + plat.w):
 			for z in range(plat.z, plat.z + plat.h):
-				var bloc = bloc_scene.instantiate()
+				# Calculer la position locale dans la plateforme
+				var local_x = x - plat.x
+				var local_z = z - plat.z
+				
+				# Déterminer le type et la rotation
+				var bloc_info = _get_bloc_type_and_rotation(local_x, local_z, plat.w, plat.h)
+				
+				# Instancier le bon type de bloc
+				var bloc: Node3D
+				match bloc_info.type:
+					BlocType.CORNER:
+						bloc = corner_scene.instantiate()
+					BlocType.SIDE:
+						bloc = side_scene.instantiate()
+					BlocType.FLOOR:
+						bloc = floor_scene.instantiate()
+				
 				bloc.name = "Bloc_" + str(x) + "_" + str(z) + "_L" + str(plat.level)
 				
+				# Position
 				var x_pos = x * bloc_size + bloc_size * 0.5
 				var y_pos = (plat.level - 1) * bloc_size + bloc_size
 				var z_pos = z * bloc_size + bloc_size * 0.5
 				
 				bloc.position = Vector3(x_pos, y_pos, z_pos) - center
+				
+				# Rotation
+				bloc.rotation_degrees.y = bloc_info.rotation
+				
 				visual_container.add_child(bloc)
 	
 	container.add_child(visual_container)
@@ -173,7 +261,6 @@ func _generate_ground(N: int, M: int, bloc_size: float, center: Vector3, contain
 	mat.albedo_color = Color(0.3, 0.5, 0.3)
 	mesh_inst.material_override = mat
 	
-	# CORRECTION : Positionner le ground à Y = -0.5 pour qu'il soit sous les plateformes
 	ground.position = Vector3(0, -0.5, 0)
 	ground.add_child(mesh_inst)
 	
@@ -184,6 +271,7 @@ func _generate_ground(N: int, M: int, bloc_size: float, center: Vector3, contain
 	ground.add_child(collision)
 	
 	container.add_child(ground)
+
 func _create_audio_wall(container: Node3D) -> void:
 	var audio_wall = Node3D.new()
 	audio_wall.name = "AudioWall"
