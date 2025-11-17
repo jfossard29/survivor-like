@@ -54,7 +54,7 @@ static func _generate_ramp_for_platform(
 			nx = x0 + rng.randi_range(0, w - 1)
 			nz = z0 - 1
 		
-		# ✅ Vérifier que la rampe n'est pas sur le bord de la map
+		# Vérifier que la rampe n'est pas sur le bord de la map
 		if nx <= 0 or nx >= N - 1 or nz <= 0 or nz >= M - 1:
 			continue
 		
@@ -63,11 +63,11 @@ static func _generate_ramp_for_platform(
 			
 			# Vérifier que le voisin est au niveau inférieur
 			if neighbor_level == level - 1:
-				# ✅ Vérifier que ce n'est pas dans un bloc_gap
+				# Vérifier que ce n'est pas dans un bloc_gap
 				if _is_in_gap(nx, nz, hm, N, M, bloc_gap):
 					continue
 				
-				# ✅ Vérifier qu'il n'y a pas déjà une rampe du même niveau adjacente
+				# Vérifier qu'il n'y a pas déjà une rampe du même niveau adjacente
 				if _has_adjacent_ramp_same_level(nx, nz, level, existing_ramps, hm):
 					continue
 				
@@ -86,41 +86,41 @@ static func _add_ramp(
 	center: Vector3
 ) -> void:
 	# Charger la scène de rampe
-	var stairs_scene = load("res://scenes/map/Stairs.tscn")
+	var stairs_scene = load("res://scenes/map/stairs_blend.glb")
 	if not stairs_scene:
-		push_error("Impossible de charger Stairs.tscn")
+		push_error("Impossible de charger la rampe")
 		return
 	
 	var stairs = stairs_scene.instantiate()
 	stairs.name = "Ramp_" + str(origin.x) + "_" + str(origin.z)
-	var ramp_ground_offset := 0.5
-	# La rampe est placée sur le bloc de niveau inférieur (level - 1)
-	# et monte vers le bloc de niveau supérieur (level)
-	var base_height = (level * bloc_size) - (bloc_size * 0.5)
-
+	
+	# La rampe repose sur le niveau inférieur (level - 1)
+	# Sa base doit être au même niveau que le sol de la plateforme inférieure
+	var base_height = (level - 1) * bloc_size + bloc_size
+		
 	# Position de base centrée sur la case
 	var x_pos = origin.x * bloc_size + bloc_size * 0.5
 	var z_pos = origin.z * bloc_size + bloc_size * 0.5
 	
-	# Décaler la rampe de la moitié d'un bloc dans la direction de montée
-	# pour qu'elle repose correctement sur le sol et se connecte à la plateforme
-	x_pos += dir.x * bloc_size * 0.45
-	z_pos += dir.y * bloc_size * 0.45
-	
-	stairs.position = Vector3(x_pos, base_height, z_pos) - center
-	
 	# Calculer la rotation selon la direction
+	# Godot utilise les radians, mais rotation_degrees accepte les degrés
 	var rotation_y = 0.0
-	if dir.x > 0:      # Droite
-		rotation_y = 90.0
-	elif dir.x < 0:    # Gauche
+	if dir.x > 0:      # Rampe vers la droite (X+)
 		rotation_y = -90.0
-	elif dir.y > 0:    # Haut (Z+)
-		rotation_y = 0.0
-	elif dir.y < 0:    # Bas (Z-)
+	elif dir.x < 0:    # Rampe vers la gauche (X-)
+		rotation_y = 90.0
+	elif dir.y > 0:    # Rampe vers le haut (Z+)
 		rotation_y = 180.0
+	elif dir.y < 0:    # Rampe vers le bas (Z-)
+		rotation_y = 0.0
 	
+	rotation_y += 90.0
+	# Position finale (avec centre du monde)
+	stairs.position = Vector3(x_pos, base_height, z_pos) - center
 	stairs.rotation_degrees = Vector3(0, rotation_y, 0)
+	
+	# Configurer les layers et masks des collisions dans le .glb
+	_setup_collision_layers(stairs)
 	
 	container.add_child(stairs)
 
@@ -179,3 +179,15 @@ static func _has_adjacent_ramp_same_level(
 					return true
 	
 	return false
+
+# Configure les layers et masks de collision pour tous les StaticBody3D dans la rampe
+static func _setup_collision_layers(stairs: Node3D) -> void:
+	# Parcourir récursivement tous les enfants
+	for child in stairs.get_children():
+		if child is StaticBody3D:
+			child.collision_layer = 2
+			child.collision_mask = 4
+		
+		# Récursion pour les enfants des enfants
+		if child.get_child_count() > 0:
+			_setup_collision_layers(child)

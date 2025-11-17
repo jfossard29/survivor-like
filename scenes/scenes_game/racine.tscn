@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bk7dangodqgts" path="res://scenes/map/map.tscn" id="9_2atdg"]
 [ext_resource type="Script" uid="uid://bbkiswqwrl6a6" path="res://script/map/pylone_charge.gd" id="10_xnkj4"]
 [ext_resource type="Shader" uid="uid://g3uovj5kqbhb" path="res://shaders/pylone.gdshader" id="11_quacx"]
-[ext_resource type="ArrayMesh" uid="uid://dmth1gs2f07md" path="res://assets/pylone.vox" id="12_77u14"]
+[ext_resource type="ArrayMesh" uid="uid://bl76k8qf7c418" path="res://assets/pylone.vox" id="12_77u14"]
 [ext_resource type="Script" uid="uid://0mf78caqltxw" path="res://script/map/test_fesceau.gd" id="13_ii27u"]
 [ext_resource type="Script" uid="uid://bj34ar46op5rx" path="res://script/map/Quadrilatere.gd" id="14_7k12e"]
 [ext_resource type="Shader" uid="uid://dta3l04x00wf6" path="res://shaders/sun.gdshader" id="15_jlq2t"]
@@ -150,7 +150,7 @@ shader_parameter/tint_with_original = true
 [sub_resource type="BoxShape3D" id="BoxShape3D_dlngl"]
 size = Vector3(8, 26, 8)
 
-[sub_resource type="Shader" id="Shader_r4t71"]
+[sub_resource type="Shader" id="Shader_ytbxp"]
 code = "
 shader_type spatial;
 render_mode blend_add, depth_draw_opaque, cull_back, unshaded;
@@ -184,16 +184,16 @@ void fragment() {
 }
 "
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_8pssd"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nms2w"]
 render_priority = 0
-shader = SubResource("Shader_r4t71")
+shader = SubResource("Shader_ytbxp")
 shader_parameter/line_color = Color(0.78941506, 0, 0.33577523, 0.42745098)
 shader_parameter/line_speed = 0.05
 shader_parameter/line_width = 0.5
 shader_parameter/line_spacing = 0.1
 shader_parameter/emission_strength = 1.5
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_i4ci5"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_qgln7"]
 _surfaces = [{
 "aabb": AABB(-600, 0, -1200, 1200, 1e-05, 2400),
 "attribute_data": PackedByteArray("AAAAAAAAAAAAAIA/AAAAAAAAgD8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAIA/"),
@@ -241,7 +241,6 @@ map_size = 150
 corner_bloc_path = "uid://vhluw7d6c4cb"
 side_bloc_path = "uid://b2mdo71qbfdyy"
 floor_bloc_path = "uid://bp4dkv7f1tuy0"
-pylone_path = "uid://dmth1gs2f07md"
 pylone_shader_path = "uid://g3uovj5kqbhb"
 pylone_script_path = "uid://bbkiswqwrl6a6"
 audio_wall_script_path = "uid://cne885366udw3"
@@ -270,7 +269,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
 script = ExtResource("13_ii27u")
 
 [node name="Pilone_1" type="Node3D" parent="Map/GeneratedStaticBody"]
-transform = Transform3D(-0.26667392, 0, -0.422948, 0, 0.5, 0, 0.422948, 0, -0.26667392, 20, 20, 0)
+transform = Transform3D(0.14437209, 0, -0.47870314, 0, 0.5, 0, 0.47870314, 0, 0.14437209, 40, 10, 70)
 script = ExtResource("10_xnkj4")
 
 [node name="PiloneMesh" type="MeshInstance3D" parent="Map/GeneratedStaticBody/Pilone_1"]
@@ -291,7 +290,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
 script = ExtResource("13_ii27u")
 
 [node name="Pilone_2" type="Node3D" parent="Map/GeneratedStaticBody"]
-transform = Transform3D(0.14437209, 0, -0.47870314, 0, 0.5, 0, 0.47870314, 0, 0.14437209, 40, 10, 70)
+transform = Transform3D(-0.052503645, 0, -0.49723572, 0, 0.5, 0, 0.49723572, 0, -0.052503645, -10, 10, -60)
 script = ExtResource("10_xnkj4")
 
 [node name="PiloneMesh" type="MeshInstance3D" parent="Map/GeneratedStaticBody/Pilone_2"]
@@ -312,7 +311,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
 script = ExtResource("13_ii27u")
 
 [node name="Pilone_3" type="Node3D" parent="Map/GeneratedStaticBody"]
-transform = Transform3D(-0.052503645, 0, -0.49723572, 0, 0.5, 0, 0.49723572, 0, -0.052503645, -10, 10, -60)
+transform = Transform3D(0.107405074, 0, -0.48832792, 0, 0.5, 0, 0.48832792, 0, 0.107405074, 40, 30, 10)
 script = ExtResource("10_xnkj4")
 
 [node name="PiloneMesh" type="MeshInstance3D" parent="Map/GeneratedStaticBody/Pilone_3"]
@@ -333,7 +332,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
 script = ExtResource("13_ii27u")
 
 [node name="Pilone_4" type="Node3D" parent="Map/GeneratedStaticBody"]
-transform = Transform3D(0.107405074, 0, -0.48832792, 0, 0.5, 0, 0.48832792, 0, 0.107405074, 40, 30, 10)
+transform = Transform3D(0.20260812, 0, -0.45711043, 0, 0.5, 0, 0.45711043, 0, 0.20260812, 30, 10, -60)
 script = ExtResource("10_xnkj4")
 
 [node name="PiloneMesh" type="MeshInstance3D" parent="Map/GeneratedStaticBody/Pilone_4"]
@@ -354,7 +353,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
 script = ExtResource("13_ii27u")
 
 [node name="Pilone_5" type="Node3D" parent="Map/GeneratedStaticBody"]
-transform = Transform3D(0.20260812, 0, -0.45711043, 0, 0.5, 0, 0.45711043, 0, 0.20260812, 30, 10, -60)
+transform = Transform3D(-0.43567583, 0, 0.24532951, 0, 0.5, 0, -0.24532951, 0, -0.43567583, 10, 10, 0)
 script = ExtResource("10_xnkj4")
 
 [node name="PiloneMesh" type="MeshInstance3D" parent="Map/GeneratedStaticBody/Pilone_5"]
@@ -375,7 +374,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
 script = ExtResource("13_ii27u")
 
 [node name="Pilone_6" type="Node3D" parent="Map/GeneratedStaticBody"]
-transform = Transform3D(-0.43567583, 0, 0.24532951, 0, 0.5, 0, -0.24532951, 0, -0.43567583, 10, 10, 0)
+transform = Transform3D(-0.12786618, 0, 0.48337382, 0, 0.5, 0, -0.48337382, 0, -0.12786618, 70, 10, 70)
 script = ExtResource("10_xnkj4")
 
 [node name="PiloneMesh" type="MeshInstance3D" parent="Map/GeneratedStaticBody/Pilone_6"]
@@ -396,7 +395,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
 script = ExtResource("13_ii27u")
 
 [node name="Pilone_7" type="Node3D" parent="Map/GeneratedStaticBody"]
-transform = Transform3D(-0.12786618, 0, 0.48337382, 0, 0.5, 0, -0.48337382, 0, -0.12786618, 70, 10, 70)
+transform = Transform3D(0.43780714, 0, 0.24150547, 0, 0.5, 0, -0.24150547, 0, 0.43780714, 40, 10, 30)
 script = ExtResource("10_xnkj4")
 
 [node name="PiloneMesh" type="MeshInstance3D" parent="Map/GeneratedStaticBody/Pilone_7"]
@@ -417,7 +416,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
 script = ExtResource("13_ii27u")
 
 [node name="Pilone_8" type="Node3D" parent="Map/GeneratedStaticBody"]
-transform = Transform3D(0.43780714, 0, 0.24150547, 0, 0.5, 0, -0.24150547, 0, 0.43780714, 40, 10, 30)
+transform = Transform3D(0.2304748, 0, -0.44371316, 0, 0.5, 0, 0.44371316, 0, 0.2304748, 20, 10, -20)
 script = ExtResource("10_xnkj4")
 
 [node name="PiloneMesh" type="MeshInstance3D" parent="Map/GeneratedStaticBody/Pilone_8"]
@@ -438,7 +437,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
 script = ExtResource("13_ii27u")
 
 [node name="Pilone_9" type="Node3D" parent="Map/GeneratedStaticBody"]
-transform = Transform3D(0.2304748, 0, -0.44371316, 0, 0.5, 0, 0.44371316, 0, 0.2304748, 20, 10, -20)
+transform = Transform3D(-0.44872704, 0, -0.22055392, 0, 0.5, 0, 0.22055392, 0, -0.44872704, -60, 10, -20)
 script = ExtResource("10_xnkj4")
 
 [node name="PiloneMesh" type="MeshInstance3D" parent="Map/GeneratedStaticBody/Pilone_9"]
@@ -464,8 +463,8 @@ script = ExtResource("13_ii27u")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Sunset"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -169.3978, 1321.7445)
-material_override = SubResource("ShaderMaterial_8pssd")
-mesh = SubResource("ArrayMesh_i4ci5")
+material_override = SubResource("ShaderMaterial_nms2w")
+mesh = SubResource("ArrayMesh_qgln7")
 script = ExtResource("14_7k12e")
 base_width = 1200.0
 top_ratio = 0.5
@@ -481,9 +480,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6348572, -245.34164, 3857.
 mesh = SubResource("SphereMesh_pfvfn")
 
 [node name="PauseMenu" parent="." instance=ExtResource("16_hvtan")]
-visible = false
 
 [node name="Timer" parent="." instance=ExtResource("17_dlngl")]
 script = ExtResource("18_ytbxp")
 
 [node name="BossHealthUI" parent="." instance=ExtResource("19_nms2w")]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
