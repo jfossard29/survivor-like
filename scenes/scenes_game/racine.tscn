@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bk7dangodqgts" path="res://scenes/map/map.tscn" id="9_2atdg"]
 [ext_resource type="Script" uid="uid://bbkiswqwrl6a6" path="res://script/map/pylone_charge.gd" id="10_xnkj4"]
 [ext_resource type="Shader" uid="uid://g3uovj5kqbhb" path="res://shaders/pylone.gdshader" id="11_quacx"]
-[ext_resource type="ArrayMesh" uid="uid://bl76k8qf7c418" path="res://assets/pylone.vox" id="12_77u14"]
+[ext_resource type="ArrayMesh" uid="uid://dmth1gs2f07md" path="res://assets/pylone.vox" id="12_77u14"]
 [ext_resource type="Script" uid="uid://0mf78caqltxw" path="res://script/map/test_fesceau.gd" id="13_ii27u"]
 [ext_resource type="Script" uid="uid://bj34ar46op5rx" path="res://script/map/Quadrilatere.gd" id="14_7k12e"]
 [ext_resource type="Shader" uid="uid://dta3l04x00wf6" path="res://shaders/sun.gdshader" id="15_jlq2t"]
@@ -238,10 +238,10 @@ light_color = Color(0.5757481, 0.5672782, 1, 1)
 
 [node name="Map" parent="." instance=ExtResource("9_2atdg")]
 map_size = 150
-corner_bloc_path = "uid://c4tccyyu53fq2"
-side_bloc_path = "uid://cihw0cv7okt2l"
-floor_bloc_path = "uid://blpho32rc1a4w"
-pylone_path = "uid://bl76k8qf7c418"
+corner_bloc_path = "uid://vhluw7d6c4cb"
+side_bloc_path = "uid://b2mdo71qbfdyy"
+floor_bloc_path = "uid://bp4dkv7f1tuy0"
+pylone_path = "uid://dmth1gs2f07md"
 pylone_shader_path = "uid://g3uovj5kqbhb"
 pylone_script_path = "uid://bbkiswqwrl6a6"
 audio_wall_script_path = "uid://cne885366udw3"
