@@ -1,34 +1,144 @@
-[gd_scene load_steps=3 format=3 uid="uid://b64at4io6wnlg"]
+[gd_scene load_steps=9 format=3 uid="uid://b64at4io6wnlg"]
 
 [ext_resource type="Script" uid="uid://e2c3gdcf4ejo" path="res://script/UI/pause.gd" id="1_0ep5p"]
+[ext_resource type="Theme" uid="uid://cf4lqevpkrvlf" path="res://themes/game_menu.tres" id="2_y6eva"]
+[ext_resource type="PackedScene" uid="uid://c8f301tijdfrl" path="res://script/UI/options_menu.tscn" id="3_w5fml"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_0ep5p"]
-font_size = 40
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w5fml"]
+bg_color = Color(0.05882353, 0.05882353, 0.12156863, 0.79607844)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.83, 1, 1)
+shadow_color = Color(0, 0.83, 1, 0.3)
+shadow_size = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_bkpij"]
+font_size = 84
+font_color = Color(1, 0, 1, 1)
+
+[sub_resource type="GDScript" id="GDScript_y6eva"]
+script/source = "extends Button
+
+signal game_paused(is_paused: bool)
+
+@export var menu : CanvasLayer
+
+func _ready():
+	self.pressed.connect(_on_button_pressed)
+
+func _on_button_pressed():
+	get_tree().paused = false
+	menu.visible = false
+	MusicManager.set_game_paused(false)
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	game_paused.emit(false)
+"
+
+[sub_resource type="GDScript" id="GDScript_w5fml"]
+script/source = "extends Button
+
+@onready var option: Control = get_node(\"../../../../../../OptionsMenu\")
+@onready var menu: VBoxContainer = get_node(\"../../Menu\")
+func _ready():
+	self.pressed.connect(_on_button_pressed)
+
+func _on_button_pressed():
+	menu.visible = false
+	option.visible = true
+	
+"
+
+[sub_resource type="GDScript" id="GDScript_bkpij"]
+script/source = "extends Button
+
+@export_file(\"*.tscn\", \"*.scn\") var target_scene_path: String = \"\"
+
+func _ready():
+	pressed.connect(_on_button_pressed)
+
+func _on_button_pressed():
+	if target_scene_path.is_empty():
+		return
+	
+	if not ResourceLoader.exists(target_scene_path):
+		return
+	
+	# Trouver et forcer le dépausage du menu pause
+	var pause_menu = get_tree().root.find_child(\"PauseMenu\", true, false)
+	if pause_menu and pause_menu.has_method(\"force_unpause\"):
+		pause_menu.force_unpause()
+	
+	# Sécurité supplémentaire
+	get_tree().paused = false
+	
+	#On reset tout ce qui peut l'être
+	GameManager.reset()
+	
+	get_tree().change_scene_to_file(target_scene_path)
+"
 
 [node name="Pause" type="CanvasLayer"]
 process_mode = 3
 visible = false
 script = ExtResource("1_0ep5p")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="PanelContainer" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_w5fml")
 
-[node name="Label" type="Label" parent="Panel"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 0.363
-anchor_right = 0.5
-anchor_bottom = 0.363
-offset_left = -64.0
-offset_top = -25.223999
-offset_right = 61.0
-offset_bottom = 29.776001
-grow_horizontal = 2
-grow_vertical = 2
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 2
+theme = ExtResource("2_y6eva")
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 100
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer2/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 0
 text = "PAUSE"
-label_settings = SubResource("LabelSettings_0ep5p")
+label_settings = SubResource("LabelSettings_bkpij")
+horizontal_alignment = 1
+
+[node name="Menu" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer2/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 64
+
+[node name="Reprendre" type="Button" parent="Panel/MarginContainer/VBoxContainer2/MarginContainer/Menu" node_paths=PackedStringArray("menu")]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "REPRENDRE"
+script = SubResource("GDScript_y6eva")
+menu = NodePath("../../../../../..")
+
+[node name="Options" type="Button" parent="Panel/MarginContainer/VBoxContainer2/MarginContainer/Menu"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "OPTIONS"
+script = SubResource("GDScript_w5fml")
+
+[node name="Retour" type="Button" parent="Panel/MarginContainer/VBoxContainer2/MarginContainer/Menu"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "QUITTER"
+script = SubResource("GDScript_bkpij")
+target_scene_path = "uid://ctpkfksra6nxf"
+
+[node name="OptionsMenu" parent="." instance=ExtResource("3_w5fml")]
+visible = false

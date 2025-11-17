@@ -55,3 +55,11 @@ func get_enemy_damage_multiplier() -> float:
 
 func get_enemy_speed_multiplier() -> float:
 	return enemy_speed_multiplier
+
+func reset() -> void:
+	difficulty_factor = 1.0
+	xp_multiplier = 1.0
+	pickup_scale_multiplier = 1.0
+	enemy_health_multiplier = 1.0
+	enemy_damage_multiplier = 1.0
+	enemy_speed_multiplier = 1.0

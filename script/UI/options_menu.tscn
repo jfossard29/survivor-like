@@ -1,0 +1,228 @@
+[gd_scene load_steps=9 format=3 uid="uid://c8f301tijdfrl"]
+
+[ext_resource type="Theme" uid="uid://cf4lqevpkrvlf" path="res://themes/game_menu.tres" id="1_0axmg"]
+[ext_resource type="FontFile" uid="uid://c3ruxaj7pj5hk" path="res://themes/bold_pixel/BoldPixels.ttf" id="2_olqll"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_bqqt6"]
+font = ExtResource("2_olqll")
+font_size = 40
+font_color = Color(1, 0, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_wu84c"]
+font = ExtResource("2_olqll")
+font_size = 18
+font_color = Color(1, 0.83, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_8ln24"]
+font = ExtResource("2_olqll")
+font_size = 18
+font_color = Color(1, 0, 1, 1)
+
+[sub_resource type="GDScript" id="GDScript_jk1qb"]
+script/source = "extends HSlider
+
+const BUS_NAME := \"Music\"
+const MUTE_DB := -80.0  # silence
+
+@export var label: Label
+
+func _ready() -> void:
+	min_value = 0
+	max_value = 100
+	step = 1
+
+	var bus_idx: int = AudioServer.get_bus_index(BUS_NAME)
+	var bus_db: float = AudioServer.get_bus_volume_db(bus_idx)
+
+	var linear: float
+	if bus_db <= -79.9:
+		linear = 0.0
+	else:
+		linear = db_to_linear(bus_db)
+
+	value = int(round(linear * 100.0))
+	connect(\"value_changed\", Callable(self, \"_on_value_changed\"))
+
+	_update_label(value)
+
+func _on_value_changed(value: float) -> void:
+	var linear: float = clamp(value / 100.0, 0.0, 1.0)
+	var db: float = MUTE_DB if linear <= 0.0 else linear_to_db(linear)
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index(BUS_NAME), db)
+	_update_label(value)
+
+func _update_label(value: float) -> void:
+	label.text = \"%d%%\" % int(value)
+"
+
+[sub_resource type="LabelSettings" id="LabelSettings_rtw2f"]
+font = ExtResource("2_olqll")
+font_size = 18
+font_color = Color(1, 0.83, 1, 1)
+
+[sub_resource type="GDScript" id="GDScript_8ln24"]
+script/source = "extends Button
+
+@onready var menu = null
+@onready var option: Control = null
+
+func _ready():
+	self.pressed.connect(_on_button_pressed)
+	
+	# Chercher depuis le parent de la scène
+	var parent_container = owner.get_parent()
+	
+	if parent_container:
+		menu = parent_container.find_child(\"Menu\", true, false)
+		option = parent_container.find_child(\"OptionsMenu\", true, false)
+
+func _on_button_pressed():
+	if menu:
+		menu.visible = true
+	if option:
+		option.visible = false
+"
+
+[node name="OptionsMenu" type="PanelContainer"]
+z_index = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -195.5
+offset_top = -263.5
+offset_right = 195.5
+offset_bottom = 263.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_0axmg")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 25
+
+[node name="Title" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "OPTIONS"
+label_settings = SubResource("LabelSettings_bqqt6")
+horizontal_alignment = 1
+
+[node name="MasterVolume" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="VBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MasterVolume"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MasterVolume/VBoxContainer"]
+layout_mode = 2
+text = "VOLUME PRINCIPAL"
+label_settings = SubResource("LabelSettings_wu84c")
+
+[node name="Value" type="Label" parent="MarginContainer/VBoxContainer/MasterVolume/VBoxContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "50%"
+label_settings = SubResource("LabelSettings_8ln24")
+horizontal_alignment = 1
+
+[node name="HSlider" type="HSlider" parent="MarginContainer/VBoxContainer/MasterVolume"]
+layout_mode = 2
+value = 50.0
+
+[node name="MusicVolume" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MusicVolume"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MusicVolume/HBoxContainer"]
+layout_mode = 2
+text = "VOLUME MUSIQUE"
+label_settings = SubResource("LabelSettings_wu84c")
+
+[node name="Value" type="Label" parent="MarginContainer/VBoxContainer/MusicVolume/HBoxContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "50%"
+label_settings = SubResource("LabelSettings_8ln24")
+horizontal_alignment = 1
+
+[node name="HSlider" type="HSlider" parent="MarginContainer/VBoxContainer/MusicVolume" node_paths=PackedStringArray("label")]
+layout_mode = 2
+value = 100.0
+script = SubResource("GDScript_jk1qb")
+label = NodePath("../HBoxContainer/Value")
+
+[node name="Resolution" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Resolution"]
+layout_mode = 2
+text = "RÉSOLUTION"
+label_settings = SubResource("LabelSettings_rtw2f")
+
+[node name="OptionButton" type="OptionButton" parent="MarginContainer/VBoxContainer/Resolution"]
+layout_mode = 2
+item_count = 5
+popup/item_0/text = "3840 X 2160"
+popup/item_0/id = 0
+popup/item_1/text = "2560 X 1440"
+popup/item_1/id = 1
+popup/item_2/text = "1920 X 1080"
+popup/item_2/id = 2
+popup/item_3/text = "1600 X 900"
+popup/item_3/id = 3
+popup/item_4/text = "1366 X 766"
+popup/item_4/id = 4
+
+[node name="VSync_Particles" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VSync_Particles"]
+layout_mode = 2
+text = "V-SYNC"
+label_settings = SubResource("LabelSettings_rtw2f")
+
+[node name="CheckButtonV" type="CheckButton" parent="MarginContainer/VBoxContainer/VSync_Particles"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/VSync_Particles"]
+layout_mode = 2
+text = "PARTICULES"
+label_settings = SubResource("LabelSettings_rtw2f")
+
+[node name="CheckButtonP" type="CheckButton" parent="MarginContainer/VBoxContainer/VSync_Particles"]
+layout_mode = 2
+button_pressed = true
+
+[node name="Bloom" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Bloom"]
+layout_mode = 2
+text = "BLOOM / GLOW"
+label_settings = SubResource("LabelSettings_rtw2f")
+
+[node name="CheckButton" type="CheckButton" parent="MarginContainer/VBoxContainer/Bloom"]
+layout_mode = 2
+button_pressed = true
+
+[node name="Valider" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "VALIDER"
+script = SubResource("GDScript_8ln24")

@@ -1,10 +1,9 @@
-[gd_scene load_steps=14 format=3 uid="uid://61c8mu2pkxgh"]
+[gd_scene load_steps=13 format=3 uid="uid://61c8mu2pkxgh"]
 
 [ext_resource type="Script" uid="uid://ckxxrbtclaw7c" path="res://script/scene/zone_de_test.gd" id="1_1ddwx"]
 [ext_resource type="Shader" uid="uid://p6i28ung6ymp" path="res://shaders/sky.gdshader" id="2_fqdhk"]
 [ext_resource type="PackedScene" uid="uid://bcl5krgds1wpe" path="res://scenes/players/Player.tscn" id="3_vlrcl"]
-[ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://scenes/arme/ProjectileBase.tscn" id="4_2v6mb"]
-[ext_resource type="PackedScene" uid="uid://cng5kopko58jj" path="res://scenes/arme/aura_weapon.tscn" id="5_flsgt"]
+[ext_resource type="PackedScene" uid="uid://b64at4io6wnlg" path="res://scenes/UI/Pause.tscn" id="5_6cfbe"]
 [ext_resource type="Script" uid="uid://cn0qcgprhfpsp" path="res://script/audio/audio_maker.gd" id="6_xxaal"]
 [ext_resource type="Script" uid="uid://bfpeg2n8qsxat" path="res://script/audio/pulse_beat.gd" id="7_v3pan"]
 
@@ -79,15 +78,15 @@ rings = 64
 
 [node name="Joueur" parent="." instance=ExtResource("3_vlrcl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 19.738197, 27.355022)
-base_projectile_scene = ExtResource("4_2v6mb")
-aura_scene = ExtResource("5_flsgt")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+visible = false
 script = ExtResource("6_xxaal")
-beats_json_path = "res://sounds/musiques_beat.json"
+
+[node name="PauseMenu" parent="." instance=ExtResource("5_6cfbe")]
+visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.245351, 0)
 mesh = SubResource("BoxMesh_f12hp")
 script = ExtResource("7_v3pan")
-beats_file_path = "res://sounds/test.json"

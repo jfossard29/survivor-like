@@ -32,3 +32,8 @@ func remove_weapon(weapon_id: String) -> void:
 	weapon.queue_free()
 	active_weapons.erase(weapon_id)
 	print("🗑️ Arme retirée: ", weapon_id)
+
+func reset() -> void:
+	for active_weapon in active_weapons:
+		remove_weapon(active_weapon)
+	player = null
