@@ -6,6 +6,7 @@ var difficulty_manager: Node
 var enemy_manager: Node
 var pylon_manager: Node
 var timer_manager: Node
+var count_manager: Node
 
 # État du jeu
 var game_active: bool = false
@@ -33,6 +34,9 @@ func _ready() -> void:
 	timer_manager = preload("res://script/managers/timerManager.gd").new()
 	add_child(timer_manager)
 	
+	count_manager = preload("res://script/managers/countManager.gd").new()
+	add_child(timer_manager)
+
 	# Connecter les signaux
 	_setup_signals()
 	
@@ -118,6 +122,7 @@ func reset() -> void:
 	enemy_manager.reset()
 	pylon_manager.reset()
 	timer_manager.reset()
+	count_manager.reset()
 	WeaponManager.reset()
 	game_active = false
 	player_reference = null

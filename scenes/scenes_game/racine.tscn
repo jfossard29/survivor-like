@@ -150,7 +150,7 @@ shader_parameter/tint_with_original = true
 [sub_resource type="BoxShape3D" id="BoxShape3D_dlngl"]
 size = Vector3(8, 26, 8)
 
-[sub_resource type="Shader" id="Shader_ytbxp"]
+[sub_resource type="Shader" id="Shader_r4t71"]
 code = "
 shader_type spatial;
 render_mode blend_add, depth_draw_opaque, cull_back, unshaded;
@@ -184,16 +184,16 @@ void fragment() {
 }
 "
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_nms2w"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8pssd"]
 render_priority = 0
-shader = SubResource("Shader_ytbxp")
+shader = SubResource("Shader_r4t71")
 shader_parameter/line_color = Color(0.78941506, 0, 0.33577523, 0.42745098)
 shader_parameter/line_speed = 0.05
 shader_parameter/line_width = 0.5
 shader_parameter/line_spacing = 0.1
 shader_parameter/emission_strength = 1.5
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_qgln7"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_i4ci5"]
 _surfaces = [{
 "aabb": AABB(-600, 0, -1200, 1200, 1e-05, 2400),
 "attribute_data": PackedByteArray("AAAAAAAAAAAAAIA/AAAAAAAAgD8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAIA/"),
@@ -463,8 +463,8 @@ script = ExtResource("13_ii27u")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Sunset"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -169.3978, 1321.7445)
-material_override = SubResource("ShaderMaterial_nms2w")
-mesh = SubResource("ArrayMesh_qgln7")
+material_override = SubResource("ShaderMaterial_8pssd")
+mesh = SubResource("ArrayMesh_i4ci5")
 script = ExtResource("14_7k12e")
 base_width = 1200.0
 top_ratio = 0.5
