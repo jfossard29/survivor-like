@@ -35,7 +35,7 @@ func _ready() -> void:
 	add_child(timer_manager)
 	
 	count_manager = preload("res://script/managers/countManager.gd").new()
-	add_child(timer_manager)
+	add_child(count_manager)
 
 	# Connecter les signaux
 	_setup_signals()
@@ -116,7 +116,7 @@ func get_pylon_manager() -> Node:
 
 func get_timer_manager() -> Node:
 	return timer_manager
-
+	
 func reset() -> void:
 	difficulty_manager.reset()
 	enemy_manager.reset()

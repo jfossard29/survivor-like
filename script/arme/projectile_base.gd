@@ -53,7 +53,7 @@ func _on_body_entered(body: Node) -> void:
 	if body.is_in_group("enemy"):
 		if body.has_method("take_damage"):
 			body.take_damage(damage)
-			GameManager.count_manager.add_dmg_base(damage)
+			GameManager.count_manager.add_dmg_base_count(damage)
 		queue_free()
 
 func get_damage() -> int:

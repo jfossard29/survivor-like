@@ -32,6 +32,8 @@ var radius_multiplier: float = 1.0
 var health_tween: Tween = null
 var xp_tween: Tween = null
 
+var mort = false
+
 func _ready():
 	add_to_group("player")
 	if PlayerManager.player_skin != "" :
@@ -69,12 +71,12 @@ func update_stats():
 		recolte.set_pickup_radius_multiplier(GameManager.pickup_scale_multiplier)
 
 func _physics_process(delta: float) -> void:
-	# Appliquer la gravité
-	if not is_on_floor():
-		velocity.y -= gravity_force * delta
-	
-	get_input(delta)
-	move_and_slide()
+	if not mort :
+		if not is_on_floor():
+			velocity.y -= gravity_force * delta
+		
+		get_input(delta)
+		move_and_slide()
 
 func level_up():
 	# Animation simplifiée
@@ -118,27 +120,28 @@ func get_input(delta: float) -> void:
 		velocity.y = vy
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion:
-		rotate_y(-event.relative.x * mouse_sensitivity)
+	if not mort :
+		if event is InputEventMouseMotion:
+			rotate_y(-event.relative.x * mouse_sensitivity)
+			
+			if pivot_camera:
+				camera_pitch -= event.relative.y * mouse_sensitivity
+				camera_pitch = clamp(camera_pitch, -1.5, 1.5)
+				pivot_camera.rotation.x = camera_pitch
 		
-		if pivot_camera:
-			camera_pitch -= event.relative.y * mouse_sensitivity
-			camera_pitch = clamp(camera_pitch, -1.5, 1.5)
-			pivot_camera.rotation.x = camera_pitch
-	
 
-	if event.is_action_pressed("ui_page_down"):
-		if not WeaponManager.has_weapon("aura"):
-			_create_aura_weapon()
-			print("🔓 Aura débloqué via debug")
-		else:
-			print("⚠️ Aura déjà débloqué")
-	if event.is_action_pressed("ui_page_up"):
-		if not WeaponManager.has_weapon("ricochet"):
-			_create_ricochet_weapon()
-			print("🔓 Ricochet débloqué via debug")
-		else:
-			print("⚠️ Ricochet déjà débloqué")
+		if event.is_action_pressed("ui_page_down"):
+			if not WeaponManager.has_weapon("aura"):
+				_create_aura_weapon()
+				print("🔓 Aura débloqué via debug")
+			else:
+				print("⚠️ Aura déjà débloqué")
+		if event.is_action_pressed("ui_page_up"):
+			if not WeaponManager.has_weapon("ricochet"):
+				_create_ricochet_weapon()
+				print("🔓 Ricochet débloqué via debug")
+			else:
+				print("⚠️ Ricochet déjà débloqué")
 
 func take_damage(amount: int):
 	current_health -= amount
@@ -174,6 +177,7 @@ func update_health_display():
 func die():
 	print("💀 Le joueur est mort !")
 	GameManager.player_died()
+	mort = true
 
 func _on_harvest_zone_entered(area: Area3D) -> void:
 	var orbe = area.get_parent()

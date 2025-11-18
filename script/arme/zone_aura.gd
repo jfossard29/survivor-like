@@ -54,7 +54,7 @@ func apply_damage_to_enemies() -> void:
 	for enemy in enemies_in_range:
 		if enemy.has_method("take_damage"):
 			enemy.take_damage(damage)
-			GameManager.count_manager.add_dmg_aura(damage)
+			GameManager.count_manager.add_dmg_aura_count(damage)
 
 func update_collision_and_mesh() -> void:
 	if not collision_shape or not mesh_instance:

@@ -1,18 +1,27 @@
-[gd_scene load_steps=8 format=3 uid="uid://dtc8kl58j32id"]
+[gd_scene load_steps=17 format=3 uid="uid://dtc8kl58j32id"]
 
 [ext_resource type="Theme" uid="uid://cf4lqevpkrvlf" path="res://themes/game_menu.tres" id="1_jjxg3"]
 
 [sub_resource type="GDScript" id="GDScript_ka6hu"]
 script/source = "extends CanvasLayer
 
-
-func _ready():
+@onready var sonde = $PanelContainer/MarginContainer/Panel/VBoxContainer/Sonde/Value
+@onready var aura = $PanelContainer/MarginContainer/Panel/VBoxContainer/Aura/Value
+@onready var bounce = $PanelContainer/MarginContainer/Panel/VBoxContainer/Bounce/Value
+@onready var base = $PanelContainer/MarginContainer/Panel/VBoxContainer/Base/Value
+	
+func _on_anim_finished(name_anim: String):
+	if name_anim == \"fermer\":
+		$AnimationPlayer.play(\"ouvrir\")
+		
+func setup_game_over():
+	sonde.text = \"%d\" % GameManager.count_manager.probe
+	aura.text = \"%.1f\" % GameManager.count_manager.dmg_aura
+	bounce.text = \"%.1f\" % GameManager.count_manager.dmg_bounce
+	base.text = \"%.1f\" % GameManager.count_manager.dmg_base
 	$AnimationPlayer.connect(\"animation_finished\", Callable(self, \"_on_anim_finished\"))
 	$AnimationPlayer.play(\"fermer\")
-
-func _on_anim_finished(name: String):
-	if name == \"fermer\":
-		$AnimationPlayer.play(\"ouvrir\")
+	
 "
 
 [sub_resource type="Animation" id="Animation_jjxg3"]
@@ -44,14 +53,26 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("PanelContainer/MarginContainer/Panel/Label:visible")
+tracks/2/path = NodePath("PanelContainer/MarginContainer/Panel/VBoxContainer:visible")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [true]
+"values": [false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("PanelContainer/MarginContainer/Panel/Control:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
 }
 
 [sub_resource type="Animation" id="Animation_ka6hu"]
@@ -64,7 +85,7 @@ tracks/0/path = NodePath("Gauche:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1),
+"times": PackedFloat32Array(0, 0.3),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 220), Vector2(960, 220)]
@@ -76,7 +97,7 @@ tracks/1/path = NodePath("Droite:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1),
+"times": PackedFloat32Array(0, 0.3),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(1920, 220), Vector2(960, 220)]
@@ -84,7 +105,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("PanelContainer/MarginContainer/Panel/Label:visible")
+tracks/2/path = NodePath("PanelContainer/MarginContainer/Panel/VBoxContainer:visible")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -92,6 +113,18 @@ tracks/2/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [false, true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("PanelContainer/MarginContainer/Panel/Control:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
 }
 
 [sub_resource type="Animation" id="Animation_kb7o0"]
@@ -121,6 +154,18 @@ tracks/1/keys = {
 "update": 0,
 "values": [Vector2(960, 220), Vector2(1200, 220)]
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("PanelContainer/MarginContainer/Panel/Control:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(1.5),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_kb7o0"]
 _data = {
@@ -130,8 +175,61 @@ _data = {
 }
 
 [sub_resource type="LabelSettings" id="LabelSettings_kb7o0"]
-font_size = 64
-font_color = Color(1, 0, 0, 1)
+font_size = 80
+font_color = Color(0.5764706, 0, 0, 1)
+outline_size = 8
+outline_color = Color(1, 0, 0.4627451, 0.5019608)
+shadow_size = 20
+shadow_color = Color(1, 0.27058825, 0, 0.8)
+shadow_offset = Vector2(0, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_jjxg3"]
+font_size = 36
+
+[sub_resource type="LabelSettings" id="LabelSettings_hqmuo"]
+font_size = 36
+
+[sub_resource type="LabelSettings" id="LabelSettings_1sve5"]
+font_size = 36
+
+[sub_resource type="LabelSettings" id="LabelSettings_xvhye"]
+font_size = 36
+
+[sub_resource type="LabelSettings" id="LabelSettings_37y2f"]
+font_size = 36
+
+[sub_resource type="LabelSettings" id="LabelSettings_v7neo"]
+font_size = 36
+
+[sub_resource type="LabelSettings" id="LabelSettings_i7ghs"]
+font_size = 36
+
+[sub_resource type="LabelSettings" id="LabelSettings_yk5y0"]
+font_size = 36
+
+[sub_resource type="GDScript" id="GDScript_jjxg3"]
+script/source = "extends Button
+
+@export_file(\"*.tscn\", \"*.scn\") var target_scene_path: String = \"\"
+
+func _ready():
+	pressed.connect(_on_button_pressed)
+
+func _on_button_pressed():
+	if target_scene_path.is_empty():
+		return
+	
+	if not ResourceLoader.exists(target_scene_path):
+		return
+	
+	# Sécurité supplémentaire
+	get_tree().paused = false
+	
+	#On reset tout ce qui peut l'être
+	GameManager.reset()
+	
+	get_tree().change_scene_to_file(target_scene_path)
+"
 
 [node name="GameOver" type="CanvasLayer"]
 script = SubResource("GDScript_ka6hu")
@@ -157,16 +255,103 @@ theme_override_constants/margin_top = 240
 theme_override_constants/margin_right = 740
 theme_override_constants/margin_bottom = 240
 
-[node name="Panel" type="PanelContainer" parent="PanelContainer/MarginContainer"]
+[node name="Panel" type="MarginContainer" parent="PanelContainer/MarginContainer"]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_right = 4
 
-[node name="Label" type="Label" parent="PanelContainer/MarginContainer/Panel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/Panel"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 25
+
+[node name="Game_over" type="Label" parent="PanelContainer/MarginContainer/Panel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 text = "GAME OVER"
 label_settings = SubResource("LabelSettings_kb7o0")
 horizontal_alignment = 1
+
+[node name="Sonde" type="HBoxContainer" parent="PanelContainer/MarginContainer/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 150
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/Panel/VBoxContainer/Sonde"]
+layout_mode = 2
+text = "Sondes :"
+label_settings = SubResource("LabelSettings_jjxg3")
+
+[node name="Value" type="Label" parent="PanelContainer/MarginContainer/Panel/VBoxContainer/Sonde"]
+layout_mode = 2
+text = "|"
+label_settings = SubResource("LabelSettings_hqmuo")
+
+[node name="Aura" type="HBoxContainer" parent="PanelContainer/MarginContainer/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 35
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/Panel/VBoxContainer/Aura"]
+layout_mode = 2
+text = "DGT Firewall :"
+label_settings = SubResource("LabelSettings_1sve5")
+
+[node name="Value" type="Label" parent="PanelContainer/MarginContainer/Panel/VBoxContainer/Aura"]
+layout_mode = 2
+text = "|"
+label_settings = SubResource("LabelSettings_xvhye")
+
+[node name="Bounce" type="HBoxContainer" parent="PanelContainer/MarginContainer/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 118
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/Panel/VBoxContainer/Bounce"]
+layout_mode = 2
+text = "DGT Ver :"
+label_settings = SubResource("LabelSettings_37y2f")
+
+[node name="Value" type="Label" parent="PanelContainer/MarginContainer/Panel/VBoxContainer/Bounce"]
+layout_mode = 2
+text = "|"
+label_settings = SubResource("LabelSettings_v7neo")
+
+[node name="Base" type="HBoxContainer" parent="PanelContainer/MarginContainer/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 55
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/Panel/VBoxContainer/Base"]
+layout_mode = 2
+text = "DGT Flingue :"
+label_settings = SubResource("LabelSettings_i7ghs")
+
+[node name="Value" type="Label" parent="PanelContainer/MarginContainer/Panel/VBoxContainer/Base"]
+layout_mode = 2
+text = "|"
+label_settings = SubResource("LabelSettings_yk5y0")
+
+[node name="Control" type="Control" parent="PanelContainer/MarginContainer/Panel"]
+visible = false
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="Retour" type="Button" parent="PanelContainer/MarginContainer/Panel/Control"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -69.5
+offset_top = -14.0
+offset_right = 69.5
+offset_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "EXTRACTION"
+script = SubResource("GDScript_jjxg3")
+target_scene_path = "uid://ctpkfksra6nxf"
 
 [node name="Droite" type="Polygon2D" parent="."]
 position = Vector2(1920, 220)

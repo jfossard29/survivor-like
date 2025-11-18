@@ -57,7 +57,7 @@ func _on_body_entered(body: Node) -> void:
 		# Infliger les dégâts
 		if body.has_method("take_damage"):
 			body.take_damage(damage)
-			GameManager.count_manager.add_dmg_bounce(damage)
+			GameManager.count_manager.add_dmg_bounce_count(damage)
 		
 		# Ajouter l'ennemi à la liste des touchés
 		hit_enemies.append(body)

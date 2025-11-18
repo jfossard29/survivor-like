@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=4 uid="uid://1hoxtt5rrj3g"]
+[gd_scene load_steps=46 format=4 uid="uid://1hoxtt5rrj3g"]
 
 [ext_resource type="Script" uid="uid://d3b8ydmcddf0q" path="res://script/scene/racine.gd" id="1_sxnmr"]
 [ext_resource type="PackedScene" uid="uid://cgbo35opsgy86" path="res://scenes/NPC/mechant.tscn" id="2_lxtuq"]
@@ -8,11 +8,12 @@
 [ext_resource type="PackedScene" uid="uid://bk7dangodqgts" path="res://scenes/map/map.tscn" id="9_2atdg"]
 [ext_resource type="Script" uid="uid://bbkiswqwrl6a6" path="res://script/map/pylone_charge.gd" id="10_xnkj4"]
 [ext_resource type="Shader" uid="uid://g3uovj5kqbhb" path="res://shaders/pylone.gdshader" id="11_quacx"]
-[ext_resource type="ArrayMesh" uid="uid://bl76k8qf7c418" path="res://assets/pylone.vox" id="12_77u14"]
+[ext_resource type="ArrayMesh" uid="uid://dmth1gs2f07md" path="res://assets/pylone.vox" id="12_77u14"]
 [ext_resource type="Script" uid="uid://0mf78caqltxw" path="res://script/map/test_fesceau.gd" id="13_ii27u"]
 [ext_resource type="Script" uid="uid://bj34ar46op5rx" path="res://script/map/Quadrilatere.gd" id="14_7k12e"]
 [ext_resource type="Shader" uid="uid://dta3l04x00wf6" path="res://shaders/sun.gdshader" id="15_jlq2t"]
 [ext_resource type="PackedScene" uid="uid://b64at4io6wnlg" path="res://scenes/UI/Pause.tscn" id="16_hvtan"]
+[ext_resource type="PackedScene" uid="uid://dtc8kl58j32id" path="res://scenes/UI/Game_Over.tscn" id="17_8pssd"]
 [ext_resource type="PackedScene" uid="uid://dhe2pasw5lmqd" path="res://scenes/UI/timer.tscn" id="17_dlngl"]
 [ext_resource type="Script" uid="uid://bh7e0qnmfc1tu" path="res://script/UI/timer_ui.gd" id="18_ytbxp"]
 [ext_resource type="PackedScene" uid="uid://dgj6vfkt8w7oj" path="res://scenes/UI/boss_health_ui.tscn" id="19_nms2w"]
@@ -39,6 +40,7 @@ sky_material = SubResource("ShaderMaterial_sgosv")
 [sub_resource type="Environment" id="Environment_6qlrk"]
 background_mode = 2
 sky = SubResource("Sky_n7u81")
+glow_enabled = true
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_r4t71"]
 render_priority = 0
@@ -150,7 +152,7 @@ shader_parameter/tint_with_original = true
 [sub_resource type="BoxShape3D" id="BoxShape3D_dlngl"]
 size = Vector3(8, 26, 8)
 
-[sub_resource type="Shader" id="Shader_r4t71"]
+[sub_resource type="Shader" id="Shader_8pssd"]
 code = "
 shader_type spatial;
 render_mode blend_add, depth_draw_opaque, cull_back, unshaded;
@@ -184,16 +186,16 @@ void fragment() {
 }
 "
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_8pssd"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sxnmr"]
 render_priority = 0
-shader = SubResource("Shader_r4t71")
+shader = SubResource("Shader_8pssd")
 shader_parameter/line_color = Color(0.78941506, 0, 0.33577523, 0.42745098)
 shader_parameter/line_speed = 0.05
 shader_parameter/line_width = 0.5
 shader_parameter/line_spacing = 0.1
 shader_parameter/emission_strength = 1.5
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_i4ci5"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_lxtuq"]
 _surfaces = [{
 "aabb": AABB(-600, 0, -1200, 1200, 1e-05, 2400),
 "attribute_data": PackedByteArray("AAAAAAAAAAAAAIA/AAAAAAAAgD8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAIA/"),
@@ -463,8 +465,8 @@ script = ExtResource("13_ii27u")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Sunset"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -169.3978, 1321.7445)
-material_override = SubResource("ShaderMaterial_8pssd")
-mesh = SubResource("ArrayMesh_i4ci5")
+material_override = SubResource("ShaderMaterial_sxnmr")
+mesh = SubResource("ArrayMesh_lxtuq")
 script = ExtResource("14_7k12e")
 base_width = 1200.0
 top_ratio = 0.5
@@ -487,3 +489,7 @@ script = ExtResource("18_ytbxp")
 [node name="BossHealthUI" parent="." instance=ExtResource("19_nms2w")]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+
+[node name="GameOver" parent="." instance=ExtResource("17_8pssd")]
+process_mode = 3
+visible = false
