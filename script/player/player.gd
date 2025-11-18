@@ -1,8 +1,5 @@
 extends CharacterBody3D
 
-@export var base_projectile_scene: PackedScene  # Arme de base
-@export var aura_scene: PackedScene  # Champs de force
-@export var rebond_scene: PackedScene  # Arme à rebond
 @export var max_health: float = 100.0
 @export var base_speed: float = 5.0
 @export var gravity_force: float = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -23,7 +20,7 @@ var current_experience: float = 0.0
 var level: int = 1
 var experience_to_next_level: float = 100.0
 
-var move_speed: float
+var move_speed: float = 5.0
 var ameliorations_en_attente: Array[Amelioration] = []
 var base_radius: float = 1.0
 var radius_multiplier: float = 1.0
@@ -32,15 +29,12 @@ var radius_multiplier: float = 1.0
 var health_tween: Tween = null
 var xp_tween: Tween = null
 
-var mort = false
-
 func _ready():
 	add_to_group("player")
 	if PlayerManager.player_skin != "" :
 		self.add_child(load(PlayerManager.player_skin).instantiate())
 	else :
 		self.add_child(load("res://scenes/players/Gabriel.tscn").instantiate())
-	update_stats()
 	update_health_display()
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
@@ -57,26 +51,35 @@ func _ready():
 	# Initialiser le WeaponManager
 	if WeaponManager:
 		WeaponManager.initialize(self)
-		_setup_weapons()
 	else:
 		push_error("❌ WeaponManager non trouvé!")
-
-func _setup_weapons() -> void:
-	_create_basic_weapon()
+	update_stats()
 
 func update_stats():
-	move_speed = base_speed + (level - 1) * 0.3
+	var data = load(PlayerManager.player_data_path) as PlayerData
 	
-	if Engine.has_singleton("GameManager"):
-		recolte.set_pickup_radius_multiplier(GameManager.pickup_scale_multiplier)
-
+	var weapon_enum : WeaponManager.WeaponType
+	match data.base_weapon:
+		"Flingue":
+			weapon_enum = WeaponManager.WeaponType.Flingue
+		"Firewall":
+			weapon_enum = WeaponManager.WeaponType.Firewall
+		"Ver":
+			weapon_enum = WeaponManager.WeaponType.Ver
+			
+	WeaponManager._create_first_weapon(weapon_enum)
+	max_health = data.hp
+	current_health = data.hp
+	radius_multiplier = data.harvest
+	GameManager.difficulty_manager.xp_multiplier = data.xp
+	
 func _physics_process(delta: float) -> void:
-	if not mort :
-		if not is_on_floor():
-			velocity.y -= gravity_force * delta
-		
-		get_input(delta)
-		move_and_slide()
+	# Appliquer la gravité
+	if not is_on_floor():
+		velocity.y -= gravity_force * delta
+	
+	get_input(delta)
+	move_and_slide()
 
 func level_up():
 	# Animation simplifiée
@@ -120,28 +123,13 @@ func get_input(delta: float) -> void:
 		velocity.y = vy
 
 func _input(event: InputEvent) -> void:
-	if not mort :
-		if event is InputEventMouseMotion:
-			rotate_y(-event.relative.x * mouse_sensitivity)
-			
-			if pivot_camera:
-				camera_pitch -= event.relative.y * mouse_sensitivity
-				camera_pitch = clamp(camera_pitch, -1.5, 1.5)
-				pivot_camera.rotation.x = camera_pitch
+	if event is InputEventMouseMotion:
+		rotate_y(-event.relative.x * mouse_sensitivity)
 		
-
-		if event.is_action_pressed("ui_page_down"):
-			if not WeaponManager.has_weapon("aura"):
-				_create_aura_weapon()
-				print("🔓 Aura débloqué via debug")
-			else:
-				print("⚠️ Aura déjà débloqué")
-		if event.is_action_pressed("ui_page_up"):
-			if not WeaponManager.has_weapon("ricochet"):
-				_create_ricochet_weapon()
-				print("🔓 Ricochet débloqué via debug")
-			else:
-				print("⚠️ Ricochet déjà débloqué")
+		if pivot_camera:
+			camera_pitch -= event.relative.y * mouse_sensitivity
+			camera_pitch = clamp(camera_pitch, -1.5, 1.5)
+			pivot_camera.rotation.x = camera_pitch
 
 func take_damage(amount: int):
 	current_health -= amount
@@ -177,7 +165,6 @@ func update_health_display():
 func die():
 	print("💀 Le joueur est mort !")
 	GameManager.player_died()
-	mort = true
 
 func _on_harvest_zone_entered(area: Area3D) -> void:
 	var orbe = area.get_parent()
@@ -216,73 +203,3 @@ func apply_pickup_multiplier(mult: float) -> void:
 
 func get_player_position() -> Vector3:
 	return global_position
-	
-func _create_basic_weapon() -> void:
-	# Créer le node de l'arme
-	var basic_weapon = Node.new()
-	basic_weapon.name = "BasicWeapon"
-	
-	# Charger et attacher le script
-	var script = load("res://script/arme/armeDebut.gd")
-	basic_weapon.set_script(script)
-	
-	# ⚠️ IMPORTANT: Configurer l'arme AVANT de l'ajouter à la scène
-	basic_weapon.weapon_id = "basic_gun"
-	basic_weapon.weapon_name = "Pistolet de Base"
-	basic_weapon.projectile_scene = base_projectile_scene  # Utilise l'export var du Player
-	basic_weapon.base_damage = 10.0
-	basic_weapon.base_fire_rate = 1.0
-	basic_weapon.base_range = 30.0
-
-	# Ajouter au WeaponManager (ceci déclenche _ready())
-	WeaponManager.add_child(basic_weapon)
-	
-	# Enregistrer dans le WeaponManager
-	WeaponManager.active_weapons["basic_gun"] = basic_weapon
-	
-	# Initialiser APRÈS l'ajout à la scène
-	basic_weapon.initialize(self)
-
-func _create_aura_weapon() -> void:
-	var aura_weapon = Node.new()
-	aura_weapon.name = "AuraWeapon"
-	
-	var script = load("res://script/arme/armeAura.gd")
-	aura_weapon.set_script(script)
-	WeaponManager.add_child(aura_weapon)
-	
-	aura_weapon.weapon_id = "Aura"
-	aura_weapon.weapon_name = "Champs de force"
-	aura_weapon.aura_scene = aura_scene
-	aura_weapon.base_damage = 5.0
-	aura_weapon.base_fire_rate = 2.0
-	aura_weapon.base_range = 2.5
-	
-	WeaponManager.active_weapons["aura"] = aura_weapon
-	aura_weapon.initialize(self)
-
-func _create_ricochet_weapon() -> void:
-	# Créer le node de l'arme
-	var ricochet_weapon = Node.new()
-	ricochet_weapon.name = "BasicWeapon"
-	
-	# Charger et attacher le script
-	var script = load("res://script/arme/armeRebond.gd")
-	ricochet_weapon.set_script(script)
-	
-	# ⚠️ IMPORTANT: Configurer l'arme AVANT de l'ajouter à la scène
-	ricochet_weapon.weapon_id = "ricochet"
-	ricochet_weapon.weapon_name = "Pistolet à Rebond"
-	ricochet_weapon.projectile_scene = rebond_scene  # Utilise l'export var du Player
-	ricochet_weapon.base_damage = 8.0
-	ricochet_weapon.base_fire_rate = 0.8
-	ricochet_weapon.base_range = 30.0
-
-	# Ajouter au WeaponManager (ceci déclenche _ready())
-	WeaponManager.add_child(ricochet_weapon)
-	
-	# Enregistrer dans le WeaponManager
-	WeaponManager.active_weapons["ricochet"] = ricochet_weapon
-	
-	# Initialiser APRÈS l'ajout à la scène
-	ricochet_weapon.initialize(self)

@@ -116,13 +116,32 @@ func get_pylon_manager() -> Node:
 
 func get_timer_manager() -> Node:
 	return timer_manager
-	
+
 func reset() -> void:
+	print("🧹 GameManager: Début du reset complet...")
+	
+	# 1. Arrêter immédiatement toutes les activités
+	game_active = false
+	is_paused = false
+	
+	# 2. Arrêter le timer en premier
+	timer_manager.stop()
+	
+	# 3. Reset WeaponManager (qui va désactiver toutes les armes)
+	if WeaponManager:
+		await WeaponManager.reset()  # Attendre que les armes soient désactivées
+	
+	# 4. Attendre un frame pour que tous les process s'arrêtent
+	await get_tree().process_frame
+	
+	# 5. Maintenant on peut reset les autres managers en sécurité
 	difficulty_manager.reset()
 	enemy_manager.reset()
 	pylon_manager.reset()
 	timer_manager.reset()
 	count_manager.reset()
-	WeaponManager.reset()
-	game_active = false
+	
+	# 6. Nettoyer les références
 	player_reference = null
+	
+	print("✅ GameManager: Reset complet terminé")

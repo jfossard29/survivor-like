@@ -6,7 +6,7 @@
 script = ExtResource("1_ln2cn")
 name = "Lucy"
 bio = "Elle cherche ses écouteurs dans la zone. Je les ai. Comme ça elle bosse."
-base_weapon = "Bounce"
+base_weapon = "Ver"
 xp = 2.0
 dmg = 2.0
 harvest = 2.0

@@ -6,7 +6,7 @@
 script = ExtResource("1_5jslw")
 name = "Gabriel"
 bio = "Je n'abandonnerais jamais."
-base_weapon = "Aura"
+base_weapon = "Firewall"
 hp = 150
 xp = 2.0
 dmg = 2.0

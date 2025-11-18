@@ -73,15 +73,15 @@ func get_ameliorations_random(player: CharacterBody3D) -> Array[Amelioration]:
 	))
 	
 	# === ARME DE BASE (basic_gun) ===
-	if not WeaponManager.has_weapon("basic_gun"):
+	if not WeaponManager.has_weapon("flingue"):
 		available.append(Amelioration.new(
 			"Flingue à énergie",
 			"Débloque l'arme",
-			func(): player._create_basic_weapon(),
+			func(): WeaponManager._create_flingue_weapon(),
 			"common"
 		))
 	else:
-		var basic = WeaponManager.get_weapon("basic_gun")
+		var basic = WeaponManager.get_weapon("flingue")
 		
 		rarity = _roll_rarity()
 		multiplier = _get_rarity_multiplier(rarity)
@@ -120,15 +120,15 @@ func get_ameliorations_random(player: CharacterBody3D) -> Array[Amelioration]:
 		))
 	
 	# === AURA ===
-	if not WeaponManager.has_weapon("aura"):
+	if not WeaponManager.has_weapon("firewall"):
 		available.append(Amelioration.new(
 			"Firewall",
 			"Débloque l'arme",
-			func(): player._create_aura_weapon(),
+			func(): WeaponManager._create_firewall_weapon(),
 			"common"
 		))
 	else:
-		var aura = WeaponManager.get_weapon("aura")
+		var aura = WeaponManager.get_weapon("firewall")
 		
 		rarity = _roll_rarity()
 		multiplier = _get_rarity_multiplier(rarity)
@@ -158,15 +158,15 @@ func get_ameliorations_random(player: CharacterBody3D) -> Array[Amelioration]:
 		))
 	
 	# === RICOCHET ===
-	if not WeaponManager.has_weapon("ricochet"):
+	if not WeaponManager.has_weapon("ver"):
 		available.append(Amelioration.new(
 			"Ver",
 			"Débloque l'arme",
-			func(): player._create_ricochet_weapon(),
+			func(): WeaponManager._create_ver_weapon(),
 			"common"
 		))
 	else:
-		var ricochet = WeaponManager.get_weapon("ricochet")
+		var ricochet = WeaponManager.get_weapon("ver")
 		
 		rarity = _roll_rarity()
 		multiplier = _get_rarity_multiplier(rarity)

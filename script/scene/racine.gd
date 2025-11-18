@@ -17,6 +17,7 @@ var is_paused: bool = false
 var player: CharacterBody3D = null  # Le joueur est maintenant directement le CharacterBody3D
 
 signal game_over()
+signal game_paused(paused: bool)
 
 func _ready():
 	# Récupérer le joueur qui est maintenant un CharacterBody3D
@@ -281,10 +282,9 @@ func _instantiate_boss(ground_pos: Vector3):
 	print("🎉 Boss spawné avec succès à: ", boss.global_position)
 
 func _game_over_setup():
-	print("setup game_over racine")
 	game_over_canvas.visible = true
 	game_over_canvas.setup_game_over()
-	get_tree().paused = not get_tree().paused
-	visible = get_tree().paused
+	get_tree().paused = true
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	game_paused.emit(true)
 	

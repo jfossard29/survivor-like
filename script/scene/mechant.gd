@@ -143,5 +143,5 @@ func die() -> void:
 		var experience = experience_scene.instantiate()
 		get_parent().add_child(experience)
 		experience.global_position = global_position
-	
+	GameManager.count_manager.add_probe_count()
 	queue_free()

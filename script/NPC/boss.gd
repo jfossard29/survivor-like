@@ -62,6 +62,9 @@ func _register_with_ui() -> void:
 	boss_health_ui.register_boss(self, max_health)
 
 func _exit_tree():
+	# Nettoyer IMMÉDIATEMENT tous les effets avant de quitter
+	_immediate_cleanup()
+	
 	GameManager.enemy_manager.unregister_enemy(self)
 	
 	# Se désenregistrer de l'UI
@@ -257,9 +260,14 @@ func _perform_attack_salvo() -> void:
 func _create_warning_zone(position: Vector3) -> void:
 	if is_dead:
 		return
-		
+	
+	# Vérifier que la scène existe encore
+	var tree = get_tree()
+	if not tree or not tree.current_scene:
+		return
+	
 	var warning = Node3D.new()
-	get_tree().current_scene.add_child(warning)
+	tree.current_scene.add_child(warning)
 	warning.global_position = position
 	warning.process_mode = Node.PROCESS_MODE_PAUSABLE
 	
@@ -285,16 +293,16 @@ func _create_warning_zone(position: Vector3) -> void:
 	_animate_warning(mesh, warning_duration)
 	
 	var elapsed = 0.0
-	while elapsed < warning_duration and not is_dead:
+	while elapsed < warning_duration and not is_dead and is_instance_valid(warning):
 		await get_tree().process_frame
-		if not get_tree().paused:
-			elapsed += get_process_delta_time()
+		if not get_tree() or get_tree().paused:
+			continue
+		elapsed += get_process_delta_time()
 	
 	if is_instance_valid(warning):
-		# Retirer de la liste des effets actifs
 		active_effects.erase(warning)
 		
-		if not is_dead:
+		if not is_dead and get_tree() and get_tree().current_scene:
 			_create_attack_zone(position)
 		warning.queue_free()
 
@@ -319,9 +327,14 @@ func _animate_warning(mesh: MeshInstance3D, duration: float) -> void:
 func _create_attack_zone(position: Vector3) -> void:
 	if is_dead:
 		return
-		
+	
+	# Vérifier que la scène existe encore
+	var tree = get_tree()
+	if not tree or not tree.current_scene:
+		return
+	
 	var attack = Area3D.new()
-	get_tree().current_scene.add_child(attack)
+	tree.current_scene.add_child(attack)
 	attack.global_position = position
 	attack.process_mode = Node.PROCESS_MODE_PAUSABLE
 	
@@ -347,13 +360,13 @@ func _create_attack_zone(position: Vector3) -> void:
 	_animate_rayons(position)
 	
 	var elapsed = 0.0
-	while elapsed < 0.5 and not is_dead:
+	while elapsed < 0.5 and not is_dead and is_instance_valid(attack):
 		await get_tree().process_frame
-		if not get_tree().paused:
-			elapsed += get_process_delta_time()
+		if not get_tree() or get_tree().paused:
+			continue
+		elapsed += get_process_delta_time()
 	
 	if is_instance_valid(attack):
-		# Retirer de la liste des effets actifs
 		active_effects.erase(attack)
 		attack.queue_free()
 
@@ -468,20 +481,44 @@ func _cleanup_active_effects() -> void:
 			effect.queue_free()
 	active_effects.clear()
 
+func _immediate_cleanup() -> void:
+	"""Nettoyer immédiatement et de manière synchrone tous les effets"""
+	is_dead = true
+	is_attacking = false
+	
+	# Arrêter tous les processus
+	set_process(false)
+	set_physics_process(false)
+	
+	# Nettoyer tous les effets actifs IMMÉDIATEMENT
+	for effect in active_effects:
+		if is_instance_valid(effect):
+			# Détruire immédiatement sans queue_free pour éviter les délais
+			effect.set_process(false)
+			effect.set_physics_process(false)
+			effect.hide()
+			effect.queue_free()
+	
+	active_effects.clear()
+
+# Modifier la fonction die() existante:
 func die() -> void:
 	if is_dead:
 		return
-		
-	is_dead = true
+	
+	_immediate_cleanup()
+	
 	print("💀 Boss vaincu!")
 	
-	# Nettoyer tous les effets actifs
-	_cleanup_active_effects()
-	
 	if experience_scene:
-		for i in range(10):
-			var xp = experience_scene.instantiate()
-			get_parent().add_child(xp)
-			xp.global_position = global_position + Vector3(randf_range(-2, 2), 0, randf_range(-2, 2))
+		# Vérifier que la scène est encore valide
+		var tree = get_tree()
+		if tree and tree.current_scene:
+			var parent = get_parent()
+			if parent and is_instance_valid(parent):
+				for i in range(10):
+					var xp = experience_scene.instantiate()
+					parent.add_child(xp)
+					xp.global_position = global_position + Vector3(randf_range(-2, 2), 0, randf_range(-2, 2))
 	
 	queue_free()

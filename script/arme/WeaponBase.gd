@@ -16,6 +16,7 @@ var damage_multiplier: float = 1.0  # Multiplicateur de dégâts (%)
 var fire_rate_multiplier: float = 1.0  # Multiplicateur de cadence
 var range_multiplier: float = 1.0  # Multiplicateur de portée
 var bounce_count: int = 1
+
 # Stats finales calculées
 var final_damage: float
 var final_fire_interval: float
@@ -28,11 +29,16 @@ var fire_timer: float = 0.0
 # Référence au joueur
 var player: CharacterBody3D
 
+# Flag de sécurité
+var is_active: bool = false
+
 func _ready():
+	is_active = true
 	update_stats()
 
 func initialize(p_player: CharacterBody3D) -> void:
 	player = p_player
+	is_active = true
 	update_stats()
 
 func update_stats() -> void:
@@ -44,6 +50,13 @@ func update_stats() -> void:
 	print("📊 ", weapon_name, " stats: DMG=", final_damage, " Rate=", 1.0/final_fire_interval, "/s Range=", final_range)
 
 func _process(delta: float) -> void:
+	# CRITICAL: Vérifier que l'arme est active et valide
+	if not is_active or not is_instance_valid(self):
+		return
+	
+	if not player or not is_instance_valid(player) or not player.is_inside_tree():
+		return
+	
 	if not can_fire:
 		fire_timer -= delta
 		if fire_timer <= 0:
@@ -76,6 +89,16 @@ func add_fire_rate(percent: float) -> void:
 func add_range(percent: float) -> void:
 	range_multiplier += percent / 100.0
 	update_stats()
-	
+
 func add_bounce_count(number: int) -> void:
 	bounce_count += number
+
+# Cleanup sécurisé
+func deactivate() -> void:
+	is_active = false
+	can_fire = false
+	set_process(false)
+	set_physics_process(false)
+
+func _exit_tree() -> void:
+	is_active = false

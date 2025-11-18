@@ -6,7 +6,6 @@
 script = ExtResource("1_8tuny")
 name = "X681_Liberty"
 bio = "Intelligence Artificielle N°681. Plus performante que les précédentes, plus robuste, je pense qu'elle s'adapte plus vite."
-base_weapon = "Base"
 hp = 200
 harvest = 3.0
 threat = 1
