@@ -1,15 +1,16 @@
-[gd_scene load_steps=21 format=3 uid="uid://dtc8kl58j32id"]
+[gd_scene load_steps=22 format=3 uid="uid://dtc8kl58j32id"]
 
 [ext_resource type="Theme" uid="uid://cf4lqevpkrvlf" path="res://themes/game_menu.tres" id="1_jjxg3"]
-[ext_resource type="Texture2D" uid="uid://d166c3n65k6eb" path="res://themes/Texture/Carre.png" id="2_kb7o0"]
+[ext_resource type="FontFile" uid="uid://c3ruxaj7pj5hk" path="res://themes/bold_pixel/BoldPixels.ttf" id="2_1sve5"]
+[ext_resource type="Texture2D" uid="uid://dscxrsuonypf4" path="res://themes/Texture/Carre.png" id="2_kb7o0"]
 
 [sub_resource type="GDScript" id="GDScript_ka6hu"]
 script/source = "extends CanvasLayer
 
-@onready var sonde = $PanelContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Sonde/Value
-@onready var aura = $PanelContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Aura/Value
-@onready var bounce = $PanelContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Bounce/Value
-@onready var base = $PanelContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Base/Value
+@onready var sonde = $PanelContainer/PanelContainer/PanelContainer/MarginContainer/VBoxContainer/Sonde/Value
+@onready var aura = $PanelContainer/PanelContainer/PanelContainer/MarginContainer/VBoxContainer/Aura/Value
+@onready var bounce = $PanelContainer/PanelContainer/PanelContainer/MarginContainer/VBoxContainer/Bounce/Value
+@onready var base = $PanelContainer/PanelContainer/PanelContainer/MarginContainer/VBoxContainer/Base/Value
 	
 func _on_anim_finished(name_anim: String):
 	if name_anim == \"fermer\":
@@ -30,94 +31,106 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Gauche:position")
+tracks/0/path = NodePath("PanelContainer/PanelContainer/PanelContainer/MarginContainer/VBoxContainer:visible")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 220)]
+"update": 1,
+"values": [false]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Droite:position")
+tracks/1/path = NodePath("PanelContainer/PanelContainer/PanelContainer/MarginContainer/Control:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(1920, 220)]
+"update": 1,
+"values": [false]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("PanelContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer:visible")
+tracks/2/path = NodePath("PanelContainer2/Control2/Gauche/BordureG:width")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
+"update": 0,
+"values": [2.0]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("PanelContainer/MarginContainer/PanelContainer/MarginContainer/Control:visible")
+tracks/3/path = NodePath("PanelContainer2/Control/Droite/BordureD:width")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
+"update": 0,
+"values": [2.0]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("Gauche/BordureG:width")
+tracks/4/path = NodePath("PanelContainer/PanelContainer/PanelContainer:visible")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [2.0]
+"update": 1,
+"values": [false]
 }
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("Droite/BordureD:width")
+tracks/5/path = NodePath("PanelContainer/Control/Game_over:visible")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [2.0]
+"update": 1,
+"values": [false]
 }
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("PanelContainer/MarginContainer/PanelContainer:visible")
+tracks/6/path = NodePath("PanelContainer2/Control/Droite:position")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
+"update": 0,
+"values": [Vector2(1920, 0)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
 tracks/7/enabled = true
-tracks/7/path = NodePath("PanelContainer/MarginContainer/Game_over:visible")
+tracks/7/path = NodePath("PanelContainer2/Control2/Gauche:position")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-1920, 0)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("PanelContainer/PanelContainer:visible")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
@@ -130,94 +143,106 @@ length = 2.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Gauche:position")
+tracks/0/path = NodePath("PanelContainer/PanelContainer/PanelContainer/MarginContainer/VBoxContainer:visible")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.3),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(0, 220), Vector2(960, 220)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Droite:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.3),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(1920, 220), Vector2(960, 220)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("PanelContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer:visible")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
 "times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [false, true]
 }
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("PanelContainer/MarginContainer/PanelContainer/MarginContainer/Control:visible")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PanelContainer/PanelContainer/PanelContainer/MarginContainer/Control:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("PanelContainer2/Control2/Gauche/BordureG:width")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5, 1, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [2.0, 2.0, 20.0, 4.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("PanelContainer2/Control/Droite/BordureD:width")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5, 1, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [2.0, 2.0, 20.0, 4.0]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("Gauche/BordureG:width")
+tracks/4/path = NodePath("PanelContainer/PanelContainer/PanelContainer:visible")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0, 0.5, 1, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [2.0, 2.0, 20.0, 4.0]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Droite/BordureD:width")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0, 0.5, 1, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [2.0, 2.0, 20.0, 4.0]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("PanelContainer/MarginContainer/PanelContainer:visible")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [false]
 }
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("PanelContainer/Control/Game_over:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("PanelContainer2/Control/Droite:position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(1920, 0), Vector2(0, 0)]
+}
 tracks/7/type = "value"
 tracks/7/imported = false
 tracks/7/enabled = true
-tracks/7/path = NodePath("PanelContainer/MarginContainer/Game_over:visible")
+tracks/7/path = NodePath("PanelContainer2/Control2/Gauche:position")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(-1920, 0), Vector2(0, 0)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("PanelContainer/PanelContainer:visible")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
@@ -230,35 +255,35 @@ length = 2.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Gauche:position")
+tracks/0/path = NodePath("PanelContainer/PanelContainer/PanelContainer/MarginContainer/Control:visible")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(960, 220), Vector2(720, 220)]
+"times": PackedFloat32Array(1.5),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Droite:position")
+tracks/1/path = NodePath("PanelContainer/PanelContainer/PanelContainer:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0, 1.5),
 "transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(960, 220), Vector2(1200, 220)]
+"update": 1,
+"values": [false, true]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("PanelContainer/MarginContainer/PanelContainer/MarginContainer/Control:visible")
+tracks/2/path = NodePath("PanelContainer/Control/Game_over:visible")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(1.5),
+"times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [true]
@@ -266,23 +291,35 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("PanelContainer/MarginContainer/PanelContainer:visible")
+tracks/3/path = NodePath("PanelContainer2/Control/Droite:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 1.5),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [false, true]
+"update": 0,
+"values": [Vector2(0, 0), Vector2(270, 0)]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("PanelContainer/MarginContainer/Game_over:visible")
+tracks/4/path = NodePath("PanelContainer2/Control2/Gauche:position")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0),
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-270, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("PanelContainer/PanelContainer:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(1.5),
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [true]
@@ -295,11 +332,16 @@ _data = {
 &"ouvrir": SubResource("Animation_kb7o0")
 }
 
+[sub_resource type="Gradient" id="Gradient_1sve5"]
+offsets = PackedFloat32Array(0, 0, 1)
+colors = PackedColorArray(1, 0.13725491, 0, 1, 1, 0.80784315, 0, 1, 1, 0.022999108, 0, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kb7o0"]
 bg_color = Color(0.15686275, 0, 0, 0.60784316)
 shadow_color = Color(1, 0, 0, 0.6)
 
 [sub_resource type="LabelSettings" id="LabelSettings_kb7o0"]
+font = ExtResource("2_1sve5")
 font_size = 80
 font_color = Color(0.5764706, 0, 0, 1)
 outline_size = 8
@@ -378,10 +420,6 @@ func _on_button_pressed():
 	get_tree().change_scene_to_file(target_scene_path)
 "
 
-[sub_resource type="Gradient" id="Gradient_1sve5"]
-offsets = PackedFloat32Array(0, 0, 1)
-colors = PackedColorArray(1, 0.13725491, 0, 1, 1, 0.80784315, 0, 1, 1, 0.022999108, 0, 1)
-
 [node name="GameOver" type="CanvasLayer"]
 script = SubResource("GDScript_ka6hu")
 
@@ -389,6 +427,52 @@ script = SubResource("GDScript_ka6hu")
 libraries = {
 &"": SubResource("AnimationLibrary_kb7o0")
 }
+
+[node name="PanelContainer2" type="MarginContainer" parent="."]
+self_modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Control" type="Control" parent="PanelContainer2"]
+z_index = 2
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Droite" type="Polygon2D" parent="PanelContainer2/Control"]
+position = Vector2(1920, 0)
+color = Color(0.44313726, 0, 0, 1)
+texture = ExtResource("2_kb7o0")
+polygon = PackedVector2Array(0, 270, 540, -270, 0, -270)
+uv = PackedVector2Array(0, 540, 540, 0, 0, 0)
+
+[node name="BordureD" type="Line2D" parent="PanelContainer2/Control/Droite"]
+position = Vector2(0, -270)
+points = PackedVector2Array(540, 0, 0, 0, 0, 540, 540, 0)
+width = 2.0
+default_color = Color(1, 0.7529412, 0, 1)
+gradient = SubResource("Gradient_1sve5")
+
+[node name="Control2" type="Control" parent="PanelContainer2"]
+z_index = 2
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Gauche" type="Polygon2D" parent="PanelContainer2/Control2"]
+position = Vector2(-1920, 0)
+color = Color(0.44313726, 0, 0, 1)
+polygon = PackedVector2Array(0, -270, -540, -270, 0, 270)
+
+[node name="BordureG" type="Line2D" parent="PanelContainer2/Control2/Gauche"]
+position = Vector2(0, -270)
+points = PackedVector2Array(-540, 0, 0, 0, 0, 540, -540, 0)
+width = 2.0
+default_color = Color(1, 0.7529412, 0, 1)
+gradient = SubResource("Gradient_1sve5")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 modulate = Color(1, 1, 1, 0.5882353)
@@ -399,102 +483,119 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_kb7o0")
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+[node name="Control" type="Control" parent="PanelContainer"]
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
-theme = ExtResource("1_jjxg3")
-theme_override_constants/margin_left = 740
-theme_override_constants/margin_top = 240
-theme_override_constants/margin_right = 740
-theme_override_constants/margin_bottom = 240
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
-[node name="Game_over" type="Label" parent="PanelContainer/MarginContainer"]
+[node name="Game_over" type="Label" parent="PanelContainer/Control"]
 visible = false
 z_index = 1
-layout_mode = 2
-size_flags_vertical = 0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -250.0
+offset_right = 200.0
+offset_bottom = -170.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
 text = "GAME OVER"
 label_settings = SubResource("LabelSettings_kb7o0")
 horizontal_alignment = 1
 script = SubResource("GDScript_kb7o0")
 
-[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer"]
+visible = false
+custom_minimum_size = Vector2(450, 550)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("1_jjxg3")
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/PanelContainer"]
 visible = false
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/PanelContainer/PanelContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 150
 theme_override_constants/margin_right = 4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/PanelContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/PanelContainer/PanelContainer/MarginContainer"]
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 25
 
-[node name="Sonde" type="HBoxContainer" parent="PanelContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Sonde" type="HBoxContainer" parent="PanelContainer/PanelContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 150
 
-[node name="Label" type="Label" parent="PanelContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Sonde"]
+[node name="Label" type="Label" parent="PanelContainer/PanelContainer/PanelContainer/MarginContainer/VBoxContainer/Sonde"]
 layout_mode = 2
 text = "Sondes :"
 label_settings = SubResource("LabelSettings_jjxg3")
 
-[node name="Value" type="Label" parent="PanelContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Sonde"]
+[node name="Value" type="Label" parent="PanelContainer/PanelContainer/PanelContainer/MarginContainer/VBoxContainer/Sonde"]
 layout_mode = 2
 text = "|"
 label_settings = SubResource("LabelSettings_hqmuo")
 
-[node name="Aura" type="HBoxContainer" parent="PanelContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Aura" type="HBoxContainer" parent="PanelContainer/PanelContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 35
 
-[node name="Label" type="Label" parent="PanelContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Aura"]
+[node name="Label" type="Label" parent="PanelContainer/PanelContainer/PanelContainer/MarginContainer/VBoxContainer/Aura"]
 layout_mode = 2
 text = "DGT Firewall :"
 label_settings = SubResource("LabelSettings_1sve5")
 
-[node name="Value" type="Label" parent="PanelContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Aura"]
+[node name="Value" type="Label" parent="PanelContainer/PanelContainer/PanelContainer/MarginContainer/VBoxContainer/Aura"]
 layout_mode = 2
 text = "|"
 label_settings = SubResource("LabelSettings_xvhye")
 
-[node name="Bounce" type="HBoxContainer" parent="PanelContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Bounce" type="HBoxContainer" parent="PanelContainer/PanelContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 118
 
-[node name="Label" type="Label" parent="PanelContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Bounce"]
+[node name="Label" type="Label" parent="PanelContainer/PanelContainer/PanelContainer/MarginContainer/VBoxContainer/Bounce"]
 layout_mode = 2
 text = "DGT Ver :"
 label_settings = SubResource("LabelSettings_37y2f")
 
-[node name="Value" type="Label" parent="PanelContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Bounce"]
+[node name="Value" type="Label" parent="PanelContainer/PanelContainer/PanelContainer/MarginContainer/VBoxContainer/Bounce"]
 layout_mode = 2
 text = "|"
 label_settings = SubResource("LabelSettings_v7neo")
 
-[node name="Base" type="HBoxContainer" parent="PanelContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Base" type="HBoxContainer" parent="PanelContainer/PanelContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 55
 
-[node name="Label" type="Label" parent="PanelContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Base"]
+[node name="Label" type="Label" parent="PanelContainer/PanelContainer/PanelContainer/MarginContainer/VBoxContainer/Base"]
 layout_mode = 2
 text = "DGT Flingue :"
 label_settings = SubResource("LabelSettings_i7ghs")
 
-[node name="Value" type="Label" parent="PanelContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Base"]
+[node name="Value" type="Label" parent="PanelContainer/PanelContainer/PanelContainer/MarginContainer/VBoxContainer/Base"]
 layout_mode = 2
 text = "|"
 label_settings = SubResource("LabelSettings_yk5y0")
 
-[node name="Control" type="Control" parent="PanelContainer/MarginContainer/PanelContainer/MarginContainer"]
+[node name="Control" type="Control" parent="PanelContainer/PanelContainer/PanelContainer/MarginContainer"]
 visible = false
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="Retour" type="Button" parent="PanelContainer/MarginContainer/PanelContainer/MarginContainer/Control"]
+[node name="Retour" type="Button" parent="PanelContainer/PanelContainer/PanelContainer/MarginContainer/Control"]
 custom_minimum_size = Vector2(200, 50)
 layout_mode = 1
 anchors_preset = 8
@@ -511,30 +612,3 @@ grow_vertical = 2
 text = "EXTRACTION"
 script = SubResource("GDScript_jjxg3")
 target_scene_path = "uid://ctpkfksra6nxf"
-
-[node name="Droite" type="Polygon2D" parent="."]
-z_index = 1
-position = Vector2(1920, 220)
-color = Color(0.44313726, 0, 0, 1)
-texture = ExtResource("2_kb7o0")
-polygon = PackedVector2Array(0, 540, 540, 0, 0, 0)
-uv = PackedVector2Array(0, 540, 540, 0, 0, 0)
-
-[node name="BordureD" type="Line2D" parent="Droite"]
-points = PackedVector2Array(540, 0, 0, 0, 0, 540, 540, 0)
-width = 2.0
-default_color = Color(1, 0.7529412, 0, 1)
-gradient = SubResource("Gradient_1sve5")
-
-[node name="Gauche" type="Polygon2D" parent="."]
-z_index = 1
-position = Vector2(0, 220)
-color = Color(0.44313726, 0, 0, 1)
-texture_rotation = -0.89884454
-polygon = PackedVector2Array(0, 540, -540, 0, 0, 0)
-
-[node name="BordureG" type="Line2D" parent="Gauche"]
-points = PackedVector2Array(-540, 0, 0, 0, 0, 540, -540, 0)
-width = 2.0
-default_color = Color(1, 0.7529412, 0, 1)
-gradient = SubResource("Gradient_1sve5")

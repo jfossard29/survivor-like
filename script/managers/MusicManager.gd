@@ -23,6 +23,8 @@ var target_cutoff: float
 var current_volume: float
 var current_cutoff: float
 
+const CONFIG_PATH = "user://settings.cfg"
+
 func _init():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
@@ -31,6 +33,9 @@ func _ready():
 	
 	# 🔍 DEBUG : Voir combien de filtres existent
 	print("Nombre d'effets sur bus Music: ", AudioServer.get_bus_effect_count(music_bus_idx))
+	
+	# ✅ CHARGER LA CONFIG EN PREMIER (avant de créer le player)
+	_load_settings()
 	
 	# Créer le player audio
 	main_player = AudioStreamPlayer.new()
@@ -59,13 +64,40 @@ func _ready():
 	lowpass_effect.cutoff_hz = normal_cutoff
 	print("🎵 Cutoff réglé à: ", lowpass_effect.cutoff_hz, " Hz")
 	
-	# Initialiser les valeurs
+	# Initialiser les valeurs APRÈS avoir chargé la config
 	current_volume = volume_db
 	current_cutoff = normal_cutoff
 	target_volume = volume_db
 	target_cutoff = normal_cutoff
 	
-	_set_volume(volume_db)
+	# Appliquer le volume chargé
+	if main_player:
+		main_player.volume_db = volume_db
+		print("🎵 Volume initial appliqué: ", volume_db, " dB")
+
+func _load_settings() -> void:
+	var config = ConfigFile.new()
+	var error = config.load(CONFIG_PATH)
+	
+	if error != OK:
+		print("⚠️ Pas de fichier config, volume par défaut: ", volume_db, " dB")
+		return
+	
+	if config.has_section_key("audio", "music_volume"):
+		var loaded_volume = config.get_value("audio", "music_volume")
+		
+		# Convertir si nécessaire (0-100 -> -80 à 0 dB)
+		# Si la valeur sauvegardée est entre 0 et 100, on la convertit
+		if loaded_volume > 0:
+			volume_db = lerp(-80.0, 0.0, loaded_volume / 100.0)
+			print("🎵 Volume chargé depuis config: ", loaded_volume, "% -> ", volume_db, " dB")
+		else:
+			# Sinon c'est déjà en dB
+			volume_db = loaded_volume
+			print("🎵 Volume chargé depuis config: ", volume_db, " dB")
+	else:
+		print("⚠️ Clé 'music_volume' non trouvée, volume par défaut")
+
 func _process(delta: float) -> void:
 	# Interpoler smoothement le volume et le filtre
 	if not is_equal_approx(current_volume, target_volume):

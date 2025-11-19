@@ -73,6 +73,18 @@ tracks/3/keys = {
 "update": 1,
 "values": [false]
 }
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Control/ControlAnimated/PanelContainer/MarginContainer/Logo:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
 
 [sub_resource type="Animation" id="Animation_rtw2f"]
 resource_name = "select_character"
@@ -123,6 +135,18 @@ tracks/3/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [true]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Control/ControlAnimated/PanelContainer/MarginContainer/Logo:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_tbmy8"]
@@ -228,14 +252,14 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Control/Logo:position")
+tracks/0/path = NodePath("../../Control/ControlAnimated:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(0, 4)]
+"values": [Vector2(0, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_bqqt6"]
@@ -245,14 +269,14 @@ loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Control/Logo:position")
+tracks/0/path = NodePath("../../Control/ControlAnimated:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.26666668, 0.5, 0.75, 1, 1.25),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [Vector2(0, 4), Vector2(-2.5, 4), Vector2(10, 4), Vector2(-2.5, 4), Vector2(-5, 4), Vector2(2.5, 4)]
+"times": PackedFloat32Array(0, 0.13, 0.25, 0.63, 0.75, 0.88, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(5, 0), Vector2(0, 0), Vector2(-5, 0), Vector2(0, 0), Vector2(-10, 0), Vector2(0, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_wu84c"]
@@ -957,6 +981,54 @@ emission_strength = 1.5
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.6348572, -5.895879, 36.618713)
 mesh = SubResource("SphereMesh_lgwnu")
 
+[node name="Control" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+grow_horizontal = 2
+
+[node name="LogoScanAnimator" type="AnimationPlayer" parent="Control"]
+root_node = NodePath("../../Menu/Positionnement")
+libraries = {
+&"": SubResource("AnimationLibrary_wu84c")
+}
+autoplay = "logo_scan"
+
+[node name="ControlAnimated" type="Control" parent="Control"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+grow_horizontal = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Control/ControlAnimated"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -180.0
+offset_right = 180.0
+offset_bottom = 180.0
+grow_horizontal = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/ControlAnimated/PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/margin_top = 100
+
+[node name="Logo" type="Label" parent="Control/ControlAnimated/PanelContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_fonts/font = ExtResource("5_veaib")
+theme_override_font_sizes/font_size = 80
+text = "MEGAPUNK"
+label_settings = SubResource("LabelSettings_oa1go")
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="OptionsMenu" parent="." instance=ExtResource("4_yis5q")]
 visible = false
 layout_mode = 1
@@ -976,26 +1048,6 @@ theme_override_constants/margin_bottom = 150
 
 [node name="Positionnement" type="VBoxContainer" parent="Menu"]
 layout_mode = 2
-
-[node name="LogoScanAnimator" type="AnimationPlayer" parent="Menu/Positionnement"]
-libraries = {
-&"": SubResource("AnimationLibrary_wu84c")
-}
-autoplay = "logo_scan"
-
-[node name="Control" type="Control" parent="Menu/Positionnement"]
-layout_mode = 2
-
-[node name="Logo" type="Label" parent="Menu/Positionnement/Control"]
-layout_mode = 1
-offset_top = 4.0
-offset_right = 1920.0
-offset_bottom = 114.0
-theme_override_fonts/font = ExtResource("5_veaib")
-theme_override_font_sizes/font_size = 80
-text = "MEGAPUNK"
-label_settings = SubResource("LabelSettings_oa1go")
-horizontal_alignment = 1
 
 [node name="ButtonContainer" type="HBoxContainer" parent="Menu"]
 z_index = -1

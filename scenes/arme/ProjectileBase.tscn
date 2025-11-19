@@ -7,7 +7,6 @@ albedo_color = Color(1, 1, 0, 1)
 emission_enabled = true
 emission = Color(18.892157, 18.892157, 0, 1)
 emission_energy_multiplier = 3.0
-emission_operator = 1
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_qxf0c"]
 material = SubResource("StandardMaterial3D_a85iw")
