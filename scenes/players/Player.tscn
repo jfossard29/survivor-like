@@ -1,12 +1,10 @@
-[gd_scene load_steps=13 format=3 uid="uid://bcl5krgds1wpe"]
+[gd_scene load_steps=10 format=3 uid="uid://bcl5krgds1wpe"]
 
 [ext_resource type="Script" uid="uid://b6g6rerfmvwhp" path="res://script/player/HarvestZone.gd" id="1_22ypy"]
 [ext_resource type="Script" uid="uid://bpafwtxkb2gqg" path="res://script/player/player.gd" id="1_n43po"]
-[ext_resource type="PackedScene" uid="uid://buvywldvvmux5" path="res://scenes/arme/ProjectileBase.tscn" id="2_7166c"]
-[ext_resource type="PackedScene" uid="uid://cng5kopko58jj" path="res://scenes/arme/aura_weapon.tscn" id="3_r1bx0"]
 [ext_resource type="PackedScene" uid="uid://brbib2i6ft83b" path="res://scenes/UI/Amelioration.tscn" id="4_fdjei"]
-[ext_resource type="PackedScene" uid="uid://gvu6insiwbib" path="res://scenes/arme/projectile_rebond.tscn" id="4_shwb6"]
 [ext_resource type="Script" uid="uid://bug10plnrdh5t" path="res://script/class/GestionnaireAmelioration.gd" id="5_8cenu"]
+[ext_resource type="PackedScene" uid="uid://dlmme8qbj7p7w" path="res://scenes/UI/cyberpunk_hud_scene.tscn" id="5_smcha"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_xqeeq"]
 
@@ -17,19 +15,14 @@ radius = 2.0
 height = 10.0
 radius = 15.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fdjei"]
-bg_color = Color(0.5563933, 0, 0, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8cenu"]
-bg_color = Color(0.07846785, 0.805388, 0.97360384, 1)
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_wciw6"]
+height = 10.0
+radius = 15.0
 
 [node name="Corps" type="CharacterBody3D"]
 collision_layer = 4
 collision_mask = 275
 script = ExtResource("1_n43po")
-base_projectile_scene = ExtResource("2_7166c")
-aura_scene = ExtResource("3_r1bx0")
-rebond_scene = ExtResource("4_shwb6")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_xqeeq")
@@ -48,10 +41,21 @@ shape = SubResource("SphereShape3D_fdjei")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SpawnZone"]
 shape = SubResource("CylinderShape3D_8cenu")
 
+[node name="AnimationBlocs" type="Area3D" parent="."]
+collision_layer = 1024
+collision_mask = 512
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AnimationBlocs"]
+shape = SubResource("CylinderShape3D_wciw6")
+
 [node name="CameraPivot" type="Node3D" parent="."]
 
-[node name="Camera3D" type="Camera3D" parent="CameraPivot"]
-transform = Transform3D(0.99991065, -0.0039591314, 0.0127693955, -7.264424e-09, 0.9551441, 0.2961415, -0.013369076, -0.29611504, 0.95505875, 0, 2.2496388, 4.389728)
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.652653, 3.1956828)
+collision_mask = 2
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D"]
+transform = Transform3D(0.99990255, 0, 0.01396218, -0.005244556, 0.9267714, 0.37558925, -0.012939749, -0.37562585, 0.9266811, 0, 0, 0)
 current = true
 
 [node name="Amelioration" parent="." instance=ExtResource("4_fdjei")]
@@ -59,38 +63,4 @@ current = true
 [node name="AmeliorationManager" type="Node" parent="."]
 script = ExtResource("5_8cenu")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="Panel" type="Panel" parent="CanvasLayer"]
-offset_right = 198.0
-offset_bottom = 65.0
-
-[node name="PV" type="Label" parent="CanvasLayer/Panel"]
-layout_mode = 0
-offset_left = 6.852009
-offset_top = 7.3451385
-offset_right = 46.85201
-offset_bottom = 30.345139
-text = "PV :"
-
-[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer/Panel/PV"]
-layout_mode = 0
-offset_left = 32.0
-offset_right = 182.0
-offset_bottom = 27.0
-theme_override_styles/fill = SubResource("StyleBoxFlat_fdjei")
-
-[node name="Experience" type="Label" parent="CanvasLayer/Panel"]
-layout_mode = 0
-offset_left = 6.852
-offset_top = 35.0
-offset_right = 46.852
-offset_bottom = 58.0
-text = "XP :"
-
-[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer/Panel/Experience"]
-layout_mode = 0
-offset_left = 32.0
-offset_right = 182.0
-offset_bottom = 27.0
-theme_override_styles/fill = SubResource("StyleBoxFlat_8cenu")
+[node name="HUD" parent="." instance=ExtResource("5_smcha")]

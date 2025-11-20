@@ -10,10 +10,10 @@ config_version=5
 
 [application]
 
-config/name="MonPremierJeu"
+config/name="MegaPunk"
 run/main_scene="uid://ctpkfksra6nxf"
 config/features=PackedStringArray("4.5", "GL Compatibility")
-config/icon="res://assets/icon.svg"
+config/icon="uid://du7qvjeq53cvb"
 
 [audio]
 
@@ -92,6 +92,8 @@ pause={
 3d_physics/layer_7="recolte"
 3d_physics/layer_8="objets"
 3d_physics/layer_9="boss"
+3d_physics/layer_10="blocs"
+3d_physics/layer_11="Player_animation_bloc"
 
 [rendering]
 

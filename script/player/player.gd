@@ -8,11 +8,17 @@ extends CharacterBody3D
 @export var xp_to_next_level: float = 100.0
 
 @onready var pivot_camera: Node3D = $CameraPivot
-@onready var health_bar: ProgressBar = $CanvasLayer/Panel/PV/ProgressBar
-@onready var experience_bar: ProgressBar = $CanvasLayer/Panel/Experience/ProgressBar
+@onready var health_bar: ProgressBar = $HUD/Panel/PV/ProgressBar
+@onready var experience_bar: ProgressBar = $HUD/Panel/Experience/ProgressBar
 @onready var recolte: Area3D = $Recolte
 @onready var popup_multi: CanvasLayer = $Amelioration
 @onready var amelioration_manager: Node = $AmeliorationManager
+
+@export var zoom_min: float = 1.5
+@export var zoom_max: float = 6.0
+@export var zoom_speed: float = 0.5
+
+@onready var spring_arm: SpringArm3D = $CameraPivot/SpringArm3D
 
 var camera_pitch: float = 0.0
 var current_health: float = 100.0
@@ -93,7 +99,7 @@ func level_up():
 	level += 1
 	xp_to_next_level *= 1.25
 	move_speed += 0.2
-	
+	experience_bar.value = 0
 	var choix = amelioration_manager.get_ameliorations_random(self)
 	popup_multi.afficher(choix)
 
@@ -130,6 +136,15 @@ func _input(event: InputEvent) -> void:
 			camera_pitch -= event.relative.y * mouse_sensitivity
 			camera_pitch = clamp(camera_pitch, -1.5, 1.5)
 			pivot_camera.rotation.x = camera_pitch
+
+	# --- ZOOM / DEZOOM ---
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP and event.pressed:
+			spring_arm.spring_length = max(zoom_min, spring_arm.spring_length - zoom_speed)
+		
+		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
+			spring_arm.spring_length = min(zoom_max, spring_arm.spring_length + zoom_speed)
+
 
 func take_damage(amount: int):
 	current_health -= amount
@@ -177,7 +192,19 @@ func add_experience(amount: float):
 	
 	while current_experience >= xp_to_next_level:
 		current_experience -= xp_to_next_level
+
+		# STOPPER L’ANIMATION EN COURS
+		if xp_tween and xp_tween.is_valid():
+			xp_tween.kill()
+
+		# RESET VISUEL
+		experience_bar.value = 0
+
 		level_up()
+
+		# Mettre à jour la barre avec l’XP restante
+		update_experience_bar()
+
 
 func update_experience_bar():
 	if not experience_bar:

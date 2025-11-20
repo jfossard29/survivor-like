@@ -22,19 +22,19 @@ signal game_paused(paused: bool)
 
 func _ready() -> void:
 	# Créer et initialiser les sous-gestionnaires
-	difficulty_manager = preload("res://script/managers/difficultyManager.gd").new()
+	difficulty_manager = preload("res://script/managers/DifficultyManager.gd").new()
 	add_child(difficulty_manager)
 	
-	enemy_manager = preload("res://script/managers/enemyManager.gd").new()
+	enemy_manager = preload("res://script/managers/EnemyManager.gd").new()
 	add_child(enemy_manager)
 	
-	pylon_manager = preload("res://script/managers/pylonManager.gd").new()
+	pylon_manager = preload("res://script/managers/PylonManager.gd").new()
 	add_child(pylon_manager)
 	
-	timer_manager = preload("res://script/managers/timerManager.gd").new()
+	timer_manager = preload("res://script/managers/TimerManager.gd").new()
 	add_child(timer_manager)
 	
-	count_manager = preload("res://script/managers/countManager.gd").new()
+	count_manager = preload("res://script/managers/CountManager.gd").new()
 	add_child(count_manager)
 
 	# Connecter les signaux

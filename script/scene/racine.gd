@@ -9,7 +9,7 @@ extends Node3D
 @export var boss_spawn_distance: float = 15.0
 
 @onready var game_over_canvas : CanvasLayer = $GameOver
-
+@onready var win_canvas : CanvasLayer = $Win
 var current_pnjs: Array = []
 var spawn_radius: float = 5.0
 var spawn_zone: Area3D = null
@@ -18,6 +18,7 @@ var player: CharacterBody3D = null  # Le joueur est maintenant directement le Ch
 
 signal game_over()
 signal game_paused(paused: bool)
+signal game_won()
 
 func _ready():
 	# Récupérer le joueur qui est maintenant un CharacterBody3D
@@ -59,6 +60,7 @@ func _ready():
 	call_deferred("_initialize_spawn_system")
 	GameManager.set_game_active(true)
 	GameManager.game_over.connect(_game_over_setup)
+	GameManager.game_won.connect(_win_setup)
 
 func _initialize_spawn_system():
 	# Attendre plusieurs frames pour que tout soit bien dans l'arbre
@@ -288,3 +290,9 @@ func _game_over_setup():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	game_paused.emit(true)
 	
+func _win_setup():
+	win_canvas.visible = true
+	win_canvas.setup_win()
+	get_tree().paused = true
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	game_paused.emit(true)

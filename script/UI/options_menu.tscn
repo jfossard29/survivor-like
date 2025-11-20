@@ -195,7 +195,7 @@ script/source = "extends Button
 @onready var option: Control = null
 var sound_value: HSlider
 var bloom_value: CheckButton
-var resolution: CheckButton
+var resolution: OptionButton	
 
 const CONFIG_PATH = \"user://settings.cfg\"
 

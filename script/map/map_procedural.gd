@@ -205,7 +205,6 @@ func _place_visual_blocs_optimized(placed_platforms: Array, bloc_size: float, ce
 	var corner_scene = load(corner_bloc_path)
 	var side_scene = load(side_bloc_path)
 	var floor_scene = load(floor_bloc_path)
-	
 	var visual_container = Node3D.new()
 	visual_container.name = "BlocsVisuels"
 	
@@ -241,7 +240,7 @@ func _place_visual_blocs_optimized(placed_platforms: Array, bloc_size: float, ce
 				
 				# Rotation
 				bloc.rotation_degrees.y = bloc_info.rotation
-				
+					
 				visual_container.add_child(bloc)
 	
 	container.add_child(visual_container)

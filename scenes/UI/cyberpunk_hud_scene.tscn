@@ -1,0 +1,222 @@
+[gd_scene load_steps=10 format=3 uid="uid://dlmme8qbj7p7w"]
+
+[ext_resource type="FontFile" uid="uid://c3ruxaj7pj5hk" path="res://themes/bold_pixel/BoldPixels.ttf" id="1_4u5li"]
+
+[sub_resource type="GDScript" id="GDScript_4u5li"]
+script/source = "extends CanvasLayer
+
+@onready var panel: Panel = $Panel
+@onready var health_bar: ProgressBar = $Panel/PV/ProgressBar
+@onready var xp_bar: ProgressBar = $Panel/Experience/ProgressBar
+@onready var scan_line: ColorRect = $Panel/ScanLine
+
+# Couleurs pour les animations
+var neon_cyan := Color(\"#00F5FF\")
+var neon_purple := Color(\"#8B00FF\")
+var neon_yellow := Color(\"#FFFF00\")
+var neon_pink := Color(\"#FF006E\")
+
+# Animation
+var pulse_timer := 0.0
+var glitch_timer := 0.0
+
+func _ready() -> void:
+	_start_scan_line_animation()
+
+func _start_scan_line_animation() -> void:
+	var tween = create_tween()
+	tween.set_loops()
+	tween.tween_property(scan_line, \"position:y\", 120.0, 2.0)
+	tween.tween_property(scan_line, \"position:y\", 0.0, 2.0)
+
+func _process(delta: float) -> void:
+	pulse_timer += delta * 2.0
+	glitch_timer += delta
+	
+	# Effet de pulsation sur les bordures
+	_update_pulse_effect()
+	
+	# Effet de glitch aléatoire
+	if glitch_timer > 3.0 and randf() > 0.95:
+		_trigger_glitch_effect()
+		glitch_timer = 0.0
+
+func _update_pulse_effect() -> void:
+	var pulse = (sin(pulse_timer) + 1.0) / 2.0  # Valeur entre 0 et 1
+	
+	# Faire pulser la bordure et l'ombre du panel
+	var panel_style = panel.get_theme_stylebox(\"panel\")
+	if panel_style is StyleBoxFlat:
+		var pulse_color = neon_cyan.lerp(neon_purple, pulse)
+		panel_style.border_color = pulse_color
+		panel_style.shadow_color = Color(pulse_color, 0.5)
+
+func _trigger_glitch_effect() -> void:
+	# Créer un effet de glitch temporaire
+	var original_pos = panel.position
+	panel.position = original_pos + Vector2(randf_range(-3, 3), randf_range(-3, 3))
+	
+	await get_tree().create_timer(0.05).timeout
+	panel.position = original_pos
+
+# Méthodes publiques pour mettre à jour les barres
+func update_health(current: float, maximum: float) -> void:
+	health_bar.max_value = maximum
+	
+	# Animation smooth
+	var tween = create_tween()
+	tween.tween_property(health_bar, \"value\", current, 0.3).set_trans(Tween.TRANS_CUBIC)
+	
+	# Effet de flash si dégâts critiques
+	if current < maximum * 0.3:
+		_flash_health_bar()
+
+func update_xp(current: float, maximum: float) -> void:
+	xp_bar.max_value = maximum
+	
+	# Animation smooth
+	var tween = create_tween()
+	tween.tween_property(xp_bar, \"value\", current, 0.3).set_trans(Tween.TRANS_CUBIC)
+	
+	# Effet de flash au level up
+	if current >= maximum:
+		_flash_xp_bar()
+
+func _flash_health_bar() -> void:
+	var fill_style = health_bar.get_theme_stylebox(\"fill\")
+	if fill_style is StyleBoxFlat:
+		var original_color = fill_style.bg_color
+		
+		var tween = create_tween()
+		tween.tween_property(fill_style, \"bg_color\", Color.RED, 0.2)
+		tween.tween_property(fill_style, \"bg_color\", original_color, 0.2)
+
+func _flash_xp_bar() -> void:
+	var fill_style = xp_bar.get_theme_stylebox(\"fill\")
+	if fill_style is StyleBoxFlat:
+		var original_color = fill_style.bg_color
+		
+		var tween = create_tween()
+		tween.tween_property(fill_style, \"bg_color\", neon_yellow, 0.2)
+		tween.tween_property(fill_style, \"bg_color\", original_color, 0.2)
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.0392157, 0.054902, 0.152941, 0.85)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.960784, 1, 1)
+corner_radius_top_right = 15
+corner_radius_bottom_left = 15
+shadow_color = Color(0, 0.960784, 1, 0.5)
+shadow_size = 10
+
+[sub_resource type="LabelSettings" id="LabelSettings_srbd5"]
+font = ExtResource("1_4u5li")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_health_bg"]
+bg_color = Color(0.101961, 0.121569, 0.227451, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0, 0.431373, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_health_fill"]
+bg_color = Color(1, 0, 0.431373, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+shadow_color = Color(1, 0, 0.431373, 0.8)
+shadow_size = 8
+
+[sub_resource type="LabelSettings" id="LabelSettings_m2k8j"]
+font = ExtResource("1_4u5li")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xp_bg"]
+bg_color = Color(0.101961, 0.121569, 0.227451, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0.960784, 1, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xp_fill"]
+bg_color = Color(0, 0.960784, 1, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+shadow_color = Color(0, 0.960784, 1, 0.8)
+shadow_size = 8
+
+[node name="HUD" type="CanvasLayer"]
+script = SubResource("GDScript_4u5li")
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(350, 120)
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 370.0
+offset_bottom = 140.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="PV" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 10.0
+offset_right = 330.0
+offset_bottom = 55.0
+
+[node name="Label" type="Label" parent="Panel/PV"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0.431373, 1)
+theme_override_font_sizes/font_size = 16
+text = "SANTÉ"
+label_settings = SubResource("LabelSettings_srbd5")
+
+[node name="ProgressBar" type="ProgressBar" parent="Panel/PV"]
+custom_minimum_size = Vector2(300, 30)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_health_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_health_fill")
+value = 100.0
+show_percentage = false
+
+[node name="Experience" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 60.0
+offset_right = 330.0
+offset_bottom = 100.0
+
+[node name="Label" type="Label" parent="Panel/Experience"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.960784, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "EXPÉRIENCE"
+label_settings = SubResource("LabelSettings_m2k8j")
+
+[node name="ProgressBar" type="ProgressBar" parent="Panel/Experience"]
+custom_minimum_size = Vector2(300, 25)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_xp_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_xp_fill")
+show_percentage = false
+
+[node name="ScanLine" type="ColorRect" parent="Panel"]
+layout_mode = 0
+offset_right = 350.0
+offset_bottom = 2.0
+color = Color(0, 0.960784, 1, 0.15)
