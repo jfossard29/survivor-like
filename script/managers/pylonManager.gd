@@ -21,8 +21,6 @@ func notify_pylon_charged(pylon: Node3D) -> void:
 	charged_pylons_count += 1
 	pylon_charged.emit(pylon)
 	
-	print("Pylône chargé: ", pylon.name, " (", charged_pylons_count, "/", registered_pylons.size(), ")")
-	
 	if charged_pylons_count >= registered_pylons.size():
 		all_pylons_charged.emit()
 		print("🎉 Tous les pylônes sont chargés!")
