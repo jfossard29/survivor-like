@@ -1,16 +1,15 @@
-[gd_scene load_steps=49 format=4 uid="uid://1hoxtt5rrj3g"]
+[gd_scene load_steps=29 format=4 uid="uid://1hoxtt5rrj3g"]
 
 [ext_resource type="Script" uid="uid://d3b8ydmcddf0q" path="res://script/scene/racine.gd" id="1_sxnmr"]
 [ext_resource type="PackedScene" uid="uid://cgbo35opsgy86" path="res://scenes/NPC/mechant.tscn" id="2_lxtuq"]
 [ext_resource type="PackedScene" uid="uid://b1stvgy2g2801" path="res://scenes/NPC/Boss.tscn" id="3_hnp5q"]
 [ext_resource type="PackedScene" uid="uid://bcl5krgds1wpe" path="res://scenes/players/Player.tscn" id="4_lrn7n"]
+[ext_resource type="PackedScene" uid="uid://bp4dkv7f1tuy0" path="res://scenes/map/floor_bloc.glb" id="5_8pssd"]
 [ext_resource type="PackedScene" uid="uid://cgi3g47uwmgfh" path="res://scenes/map/logo_ciel.tscn" id="5_sxnmr"]
+[ext_resource type="PackedScene" uid="uid://b2mdo71qbfdyy" path="res://scenes/map/side_bloc.glb" id="6_i4ci5"]
+[ext_resource type="PackedScene" uid="uid://vhluw7d6c4cb" path="res://scenes/map/corner_bloc.glb" id="7_sxnmr"]
 [ext_resource type="Shader" uid="uid://p6i28ung6ymp" path="res://shaders/sky.gdshader" id="8_3r1n2"]
-[ext_resource type="PackedScene" uid="uid://bk7dangodqgts" path="res://scenes/map/map.tscn" id="9_2atdg"]
-[ext_resource type="Script" uid="uid://bbkiswqwrl6a6" path="res://script/map/pylone_charge.gd" id="10_xnkj4"]
-[ext_resource type="Shader" uid="uid://g3uovj5kqbhb" path="res://shaders/pylone.gdshader" id="11_quacx"]
-[ext_resource type="ArrayMesh" uid="uid://bl76k8qf7c418" path="res://assets/pylone.vox" id="12_77u14"]
-[ext_resource type="Script" uid="uid://0mf78caqltxw" path="res://script/map/test_fesceau.gd" id="13_ii27u"]
+[ext_resource type="PackedScene" uid="uid://dii65isbcweva" path="res://scenes/map/stairs_blend.glb" id="8_lxtuq"]
 [ext_resource type="Shader" uid="uid://dta3l04x00wf6" path="res://shaders/sun.gdshader" id="15_jlq2t"]
 [ext_resource type="PackedScene" uid="uid://b64at4io6wnlg" path="res://scenes/UI/Pause.tscn" id="16_hvtan"]
 [ext_resource type="PackedScene" uid="uid://dtc8kl58j32id" path="res://scenes/UI/Game_Over.tscn" id="17_8pssd"]
@@ -18,6 +17,248 @@
 [ext_resource type="PackedScene" uid="uid://bu6k3gq55rj0u" path="res://scenes/UI/Win.tscn" id="18_i4ci5"]
 [ext_resource type="Script" uid="uid://bh7e0qnmfc1tu" path="res://script/UI/timer_ui.gd" id="18_ytbxp"]
 [ext_resource type="PackedScene" uid="uid://dgj6vfkt8w7oj" path="res://scenes/UI/boss_health_ui.tscn" id="19_nms2w"]
+
+[sub_resource type="GDScript" id="GDScript_uc0ft"]
+script/source = "@tool
+extends Node3D
+
+@export var map_size: int = 30:
+	set(value):
+		map_size = value
+		if Engine.is_editor_hint():
+			_update_grid()
+
+@export var max_height: int = 5:
+	set(value):
+		max_height = value
+		if Engine.is_editor_hint():
+			_update_grid()
+
+@export var bloc_size: float = 10.0
+
+@export var seed: int = 0:
+	set(value):
+		seed = value
+		if Engine.is_editor_hint():
+			_update_grid()
+
+@export_group(\"Platform Generation\")
+@export_range(0.0, 1.0, 0.01) var platform_coverage: float = 0.15
+@export_range(2, 10) var min_platform_size: int = 3
+@export_range(5, 20) var max_platform_size: int = 8
+@export_range(0, 5) var min_gap: int = 1
+@export_range(0.0, 1.0, 0.1) var stacking_chance: float = 0.5
+@export var max_attempts: int = 3000
+
+@export_group(\"Debug & Visualization\")
+@export var show_grid_in_console: bool = false:
+	set(value):
+		show_grid_in_console = value
+		if value and Engine.is_editor_hint():
+			print_grid_to_console()
+
+@export var show_detailed_info: bool = false:
+	set(value):
+		show_detailed_info = value
+		if value and Engine.is_editor_hint():
+			print_detailed_info()
+
+@export var generate_platforms: bool = false:
+	set(value):
+		generate_platforms = false
+		if value and Engine.is_editor_hint():
+			_generate_platforms()
+
+@export_group(\"3D Generation\")
+@export var floor_block_scene: PackedScene
+@export var side_block_scene: PackedScene
+@export var corner_block_scene: PackedScene
+@export var ramp_scene: PackedScene
+
+@export var generate_3d: bool = false:
+	set(value):
+		generate_3d = false
+		if value and Engine.is_editor_hint():
+			_generate_3d_map()
+
+var grid: Array = []
+var platforms: Array = []
+var stats: Dictionary = {
+	\"total_cells\": 0,
+	\"filled_cells\": 0,
+	\"platforms_count\": 0,
+	\"max_height_used\": 0
+}
+
+func _ready() -> void:
+	if Engine.is_editor_hint():
+		_update_grid()
+
+func _update_grid() -> void:
+	print(\"\\n🔄 Mise à jour de la grille...\")
+	_initialize_grid()
+	_calculate_stats()
+	print(\"✅ Grille initialisée: \", map_size, \"x\", map_size, \"x\", max_height)
+
+func _initialize_grid() -> void:
+	if grid.size() != map_size:
+		grid.clear()
+		for x in range(map_size):
+			var column_z = []
+			for z in range(map_size):
+				var column_y = []
+				for y in range(max_height):
+					column_y.append(0)
+				column_z.append(column_y)
+			grid.append(column_z)
+	else:
+		for x in range(map_size):
+			for z in range(map_size):
+				for y in range(max_height):
+					grid[x][z][y] = 0
+
+func _calculate_stats() -> void:
+	stats.total_cells = map_size * map_size * max_height
+	stats.filled_cells = 0
+	stats.max_height_used = 0
+	stats.platforms_count = platforms.size()
+	
+	for x in range(map_size):
+		for z in range(map_size):
+			for y in range(max_height):
+				if grid[x][z][y] != 0:
+					stats.filled_cells += 1
+					stats.max_height_used = max(stats.max_height_used, y + 1)
+
+func print_grid_to_console() -> void:
+	print(\"\\n═══════════════════════════════════════\")
+	print(\"🗺️  VISUALISATION DE LA GRILLE\")
+	print(\"═══════════════════════════════════════\")
+	print(\"Dimensions: \", map_size, \"x\", map_size, \"x\", max_height)
+	print(\"Seed: \", seed)
+	print(\"\\nLégende:\")
+	print(\"  . = vide\")
+	print(\"  0-9 = numéro du niveau Y\")
+	print(\"  R = rampe\")
+	print(\"═══════════════════════════════════════\\n\")
+	
+	# N'afficher que jusqu'à la hauteur max utilisée
+	var max_display = stats.max_height_used if stats.max_height_used > 0 else 1
+	
+	for y in range(max_display):
+		print(\"--- NIVEAU Y = \", y, \" ---\")
+		var header = \"   \"
+		for x in range(min(map_size, 50)):
+			header += str(x % 10)
+		print(header)
+		
+		for z in range(min(map_size, 50)):
+			var line = str(z).pad_zeros(2) + \" \"
+			for x in range(min(map_size, 50)):
+				var cell = grid[x][z][y]
+				
+				if cell == 2:
+					# Rampe
+					line += \"R\"
+				elif cell != 0:
+					# Plateforme - afficher le niveau Y
+					line += str(y)
+				elif y > 0 and grid[x][z][y - 1] == 1:
+					# Montrer le niveau parent (seulement plateformes)
+					# Chercher le niveau du parent
+					var parent_y = y - 1
+					while parent_y >= 0:
+						if grid[x][z][parent_y] == 1:
+							line += str(parent_y)
+							break
+						parent_y -= 1
+					if parent_y < 0:
+						line += \".\"
+				else:
+					# Vide
+					line += \".\"
+			print(line)
+		print(\"\")
+
+func print_detailed_info() -> void:
+	print(\"\\n╔══════════════════════════════════════╗\")
+	print(\"║   INFORMATIONS DÉTAILLÉES            ║\")
+	print(\"╚══════════════════════════════════════╝\")
+	print(\"Plateformes: \", platforms.size())
+	print(\"Cellules remplies: \", stats.filled_cells)
+	print(\"Hauteur max utilisée: \", stats.max_height_used)
+
+func _generate_platforms() -> void:
+	print(\"\\n🎮 GÉNÉRATION DES PLATEFORMES\")
+	_initialize_grid()
+	platforms.clear()
+	
+	var rng = RandomNumberGenerator.new()
+	if seed == 0:
+		rng.randomize()
+	else:
+		rng.seed = seed
+	
+	var config = {
+		\"platform_coverage\": platform_coverage,
+		\"min_size\": min_platform_size,
+		\"max_size\": max_platform_size,
+		\"min_gap\": min_gap,
+		\"stacking_chance\": stacking_chance,
+		\"max_attempts\": max_attempts
+	}
+	
+	platforms = PlatformGeneratorGrid.generate_platforms(grid, map_size, max_height, rng, config)
+	_calculate_stats()
+	
+	# Arrêt si aucune plateforme générée
+	if platforms.is_empty():
+		print(\"❌ Aucune plateforme générée, arrêt.\")
+		return
+	
+	print_grid_to_console()
+	print_detailed_info()
+
+func _generate_3d_map() -> void:
+	print(\"\\n🎮 GÉNÉRATION 3D\")
+	
+	# Vérifier que les plateformes sont générées
+	if platforms.is_empty():
+		print(\"❌ Aucune plateforme en mémoire. Cliquez d'abord sur 'Generate Platforms'\")
+		return
+	
+	# Vérifier que les scènes sont assignées
+	if not floor_block_scene or not side_block_scene or not corner_block_scene or not ramp_scene:
+		print(\"❌ Assignez les 4 scènes de blocs dans l'inspecteur (Floor, Side, Corner, Ramp)\")
+		return
+	
+	# Vider TOUS les enfants du node
+	_clear_all_children()
+	
+	# Préparer le dictionnaire de scènes
+	var block_scenes = {
+		Map3DBuilder.BlockType.FLOOR: floor_block_scene,
+		Map3DBuilder.BlockType.SIDE: side_block_scene,
+		Map3DBuilder.BlockType.CORNER: corner_block_scene,
+		Map3DBuilder.BlockType.RAMP: ramp_scene
+	}
+	
+	# Construire la map 3D
+	Map3DBuilder.build_3d_map(
+		grid, platforms, map_size, max_height,
+		bloc_size, self, block_scenes
+	)
+
+func _clear_all_children() -> void:
+	print(\"🧹 Suppression de tous les enfants...\")
+	var cleared_count = 0
+	
+	for child in get_children():
+		child.queue_free()
+		cleared_count += 1
+	
+	print(\"  ✅ %d objets supprimés\" % cleared_count)
+"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sgosv"]
 shader = ExtResource("8_3r1n2")
@@ -42,116 +283,6 @@ sky_material = SubResource("ShaderMaterial_sgosv")
 background_mode = 2
 sky = SubResource("Sky_n7u81")
 glow_enabled = true
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_lxtuq"]
-render_priority = 0
-shader = ExtResource("11_quacx")
-shader_parameter/brightness_threshold = 0.9
-shader_parameter/neon_color = Color(1, 0, 0, 0)
-shader_parameter/emission_strength = 10.0
-shader_parameter/tint_with_original = true
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_hnp5q"]
-size = Vector3(8, 26, 8)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_lrn7n"]
-render_priority = 0
-shader = ExtResource("11_quacx")
-shader_parameter/brightness_threshold = 0.9
-shader_parameter/neon_color = Color(1, 0, 0, 0)
-shader_parameter/emission_strength = 10.0
-shader_parameter/tint_with_original = true
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_cucvh"]
-size = Vector3(8, 26, 8)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_fisdi"]
-render_priority = 0
-shader = ExtResource("11_quacx")
-shader_parameter/brightness_threshold = 0.9
-shader_parameter/neon_color = Color(1, 0, 0, 0)
-shader_parameter/emission_strength = 10.0
-shader_parameter/tint_with_original = true
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_0fdmp"]
-size = Vector3(8, 26, 8)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_3r1n2"]
-render_priority = 0
-shader = ExtResource("11_quacx")
-shader_parameter/brightness_threshold = 0.9
-shader_parameter/neon_color = Color(1, 0, 0, 0)
-shader_parameter/emission_strength = 10.0
-shader_parameter/tint_with_original = true
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_2atdg"]
-size = Vector3(8, 26, 8)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_xnkj4"]
-render_priority = 0
-shader = ExtResource("11_quacx")
-shader_parameter/brightness_threshold = 0.9
-shader_parameter/neon_color = Color(1, 0, 0, 0)
-shader_parameter/emission_strength = 10.0
-shader_parameter/tint_with_original = true
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_quacx"]
-size = Vector3(8, 26, 8)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_77u14"]
-render_priority = 0
-shader = ExtResource("11_quacx")
-shader_parameter/brightness_threshold = 0.9
-shader_parameter/neon_color = Color(1, 0, 0, 0)
-shader_parameter/emission_strength = 10.0
-shader_parameter/tint_with_original = true
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_ii27u"]
-size = Vector3(8, 26, 8)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_7k12e"]
-render_priority = 0
-shader = ExtResource("11_quacx")
-shader_parameter/brightness_threshold = 0.9
-shader_parameter/neon_color = Color(1, 0, 0, 0)
-shader_parameter/emission_strength = 10.0
-shader_parameter/tint_with_original = true
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_jlq2t"]
-size = Vector3(8, 26, 8)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_hvtan"]
-render_priority = 0
-shader = ExtResource("11_quacx")
-shader_parameter/brightness_threshold = 0.9
-shader_parameter/neon_color = Color(1, 0, 0, 0)
-shader_parameter/emission_strength = 10.0
-shader_parameter/tint_with_original = true
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_dlngl"]
-size = Vector3(8, 26, 8)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ytbxp"]
-render_priority = 0
-shader = ExtResource("11_quacx")
-shader_parameter/brightness_threshold = 0.9
-shader_parameter/neon_color = Color(1, 0, 0, 0)
-shader_parameter/emission_strength = 10.0
-shader_parameter/tint_with_original = true
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_nms2w"]
-size = Vector3(8, 26, 8)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_qgln7"]
-render_priority = 0
-shader = ExtResource("11_quacx")
-shader_parameter/brightness_threshold = 0.9
-shader_parameter/neon_color = Color(1, 0, 0, 0)
-shader_parameter/emission_strength = 10.0
-shader_parameter/tint_with_original = true
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_x1yy6"]
-size = Vector3(8, 26, 8)
 
 [sub_resource type="GDScript" id="GDScript_sxnmr"]
 script/source = "extends Node3D
@@ -185,7 +316,7 @@ func _on_trigger_animation(_pylon: Node3D):
 	)
 "
 
-[sub_resource type="Shader" id="Shader_sxnmr"]
+[sub_resource type="Shader" id="Shader_8pssd"]
 code = "
 shader_type spatial;
 render_mode blend_add, depth_draw_opaque, cull_back, unshaded;
@@ -219,24 +350,24 @@ void fragment() {
 }
 "
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_hnp5q"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i4ci5"]
 render_priority = 0
-shader = SubResource("Shader_sxnmr")
-shader_parameter/line_color = Color(0.78941506, 0, 0.33577523, 0.42745098)
-shader_parameter/line_speed = 0.05
+shader = SubResource("Shader_8pssd")
+shader_parameter/line_color = Color(0.62, 0.12399999, 0.19839981, 1)
+shader_parameter/line_speed = 0.02
 shader_parameter/line_width = 0.5
 shader_parameter/line_spacing = 0.1
-shader_parameter/emission_strength = 1.5
+shader_parameter/emission_strength = 1.0
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_lrn7n"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_8pssd"]
 _surfaces = [{
-"aabb": AABB(-600, 0, -1200, 1200, 1e-05, 2400),
+"aabb": AABB(-1000, 0, -2500, 2000, 1e-05, 5000),
 "attribute_data": PackedByteArray("AAAAAAAAAAAAAIA/AAAAAAAAgD8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAIA/"),
 "format": 34359738391,
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 6,
-"vertex_data": PackedByteArray("AAAWxAAAAAAAAJbEAAAWRAAAAAAAAJbEAACWQwAAAAAAAJZEAAAWxAAAAAAAAJbEAACWQwAAAAAAAJZEAACWwwAAAAAAAJZE/3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+/")
+"vertex_data": PackedByteArray("AAB6xAAAAAAAQBzFAAB6RAAAAAAAQBzFAACWQwAAAAAAQBxFAAB6xAAAAAAAQBzFAACWQwAAAAAAQBxFAACWwwAAAAAAQBxF/3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+/")
 }]
 
 [sub_resource type="GDScript" id="GDScript_i4ci5"]
@@ -414,7 +545,17 @@ player_scene = ExtResource("4_lrn7n")
 min_spawn_distance = 15.0
 
 [node name="Joueur" parent="." instance=ExtResource("4_lrn7n")]
-transform = Transform3D(-0.9995798, 0, -0.028985813, 0, 1, 0, 0.028985813, 0, -0.9995798, 40.92035, 21.64131, 32.321846)
+transform = Transform3D(-0.9995798, 0, -0.028985813, 0, 1, 0, 0.028985813, 0, -0.9995798, 40.92035, 21.64131, 38.039547)
+
+[node name="Map" type="Node3D" parent="."]
+script = SubResource("GDScript_uc0ft")
+map_size = 25
+platform_coverage = 0.4
+max_platform_size = 7
+floor_block_scene = ExtResource("5_8pssd")
+side_block_scene = ExtResource("6_i4ci5")
+corner_block_scene = ExtResource("7_sxnmr")
+ramp_scene = ExtResource("8_lxtuq")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_6qlrk")
@@ -422,228 +563,6 @@ environment = SubResource("Environment_6qlrk")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.9999334, -0.0012064934, 0.011473112, -0.0012695245, 0.97696817, 0.21338111, -0.011466309, -0.2133815, 0.9769017, 0, 77.8699, 208.5287)
 light_color = Color(0.5757481, 0.5672782, 1, 1)
-
-[node name="Map" parent="." instance=ExtResource("9_2atdg")]
-map_size = 150
-seed = 0
-corner_bloc_path = "uid://vhluw7d6c4cb"
-side_bloc_path = "uid://b2mdo71qbfdyy"
-floor_bloc_path = "uid://bp4dkv7f1tuy0"
-pylone_shader_path = "uid://g3uovj5kqbhb"
-pylone_script_path = "uid://bbkiswqwrl6a6"
-audio_wall_script_path = "uid://cne885366udw3"
-
-[node name="@Node3D@72531" type="Node3D" parent="Map"]
-
-[node name="Pilone_0" type="Node3D" parent="Map/@Node3D@72531"]
-transform = Transform3D(-0.41793737, 0, -0.27446014, 0, 0.5, 0, 0.27446014, 0, -0.41793737, -10, 10, 10)
-script = ExtResource("10_xnkj4")
-
-[node name="PiloneMesh" type="MeshInstance3D" parent="Map/@Node3D@72531/Pilone_0"]
-material_override = SubResource("ShaderMaterial_lxtuq")
-mesh = ExtResource("12_77u14")
-
-[node name="Pilone_0_Body" type="StaticBody3D" parent="Map/@Node3D@72531/Pilone_0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, 0)
-collision_layer = 2
-collision_mask = 4
-
-[node name="CollisionShape" type="CollisionShape3D" parent="Map/@Node3D@72531/Pilone_0/Pilone_0_Body"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_hnp5q")
-
-[node name="LightBeam" type="Node3D" parent="Map/@Node3D@72531/Pilone_0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
-script = ExtResource("13_ii27u")
-
-[node name="Pilone_1" type="Node3D" parent="Map/@Node3D@72531"]
-transform = Transform3D(0.07630221, 0, -0.49414366, 0, 0.5, 0, 0.49414366, 0, 0.07630221, 30, 10, 70)
-script = ExtResource("10_xnkj4")
-
-[node name="PiloneMesh" type="MeshInstance3D" parent="Map/@Node3D@72531/Pilone_1"]
-material_override = SubResource("ShaderMaterial_lrn7n")
-mesh = ExtResource("12_77u14")
-
-[node name="Pilone_1_Body" type="StaticBody3D" parent="Map/@Node3D@72531/Pilone_1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, 0)
-collision_layer = 2
-collision_mask = 4
-
-[node name="CollisionShape" type="CollisionShape3D" parent="Map/@Node3D@72531/Pilone_1/Pilone_1_Body"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_cucvh")
-
-[node name="LightBeam" type="Node3D" parent="Map/@Node3D@72531/Pilone_1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
-script = ExtResource("13_ii27u")
-
-[node name="Pilone_2" type="Node3D" parent="Map/@Node3D@72531"]
-transform = Transform3D(-0.15665086, 0, 0.4748268, 0, 0.5, 0, -0.4748268, 0, -0.15665086, 10, 10, -30)
-script = ExtResource("10_xnkj4")
-
-[node name="PiloneMesh" type="MeshInstance3D" parent="Map/@Node3D@72531/Pilone_2"]
-material_override = SubResource("ShaderMaterial_fisdi")
-mesh = ExtResource("12_77u14")
-
-[node name="Pilone_2_Body" type="StaticBody3D" parent="Map/@Node3D@72531/Pilone_2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, 0)
-collision_layer = 2
-collision_mask = 4
-
-[node name="CollisionShape" type="CollisionShape3D" parent="Map/@Node3D@72531/Pilone_2/Pilone_2_Body"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_0fdmp")
-
-[node name="LightBeam" type="Node3D" parent="Map/@Node3D@72531/Pilone_2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
-script = ExtResource("13_ii27u")
-
-[node name="Pilone_3" type="Node3D" parent="Map/@Node3D@72531"]
-transform = Transform3D(-0.40803733, 0, 0.28897324, 0, 0.5, 0, -0.28897324, 0, -0.40803733, 60, 10, 70)
-script = ExtResource("10_xnkj4")
-
-[node name="PiloneMesh" type="MeshInstance3D" parent="Map/@Node3D@72531/Pilone_3"]
-material_override = SubResource("ShaderMaterial_3r1n2")
-mesh = ExtResource("12_77u14")
-
-[node name="Pilone_3_Body" type="StaticBody3D" parent="Map/@Node3D@72531/Pilone_3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, 0)
-collision_layer = 2
-collision_mask = 4
-
-[node name="CollisionShape" type="CollisionShape3D" parent="Map/@Node3D@72531/Pilone_3/Pilone_3_Body"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_2atdg")
-
-[node name="LightBeam" type="Node3D" parent="Map/@Node3D@72531/Pilone_3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
-script = ExtResource("13_ii27u")
-
-[node name="Pilone_4" type="Node3D" parent="Map/@Node3D@72531"]
-transform = Transform3D(0.48700717, 0, -0.11324315, 0, 0.5, 0, 0.11324315, 0, 0.48700717, 50, 10, 10)
-script = ExtResource("10_xnkj4")
-
-[node name="PiloneMesh" type="MeshInstance3D" parent="Map/@Node3D@72531/Pilone_4"]
-material_override = SubResource("ShaderMaterial_xnkj4")
-mesh = ExtResource("12_77u14")
-
-[node name="Pilone_4_Body" type="StaticBody3D" parent="Map/@Node3D@72531/Pilone_4"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, 0)
-collision_layer = 2
-collision_mask = 4
-
-[node name="CollisionShape" type="CollisionShape3D" parent="Map/@Node3D@72531/Pilone_4/Pilone_4_Body"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_quacx")
-
-[node name="LightBeam" type="Node3D" parent="Map/@Node3D@72531/Pilone_4"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
-script = ExtResource("13_ii27u")
-
-[node name="Pilone_5" type="Node3D" parent="Map/@Node3D@72531"]
-transform = Transform3D(0.432255, 0, -0.2513078, 0, 0.5, 0, 0.2513078, 0, 0.432255, -10, 10, 60)
-script = ExtResource("10_xnkj4")
-
-[node name="PiloneMesh" type="MeshInstance3D" parent="Map/@Node3D@72531/Pilone_5"]
-material_override = SubResource("ShaderMaterial_77u14")
-mesh = ExtResource("12_77u14")
-
-[node name="Pilone_5_Body" type="StaticBody3D" parent="Map/@Node3D@72531/Pilone_5"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, 0)
-collision_layer = 2
-collision_mask = 4
-
-[node name="CollisionShape" type="CollisionShape3D" parent="Map/@Node3D@72531/Pilone_5/Pilone_5_Body"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_ii27u")
-
-[node name="LightBeam" type="Node3D" parent="Map/@Node3D@72531/Pilone_5"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
-script = ExtResource("13_ii27u")
-
-[node name="Pilone_6" type="Node3D" parent="Map/@Node3D@72531"]
-transform = Transform3D(0.08892823, 0, -0.4920282, 0, 0.5, 0, 0.4920282, 0, 0.08892823, 40, 10, 30)
-script = ExtResource("10_xnkj4")
-
-[node name="PiloneMesh" type="MeshInstance3D" parent="Map/@Node3D@72531/Pilone_6"]
-material_override = SubResource("ShaderMaterial_7k12e")
-mesh = ExtResource("12_77u14")
-
-[node name="Pilone_6_Body" type="StaticBody3D" parent="Map/@Node3D@72531/Pilone_6"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, 0)
-collision_layer = 2
-collision_mask = 4
-
-[node name="CollisionShape" type="CollisionShape3D" parent="Map/@Node3D@72531/Pilone_6/Pilone_6_Body"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_jlq2t")
-
-[node name="LightBeam" type="Node3D" parent="Map/@Node3D@72531/Pilone_6"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
-script = ExtResource("13_ii27u")
-
-[node name="Pilone_7" type="Node3D" parent="Map/@Node3D@72531"]
-transform = Transform3D(-0.0765531, 0, 0.49410486, 0, 0.5, 0, -0.49410486, 0, -0.0765531, 10, 10, 50)
-script = ExtResource("10_xnkj4")
-
-[node name="PiloneMesh" type="MeshInstance3D" parent="Map/@Node3D@72531/Pilone_7"]
-material_override = SubResource("ShaderMaterial_hvtan")
-mesh = ExtResource("12_77u14")
-
-[node name="Pilone_7_Body" type="StaticBody3D" parent="Map/@Node3D@72531/Pilone_7"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, 0)
-collision_layer = 2
-collision_mask = 4
-
-[node name="CollisionShape" type="CollisionShape3D" parent="Map/@Node3D@72531/Pilone_7/Pilone_7_Body"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_dlngl")
-
-[node name="LightBeam" type="Node3D" parent="Map/@Node3D@72531/Pilone_7"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
-script = ExtResource("13_ii27u")
-
-[node name="Pilone_8" type="Node3D" parent="Map/@Node3D@72531"]
-transform = Transform3D(0.044460393, 0, -0.49801934, 0, 0.5, 0, 0.49801934, 0, 0.044460393, 40, 10, 70)
-script = ExtResource("10_xnkj4")
-
-[node name="PiloneMesh" type="MeshInstance3D" parent="Map/@Node3D@72531/Pilone_8"]
-material_override = SubResource("ShaderMaterial_ytbxp")
-mesh = ExtResource("12_77u14")
-
-[node name="Pilone_8_Body" type="StaticBody3D" parent="Map/@Node3D@72531/Pilone_8"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, 0)
-collision_layer = 2
-collision_mask = 4
-
-[node name="CollisionShape" type="CollisionShape3D" parent="Map/@Node3D@72531/Pilone_8/Pilone_8_Body"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_nms2w")
-
-[node name="LightBeam" type="Node3D" parent="Map/@Node3D@72531/Pilone_8"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
-script = ExtResource("13_ii27u")
-
-[node name="Pilone_9" type="Node3D" parent="Map/@Node3D@72531"]
-transform = Transform3D(0.43710977, 0, -0.2427654, 0, 0.5, 0, 0.2427654, 0, 0.43710977, -60, 10, -40)
-script = ExtResource("10_xnkj4")
-
-[node name="PiloneMesh" type="MeshInstance3D" parent="Map/@Node3D@72531/Pilone_9"]
-material_override = SubResource("ShaderMaterial_qgln7")
-mesh = ExtResource("12_77u14")
-
-[node name="Pilone_9_Body" type="StaticBody3D" parent="Map/@Node3D@72531/Pilone_9"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, 0)
-collision_layer = 2
-collision_mask = 4
-
-[node name="CollisionShape" type="CollisionShape3D" parent="Map/@Node3D@72531/Pilone_9/Pilone_9_Body"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_x1yy6")
-
-[node name="LightBeam" type="Node3D" parent="Map/@Node3D@72531/Pilone_9"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
-script = ExtResource("13_ii27u")
 
 [node name="performance" type="Node3D" parent="."]
 
@@ -655,9 +574,17 @@ script = SubResource("GDScript_sxnmr")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Sunset"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -169.3978, 1321.7445)
-material_override = SubResource("ShaderMaterial_hnp5q")
-mesh = SubResource("ArrayMesh_lrn7n")
+material_override = SubResource("ShaderMaterial_i4ci5")
+mesh = SubResource("ArrayMesh_8pssd")
 script = SubResource("GDScript_i4ci5")
+base_width = 2000.0
+top_ratio = 0.3
+depth = 5000.0
+line_color = Color(0.62, 0.12399999, 0.19839981, 1)
+line_speed = 0.02
+line_width = 0.5
+line_spacing = 0.1
+emission_strength = 1.0
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Sunset"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6348572, -245.34164, 3857.736)

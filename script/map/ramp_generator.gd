@@ -11,14 +11,15 @@ static func generate_ramps(
 	bloc_gap: int,
 	rng: RandomNumberGenerator,
 	container: Node3D,
-	center: Vector3
+	center: Vector3,
+	is_editor: bool = false  # 🆕 Ajout du paramètre
 ) -> Array:
 	var ramp_positions = []
 	
 	for plat in platforms:
 		var ramp_pos = _generate_ramp_for_platform(
 			plat.x, plat.z, plat.w, plat.h, plat.level,
-			hm, N, M, bloc_size, bloc_gap, rng, container, center, ramp_positions
+			hm, N, M, bloc_size, bloc_gap, rng, container, center, ramp_positions, is_editor
 		)
 		if ramp_pos != null:
 			ramp_positions.append(ramp_pos)
@@ -32,7 +33,8 @@ static func _generate_ramp_for_platform(
 	rng: RandomNumberGenerator,
 	container: Node3D,
 	center: Vector3,
-	existing_ramps: Array
+	existing_ramps: Array,
+	is_editor: bool
 ) -> Variant:
 	var directions = [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)]
 	directions.shuffle()
@@ -72,7 +74,7 @@ static func _generate_ramp_for_platform(
 					continue
 				
 				# Tout est OK, créer la rampe
-				_add_ramp(Vector3(nx, 0, nz), dir, bloc_size, level, container, center)
+				_add_ramp(Vector3(nx, 0, nz), dir, bloc_size, level, container, center, is_editor)
 				return Vector2(nx, nz)
 	
 	return null
@@ -83,7 +85,8 @@ static func _add_ramp(
 	bloc_size: float,
 	level: int,
 	container: Node3D,
-	center: Vector3
+	center: Vector3,
+	is_editor: bool  # 🆕
 ) -> void:
 	# Charger la scène de rampe
 	var stairs_scene = load("res://scenes/map/stairs_blend.glb")
@@ -95,7 +98,6 @@ static func _add_ramp(
 	stairs.name = "Ramp_" + str(origin.x) + "_" + str(origin.z)
 	
 	# La rampe repose sur le niveau inférieur (level - 1)
-	# Sa base doit être au même niveau que le sol de la plateforme inférieure
 	var base_height = (level - 1) * bloc_size + bloc_size
 		
 	# Position de base centrée sur la case
@@ -103,26 +105,30 @@ static func _add_ramp(
 	var z_pos = origin.z * bloc_size + bloc_size * 0.5
 	
 	# Calculer la rotation selon la direction
-	# Godot utilise les radians, mais rotation_degrees accepte les degrés
 	var rotation_y = 0.0
-	if dir.x > 0:      # Rampe vers la droite (X+)
+	if dir.x > 0:
 		rotation_y = -90.0
-	elif dir.x < 0:    # Rampe vers la gauche (X-)
+	elif dir.x < 0:
 		rotation_y = 90.0
-	elif dir.y > 0:    # Rampe vers le haut (Z+)
+	elif dir.y > 0:
 		rotation_y = 180.0
-	elif dir.y < 0:    # Rampe vers le bas (Z-)
+	elif dir.y < 0:
 		rotation_y = 0.0
 	
 	rotation_y += 90.0
-	# Position finale (avec centre du monde)
+	
+	# Position finale
 	stairs.position = Vector3(x_pos, base_height, z_pos) - center
 	stairs.rotation_degrees = Vector3(0, rotation_y, 0)
 	
-	# Configurer les layers et masks des collisions dans le .glb
+	# Configurer les layers et masks des collisions
 	_setup_collision_layers(stairs)
 	
 	container.add_child(stairs)
+	
+	# 🆕 Définir l'owner pour l'éditeur
+	if is_editor:
+		_set_owner_recursive(stairs, container.get_tree().edited_scene_root)
 
 # Vérifie si la position est dans un gap entre plateformes
 static func _is_in_gap(x: int, z: int, hm: Array, N: int, M: int, bloc_gap: int) -> bool:
@@ -131,7 +137,6 @@ static func _is_in_gap(x: int, z: int, hm: Array, N: int, M: int, bloc_gap: int)
 	
 	var current_level = hm[x][z]
 	
-	# Vérifier si c'est un gap : pas de bloc ET entouré de blocs
 	if current_level != 0:
 		return false
 	
@@ -147,7 +152,6 @@ static func _is_in_gap(x: int, z: int, hm: Array, N: int, M: int, bloc_gap: int)
 			if hm[nx][nz] > 0:
 				adjacent_blocks += 1
 	
-	# Si au moins 2 côtés ont des blocs, c'est probablement un gap
 	return adjacent_blocks >= 2
 
 # Vérifie s'il y a une rampe du même niveau adjacente
@@ -156,7 +160,6 @@ static func _has_adjacent_ramp_same_level(
 	existing_ramps: Array,
 	hm: Array
 ) -> bool:
-	# Vérifier les 8 cases autour (diagonales incluses)
 	var offsets = [
 		Vector2(-1, -1), Vector2(0, -1), Vector2(1, -1),
 		Vector2(-1, 0),                   Vector2(1, 0),
@@ -166,28 +169,31 @@ static func _has_adjacent_ramp_same_level(
 	for offset in offsets:
 		var check_pos = Vector2(x, z) + offset
 		
-		# Vérifier si une rampe existe déjà à cette position
 		for ramp_pos in existing_ramps:
 			if ramp_pos == null:
 				continue
 			
 			if int(ramp_pos.x) == int(check_pos.x) and int(ramp_pos.y) == int(check_pos.y):
-				# Vérifier que cette rampe est du même niveau
-				# Une rampe se trouve sur un bloc de niveau inférieur, donc on vérifie level-1
 				var ramp_level = hm[int(ramp_pos.x)][int(ramp_pos.y)] + 1
 				if ramp_level == level:
 					return true
 	
 	return false
 
-# Configure les layers et masks de collision pour tous les StaticBody3D dans la rampe
+# Configure les layers et masks de collision
 static func _setup_collision_layers(stairs: Node3D) -> void:
-	# Parcourir récursivement tous les enfants
 	for child in stairs.get_children():
 		if child is StaticBody3D:
 			child.collision_layer = 2
 			child.collision_mask = 4
 		
-		# Récursion pour les enfants des enfants
 		if child.get_child_count() > 0:
 			_setup_collision_layers(child)
+
+# 🆕 Fonction pour définir l'owner récursivement
+static func _set_owner_recursive(node: Node, owner: Node) -> void:
+	if node == owner:
+		return
+	node.owner = owner
+	for child in node.get_children():
+		_set_owner_recursive(child, owner)

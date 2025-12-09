@@ -1,283 +1,317 @@
 @tool
 extends Node3D
 
-# Paramètres
-@export var map_size: int = 300
-@export var bloc_size: float = 10.0
-@export var platform_coverage: float = 0.06
-@export var min_platform_blocs: int = 3
-@export var max_platform_blocs: int = 8
-@export var max_attempts_place: int = 3000
-@export var seed: int = 0
-@export var bloc_gap: int = 1
-@export var stacked_platform_chance: float = 0.5
-@export var auto_generate_on_play: bool = true
-@export var generate_ground: bool = true
-
-# Nouveaux exports pour les différents types de blocs
-@export_group("Bloc Types")
-@export_file var corner_bloc_path: String = "res://scenes/map/corner_bloc.gld"
-@export_file var side_bloc_path: String = "res://scenes/map/side_bloc.gld"
-@export_file var floor_bloc_path: String = "res://scenes/map/floor_bloc.gld"
-
-# Paramètres pylônes
-@export_group("Pylône")
-@export var pilone_count: int = 10
-@export_file("*.vox") var pylone_path: String = "res://assets/pylone.vox"
-@export_file("*.gdshader") var pylone_shader_path: String = "res://shaders/pylone.gdshader"
-@export_file("*.gd") var pylone_script_path: String = "res://script/map/pylone_charge.gd"
-
-@export_group("Audio Wall")
-@export_file("*.gd") var audio_wall_script_path: String = "res://script/map/audio_wall.gd"
-
-@export_group("Generate")
-@export var Generate: bool:
-	get:
-		return false
+@export var map_size: int = 30:
 	set(value):
-		if Engine.is_editor_hint() and value:
-			generate()
+		map_size = value
+		if Engine.is_editor_hint():
+			_update_grid()
 
-const NAME_BODY := "GeneratedStaticBody"
+@export var max_height: int = 5:
+	set(value):
+		max_height = value
+		if Engine.is_editor_hint():
+			_update_grid()
 
-# Enum pour les types de blocs
-enum BlocType {
-	FLOOR,
-	SIDE,
-	CORNER
-}
+@export var bloc_size: float = 10.0
 
-# Enum pour les rotations (en degrés Y)
-enum BlocRotation {
-	NORTH = 90,      # 90°
-	EAST = 0,      # 0°
-	SOUTH = -90,    # -90°
-	WEST = 180      # 180°
+@export var seed: int = 0:
+	set(value):
+		seed = value
+		if Engine.is_editor_hint():
+			_update_grid()
+
+@export_group("Platform Generation")
+@export_range(0.0, 1.0, 0.01) var platform_coverage: float = 0.15
+@export_range(2, 10) var min_platform_size: int = 3
+@export_range(5, 20) var max_platform_size: int = 8
+@export_range(0, 5) var min_gap: int = 1
+@export_range(0.0, 1.0, 0.1) var stacking_chance: float = 0.5
+@export var max_attempts: int = 3000
+
+@export_group("Debug & Visualization")
+@export var show_grid_in_console: bool = false:
+	set(value):
+		show_grid_in_console = value
+		if value and Engine.is_editor_hint():
+			print_grid_to_console()
+
+@export var show_detailed_info: bool = false:
+	set(value):
+		show_detailed_info = value
+		if value and Engine.is_editor_hint():
+			print_detailed_info()
+
+@export var generate_platforms: bool = false:
+	set(value):
+		generate_platforms = false
+		if value and Engine.is_editor_hint():
+			_generate_platforms()
+
+var grid: Array = []
+var platforms: Array = []
+var stats: Dictionary = {
+	"total_cells": 0,
+	"filled_cells": 0,
+	"platforms_count": 0,
+	"max_height_used": 0
 }
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
-		set_process(true)
+		_update_grid()
+
+func _update_grid() -> void:
+	print("\n🔄 Mise à jour de la grille...")
+	_initialize_grid()
+	_calculate_stats()
+	print("✅ Grille initialisée: ", map_size, "x", map_size, "x", max_height)
+
+func _initialize_grid() -> void:
+	if grid.size() != map_size:
+		grid.clear()
+		for x in range(map_size):
+			var column_z = []
+			for z in range(map_size):
+				var column_y = []
+				for y in range(max_height):
+					column_y.append(0)
+				column_z.append(column_y)
+			grid.append(column_z)
 	else:
-		if auto_generate_on_play:
-			generate()
+		for x in range(map_size):
+			for z in range(map_size):
+				for y in range(max_height):
+					grid[x][z][y] = 0
 
-func generate() -> void:
-	print("Génération de la map...")
-	_cleanup_previous()
+func _calculate_stats() -> void:
+	stats.total_cells = map_size * map_size * max_height
+	stats.filled_cells = 0
+	stats.max_height_used = 0
+	stats.platforms_count = platforms.size()
 	
-	if not _validate_bloc_paths():
-		return
-	
-	var N = max(1, int(floor(float(map_size) / bloc_size)))
-	var M = N
-	
-	if not _validate_parameters(N, M):
-		return
-	
-	var rng = _setup_rng()
-	var hm = _create_heightmap(N, M)
-	
-	var container = Node3D.new()
-	container.name = NAME_BODY
-	var center = Vector3(
-		N * bloc_size * 0.5, 
-		bloc_size * 0.5,
-		M * bloc_size * 0.5
-	)
-	
-	# Utiliser le générateur de plateformes
-	var placed_platforms = PlatformGenerator.generate_platforms(
-		N, M, hm, rng,
-		platform_coverage,
-		min_platform_blocs,
-		max_platform_blocs,
-		max_attempts_place,
-		bloc_gap,
-		stacked_platform_chance,
-		bloc_size,
-		center,
-		container
-	)
-	
-	# Générer le terrain
-	if generate_ground:
-		_generate_ground(N, M, bloc_size, center, container)
-	
-	# Placer les blocs visuels avec le nouveau système
-	_place_visual_blocs_optimized(placed_platforms, bloc_size, center, container)
-	
-	# Générer les rampes
-	var ramp_positions = RampGenerator.generate_ramps(
-		placed_platforms, hm, N, M, bloc_size, bloc_gap, rng, container, center
-	)
-	
-	add_child(container)
-	
-	if Engine.is_editor_hint():
-		container.owner = get_tree().edited_scene_root
-	
-	# Placer les pylônes
-	if pilone_count > 0:
-		var placed = PyloneGenerator.generate_pylones(
-			pilone_count, N, M, hm, bloc_size, rng, container, center,
-			ramp_positions, pylone_path, pylone_shader_path, pylone_script_path,
-			Engine.is_editor_hint()
-		)
-		print("Pylônes placés: ", placed, "/", pilone_count)
-	
-	# Créer le mur audio
-	_create_audio_wall(container)
-	
-	print("Génération terminée: ", N, "x", M, " - Plateformes:", placed_platforms.size())
+	for x in range(map_size):
+		for z in range(map_size):
+			for y in range(max_height):
+				if grid[x][z][y] != 0:
+					stats.filled_cells += 1
+					stats.max_height_used = max(stats.max_height_used, y + 1)
 
-func _validate_bloc_paths() -> bool:
-	if not ResourceLoader.exists(corner_bloc_path):
-		push_error("Le modèle corner_bloc n'existe pas: " + corner_bloc_path)
-		return false
-	if not ResourceLoader.exists(side_bloc_path):
-		push_error("Le modèle side_bloc n'existe pas: " + side_bloc_path)
-		return false
-	if not ResourceLoader.exists(floor_bloc_path):
-		push_error("Le modèle floor_bloc n'existe pas: " + floor_bloc_path)
-		return false
+func print_grid_to_console() -> void:
+	print("\n═══════════════════════════════════════")
+	print("🗺️  VISUALISATION DE LA GRILLE")
+	print("═══════════════════════════════════════")
+	print("Dimensions: ", map_size, "x", map_size, "x", max_height)
+	print("Seed: ", seed)
+	print("\nLégende:")
+	print("  . = vide")
+	print("  0-9 = numéro du niveau Y")
+	print("═══════════════════════════════════════\n")
+	
+	for y in range(max_height):
+		print("--- NIVEAU Y = ", y, " ---")
+		var header = "   "
+		for x in range(min(map_size, 50)):
+			header += str(x % 10)
+		print(header)
+		
+		for z in range(min(map_size, 50)):
+			var line = str(z).pad_zeros(2) + " "
+			for x in range(min(map_size, 50)):
+				if grid[x][z][y] != 0:
+					line += str(y)
+				else:
+					line += "."
+			print(line)
+		print("")
+
+func print_detailed_info() -> void:
+	print("\n╔══════════════════════════════════════╗")
+	print("║   INFORMATIONS DÉTAILLÉES            ║")
+	print("╚══════════════════════════════════════╝")
+	print("Plateformes: ", platforms.size())
+	print("Cellules remplies: ", stats.filled_cells)
+
+func _generate_platforms() -> void:
+	var ground_platforms : Array = []
+	var stacked_platforms : Array = []
+	var filled_cells := 0
+	var target_cells := int(map_size * map_size * platform_coverage)
+
+	print("\n🏗️ === GÉNÉRATION DES PLATEFORMES ===")
+	print("📊 Objectif: %d cellules sur %d (%.1f%%)" %
+		[target_cells, map_size * map_size, platform_coverage * 100.0])
+
+	# ───────────────────────────────────────────────
+	# PHASE 1 — Plateformes au sol (Y = 0)
+	# ───────────────────────────────────────────────
+	print("\n🔷 PHASE 1: Plateformes au sol (Y=0)")
+	var attempts := 0
+
+	while filled_cells < target_cells and attempts < max_attempts:
+		attempts += 1
+
+		var width = randi_range(min_platform_size, max_platform_size)
+		var depth = randi_range(min_platform_size, max_platform_size)
+		var x = randi_range(0, map_size - width)
+		var z = randi_range(0, map_size - depth)
+
+		if not _can_place_platform(x, z, 0, width, depth):
+			continue
+
+		var platform = {
+			"x": x,
+			"z": z,
+			"y": 0,
+			"width": width,
+			"depth": depth
+		}
+
+		_fill_grid(platform)
+		filled_cells += width * depth
+		ground_platforms.append(platform)
+
+		if ground_platforms.size() % 5 == 0 and show_detailed_info:
+			print("  ✓ %d plateformes | %d/%d cellules (%.1f%%)" % [
+				ground_platforms.size(),
+				filled_cells,
+				target_cells,
+				(float(filled_cells) / target_cells) * 100.0
+			])
+
+	print("\n✅ Phase 1 terminée:")
+	print("  • Plateformes créées:", ground_platforms.size())
+	print("  • Cellules remplies: %d/%d (%.1f%%)" %
+		[filled_cells, target_cells, (float(filled_cells) / target_cells) * 100.0])
+	print("  • Tentatives:", attempts)
+
+
+	# ───────────────────────────────────────────────
+	# PHASE 2 — Plateformes empilées (Y > 0)
+	# ───────────────────────────────────────────────
+	print("\n🔶 PHASE 2: Empilement de plateformes")
+	print("  Chance d'empilement: %d%%" % int(stacking_chance * 100))
+
+	var success := 0
+	var reject_height := 0
+	var reject_size := 0
+	var reject_space := 0
+	var reject_access := 0
+
+	for base in ground_platforms:
+		if randf() > stacking_chance:
+			continue
+
+		if base.y + 1 >= max_height:
+			reject_height += 1
+			continue
+
+		var new_y = base.y + 1
+
+		var new_width = randi_range(min_platform_size, base.width)
+		var new_depth = randi_range(min_platform_size, base.depth)
+
+		if new_width < min_platform_size or new_depth < min_platform_size:
+			reject_size += 1
+			continue
+
+		var offset_x = randi_range(0, base.width - new_width)
+		var offset_z = randi_range(0, base.depth - new_depth)
+
+		var new_x = base.x + offset_x
+		var new_z = base.z + offset_z
+
+		var valid := true
+
+		for cx in range(new_x, new_x + new_width):
+			for cz in range(new_z, new_z + new_depth):
+
+				# Vérifie toute la colonne sous la plateforme
+				for cy in range(new_y):
+					if grid[cx][cz][cy] == 0:
+						valid = false
+						reject_access += 1
+						break
+
+				if not valid:
+					break
+
+				# doit être vide à la hauteur cible
+				if grid[cx][cz][new_y] != 0:
+					valid = false
+					reject_space += 1
+					break
+
+			if not valid:
+				break
+
+
+		if not valid:
+			continue
+
+		var stacked = {
+			"x": new_x,
+			"z": new_z,
+			"y": new_y,
+			"width": new_width,
+			"depth": new_depth
+		}
+
+		if show_detailed_info:
+			print("    🔧 Y=%d pos[%d,%d] size[%dx%d]" %
+				[new_y, new_x, new_z, new_width, new_depth])
+
+		_fill_grid(stacked)
+		stacked_platforms.append(stacked)
+		success += 1
+
+
+	print("\n✅ Phase 2 terminée:")
+	print("  • Plateformes empilées:", stacked_platforms.size())
+	print("  • Total plateformes:", ground_platforms.size() + stacked_platforms.size())
+
+	print("\n📊 Raisons de rejet:")
+	print("  • Succès:", success)
+	print("  • Hauteur max:", reject_height)
+	print("  • Base trop petite:", reject_size)
+	print("  • Pas d'espace:", reject_space)
+	print("  • Pas de support:", reject_access)
+
+	print("\n🎉 GÉNÉRATION TERMINÉE")
+	print("  • Cellules remplies:", count_filled_cells(), "/", total_cells_2d())
+
+
+# ────────── UTILITAIRES ──────────
+
+func _can_place_platform(x:int, z:int, y:int, w:int, d:int) -> bool:
+	for cx in range(x - min_gap, x + w + min_gap):
+		for cz in range(z - min_gap, z + d + min_gap):
+			if cx < 0 or cz < 0 or cx >= map_size or cz >= map_size:
+				return false
+			if grid[cx][cz][y] != 0:
+				return false
 	return true
 
-func _validate_parameters(N: int, M: int) -> bool:
-	if min_platform_blocs > max_platform_blocs:
-		push_error("min_platform_blocs > max_platform_blocs")
-		return false
-	if min_platform_blocs > N or min_platform_blocs > M:
-		push_error("min_platform_blocs trop grand")
-		return false
-	return true
 
-func _setup_rng() -> RandomNumberGenerator:
-	var rng = RandomNumberGenerator.new()
-	if seed == 0:
-		rng.randomize()
-	else:
-		rng.seed = seed
-	return rng
+func _fill_grid(platform: Dictionary) -> void:
+	var y: int = int(platform["y"])
+	var stored_value: int = y + 1
 
-func _create_heightmap(N: int, M: int) -> Array:
-	var hm := []
-	for x in range(N + 1):
-		var col := []
-		for z in range(M + 1):
-			col.append(0)
-		hm.append(col)
-	return hm
+	for x in range(platform["x"], platform["x"] + platform["width"]):
+		for z in range(platform["z"], platform["z"] + platform["depth"]):
+			grid[x][z][y] = stored_value
 
-# Détermine le type de bloc et sa rotation pour une position donnée dans une plateforme
-func _get_bloc_type_and_rotation(local_x: int, local_z: int, plat_w: int, plat_h: int) -> Dictionary:
-	var is_left = (local_x == 0)
-	var is_right = (local_x == plat_w - 1)
-	var is_top = (local_z == 0)
-	var is_bottom = (local_z == plat_h - 1)
-	
-	# Coins (corner_bloc)
-	if is_left and is_top:
-		return {"type": BlocType.CORNER, "rotation": BlocRotation.NORTH}
-	elif is_right and is_top:
-		return {"type": BlocType.CORNER, "rotation": BlocRotation.EAST}
-	elif is_right and is_bottom:
-		return {"type": BlocType.CORNER, "rotation": BlocRotation.SOUTH}
-	elif is_left and is_bottom:
-		return {"type": BlocType.CORNER, "rotation": BlocRotation.WEST}
-	
-	# Côtés (side_bloc)
-	elif is_top:
-		return {"type": BlocType.SIDE, "rotation": BlocRotation.NORTH}
-	elif is_right:
-		return {"type": BlocType.SIDE, "rotation": BlocRotation.EAST}
-	elif is_bottom:
-		return {"type": BlocType.SIDE, "rotation": BlocRotation.SOUTH}
-	elif is_left:
-		return {"type": BlocType.SIDE, "rotation": BlocRotation.WEST}
-	
-	# Centre (floor_bloc) - pas de rotation spécifique
-	else:
-		return {"type": BlocType.FLOOR, "rotation": BlocRotation.NORTH}
 
-func _place_visual_blocs_optimized(placed_platforms: Array, bloc_size: float, center: Vector3, container: Node3D) -> void:
-	# Charger les scènes une seule fois
-	var corner_scene = load(corner_bloc_path)
-	var side_scene = load(side_bloc_path)
-	var floor_scene = load(floor_bloc_path)
-	var visual_container = Node3D.new()
-	visual_container.name = "BlocsVisuels"
-	
-	# Parcourir toutes les plateformes
-	for plat in placed_platforms:
-		for x in range(plat.x, plat.x + plat.w):
-			for z in range(plat.z, plat.z + plat.h):
-				# Calculer la position locale dans la plateforme
-				var local_x = x - plat.x
-				var local_z = z - plat.z
-				
-				# Déterminer le type et la rotation
-				var bloc_info = _get_bloc_type_and_rotation(local_x, local_z, plat.w, plat.h)
-				
-				# Instancier le bon type de bloc
-				var bloc: Node3D
-				match bloc_info.type:
-					BlocType.CORNER:
-						bloc = corner_scene.instantiate()
-					BlocType.SIDE:
-						bloc = side_scene.instantiate()
-					BlocType.FLOOR:
-						bloc = floor_scene.instantiate()
-				
-				bloc.name = "Bloc_" + str(x) + "_" + str(z) + "_L" + str(plat.level)
-				
-				# Position
-				var x_pos = x * bloc_size + bloc_size * 0.5
-				var y_pos = (plat.level - 1) * bloc_size + bloc_size
-				var z_pos = z * bloc_size + bloc_size * 0.5
-				
-				bloc.position = Vector3(x_pos, y_pos, z_pos) - center
-				
-				# Rotation
-				bloc.rotation_degrees.y = bloc_info.rotation
-					
-				visual_container.add_child(bloc)
-	
-	container.add_child(visual_container)
 
-func _generate_ground(N: int, M: int, bloc_size: float, center: Vector3, container: Node3D) -> void:
-	var ground = StaticBody3D.new()
-	ground.name = "Ground"
-	ground.collision_layer = 2
-	ground.collision_mask = 4
-	
-	var mesh = BoxMesh.new()
-	mesh.size = Vector3(N * bloc_size, 1.0, M * bloc_size)
-	
-	var mesh_inst = MeshInstance3D.new()
-	mesh_inst.mesh = mesh
-	var mat = StandardMaterial3D.new()
-	mat.albedo_color = Color(0.3, 0.5, 0.3)
-	mesh_inst.material_override = mat
-	
-	ground.position = Vector3(0, -0.5, 0)
-	ground.add_child(mesh_inst)
-	
-	var collision = CollisionShape3D.new()
-	var shape = BoxShape3D.new()
-	shape.size = mesh.size
-	collision.shape = shape
-	ground.add_child(collision)
-	
-	container.add_child(ground)
+func count_filled_cells() -> int:
+	var total := 0
+	for x in range(map_size):
+		for z in range(map_size):
+			for y in range(max_height):
+				if grid[x][z][y] != 0:
+					total += 1
+	return total
 
-func _create_audio_wall(container: Node3D) -> void:
-	var audio_wall = Node3D.new()
-	audio_wall.name = "AudioWall"
-	audio_wall.set_script(load(audio_wall_script_path))
-	audio_wall.set("map_size", map_size - 10.5)
-	container.add_child(audio_wall)
 
-func _cleanup_previous() -> void:
-	for child in get_children():
-		child.queue_free()
+func total_cells_2d() -> int:
+	return map_size * map_size
